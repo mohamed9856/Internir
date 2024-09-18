@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "902763583392",
+    "project_id": "internir",
+    "storage_bucket": "internir.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:902763583392:android:67104c86c1167e646c36c5",
+        "android_client_info": {
+          "package_name": "com.example.internir"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD11FOH0lmp6wwpWXk8cQIyKmNniBa5pp0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
