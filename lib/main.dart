@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internir/utils/routes.dart';
 import 'package:internir/utils/size_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      onGenerateRoute: AppRoute.onGenerateRoute,
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
