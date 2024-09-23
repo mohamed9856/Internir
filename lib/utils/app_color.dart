@@ -22,4 +22,6 @@ class AppColor {
   static const mainBlue = Color(0xFF0A66C2);
 
   static const red = Colors.red;
+
+  static const white = Colors.white;
 }
