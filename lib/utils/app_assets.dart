@@ -1,13 +1,13 @@
 class AppAssets {
   static const homeIcon = 'assets/icons/home.svg';
   static const homeOpenIcon = 'assets/icons/home-open.svg';
+  static const applyListOpen = 'assets/icons/to-do-list.svg';
   static const deleteIcon = 'assets/icons/delete.svg';
   static const editIcon = 'assets/icons/edit.svg';
   static const fileIcon = 'assets/icons/file.svg';
   static const notificationIcon = 'assets/icons/notification.svg';
-  static const homeImage = 'assets/images/home-image.png';
-  static const applyListIcon = 'assets/icons/to-do-list.svg';
 
+  static const homeImage = 'assets/images/home-image.png';
   static const applyImage = 'assets/images/apply.png';
   static const expires = 'assets/images/expires.png';
   static const logo = 'assets/images/Internir.png';

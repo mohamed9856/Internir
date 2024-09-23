@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:internir/components/custom_button.dart';
 import 'package:internir/components/custom_text_form_field.dart';
 import 'package:internir/components/job_card.dart';

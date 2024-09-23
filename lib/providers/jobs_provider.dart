@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:internir/constants/end_points.dart';
 import 'package:internir/models/adzuna_model.dart';
 import 'package:internir/services/api_client.dart';
-import 'package:internir/utils/utils.dart';
 
 class JobsProvider extends ChangeNotifier {
   List<Results> jobs = [];
   List<Category> categories = [];
   int page = 1;
+  String category = "";
   bool hasMore = true;
   bool loading = false;
 
@@ -20,18 +20,13 @@ class JobsProvider extends ChangeNotifier {
       loading = true;
       notifyListeners();
       var res = await APIClient.get(
-          "${searchJob.replaceAll('{country}', 'us').replaceAll('{page}', page.toString())}?app_id=${APIClient.appID}&app_key=${APIClient.appKEY}&what=${whatController.text}&where=${whereController.text}&results_per_page=20");
+          "${searchJob.replaceAll('{country}', 'us').replaceAll('{page}', page.toString())}?app_id=${APIClient.appID}&app_key=${APIClient.appKEY}&what=${whatController.text}&where=${whereController.text}&results_per_page=20&category=$category");
       jobs = List<Results>.from(res['results'].map((x) => Results.fromJson(x)));
-      for (var job in jobs) {
-        String fullDescription = await getFullDescription(job.id);
-        job.description = fullDescription;
-      }
       loading = false;
-      if(jobs.length < 20) hasMore = false;
+      if (jobs.length < 20) hasMore = false;
       notifyListeners();
     } catch (e) {
       debugPrint("${e}fetchJobs");
-      hasMore = false;
       loading = false;
       notifyListeners();
     }
