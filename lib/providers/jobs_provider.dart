@@ -22,10 +22,7 @@ class JobsProvider extends ChangeNotifier {
       var res = await APIClient.get(
           "${searchJob.replaceAll('{country}', 'us').replaceAll('{page}', page.toString())}?app_id=${APIClient.appID}&app_key=${APIClient.appKEY}&what=${whatController.text}&where=${whereController.text}&results_per_page=20&category=$category");
 
-      print(
-          "Arrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrive data");
       jobs = List<Results>.from(res['results'].map((x) => Results.fromJson(x)));
-      print("Coooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
       loading = false;
       if (jobs.length < 20) hasMore = false;
       notifyListeners();

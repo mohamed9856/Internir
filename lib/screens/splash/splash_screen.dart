@@ -26,8 +26,6 @@ class _SplashScreenState extends State<SplashScreen> {
     var jobProvider = Provider.of<JobsProvider>(context, listen: false);
     await jobProvider.fetchJobs();
     await jobProvider.fetchCategories();
-    print(jobProvider.loading.toString() + "loooooooooooooooooooooo");
-
     await Future.delayed(const Duration(seconds: 2));
 
     Navigator.pushReplacementNamed(context, HomeLayout.routeName);

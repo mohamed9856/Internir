@@ -217,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SizedBox(
-                height: 16 * SizeConfig.verticalBlock,
+                height: 32 * SizeConfig.verticalBlock,
               ),
               Row(
                 mainAxisSize: MainAxisSize.max,
