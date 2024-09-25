@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:internir/providers/jobs_provider.dart';
 import 'package:internir/utils/app_assets.dart';
 import 'package:internir/utils/app_color.dart';
 import 'package:internir/utils/size_config.dart';
 import 'package:internir/screens/layout/home_layout.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,10 +17,20 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 5), () {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const HomeLayout()));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      futureCall();
     });
+  }
+
+  futureCall() async {
+    var jobProvider = Provider.of<JobsProvider>(context, listen: false);
+    await jobProvider.fetchJobs();
+    await jobProvider.fetchCategories();
+    print(jobProvider.loading.toString() + "loooooooooooooooooooooo");
+
+    await Future.delayed(const Duration(seconds: 2));
+
+    Navigator.pushReplacementNamed(context, HomeLayout.routeName);
   }
 
   @override
