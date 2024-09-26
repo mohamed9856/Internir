@@ -557,6 +557,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.15.0"
+<<<<<<< HEAD
   mime:
     dependency: transitive
     description:
@@ -565,6 +566,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+=======
+>>>>>>> 333cc3c0aa789995925ace3776b31c8208bd5756
   nested:
     dependency: transitive
     description:
@@ -794,6 +797,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.2"
+<<<<<<< HEAD
   timing:
     dependency: transitive
     description:
@@ -802,6 +806,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+=======
+>>>>>>> 333cc3c0aa789995925ace3776b31c8208bd5756
   typed_data:
     dependency: transitive
     description:

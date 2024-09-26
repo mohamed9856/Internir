@@ -192,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(
                           fontFamily: 'Greta Arabic',
                           fontSize: 16 * SizeConfig.textRatio,
-                          color: AppColor.lightblue2),
+                          color: AppColor.lightBlue2),
                     ),
                   ),
                 ],
