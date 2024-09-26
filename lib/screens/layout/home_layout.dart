@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:internir/providers/index_provider.dart';
 import 'package:internir/screens/home/home_screen.dart';
+import 'package:internir/screens/saved/saved_internships.dart';
 import 'package:internir/utils/app_assets.dart';
 import 'package:internir/utils/app_color.dart';
 import 'package:provider/provider.dart';
 
 class HomeLayout extends StatefulWidget {
   const HomeLayout({super.key});
+  static const routeName = '/home-layout';
 
   @override
   State<HomeLayout> createState() => _HomeLayoutState();
@@ -17,7 +19,7 @@ class _HomeLayoutState extends State<HomeLayout> {
   var pages = [
     const HomeScreen(),
     Container(),
-    Container(),
+    const SavedInternships(),
     Container(),
   ];
 
