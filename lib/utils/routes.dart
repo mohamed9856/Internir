@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:internir/screens/layout/home_layout.dart';
 
 class AppRoute {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
-      // case '/':
-      //   return MaterialPageRoute(builder: (_) => const MyHomePage());
-      // case '/second':
-      //   return MaterialPageRoute(builder: (_) => const SecondPage());
+      case HomeLayout.routeName:
+        return MaterialPageRoute(builder: (_) => const HomeLayout());
       default:
         return MaterialPageRoute(builder: (_) => errorRoute());
     }
