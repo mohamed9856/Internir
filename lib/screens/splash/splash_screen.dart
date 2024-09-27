@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:internir/providers/jobs_provider.dart';
 import 'package:internir/utils/app_color.dart';
 import 'package:internir/utils/size_config.dart';
 import 'package:internir/screens/layout/home_layout.dart';
-import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -24,10 +22,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   futureCall() async {
-    var jobProvider = Provider.of<JobsProvider>(context, listen: false);
-    await jobProvider.fetchJobs();
-    await jobProvider.fetchCategories();
-    await Future.delayed(const Duration(seconds: 2));
+
+    await Future.delayed(const Duration(seconds: 3));
 
     Navigator.pushReplacementNamed(context, HomeLayout.routeName);
   }
