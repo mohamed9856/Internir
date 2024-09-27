@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:internir/screens/layout/home_layout.dart';
+import 'package:internir/screens/splash/splash_screen.dart';
 
 class AppRoute {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
-      // case '/':
-      //   return MaterialPageRoute(builder: (_) => const MyHomePage());
-      // case '/second':
-      //   return MaterialPageRoute(builder: (_) => const SecondPage());
+      case HomeLayout.routeName:
+        return MaterialPageRoute(builder: (_) => const HomeLayout());
+      case SplashScreen.routeName:
+        return MaterialPageRoute(builder: (_) => const SplashScreen());
       default:
         return MaterialPageRoute(builder: (_) => errorRoute());
     }

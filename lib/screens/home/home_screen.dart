@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:internir/components/custom_button.dart';
 import 'package:internir/components/custom_text_form_field.dart';
 import 'package:internir/components/job_card.dart';
+import 'package:internir/models/job_model.dart';
 import 'package:internir/providers/jobs_provider.dart';
 import 'package:internir/utils/app_assets.dart';
 import 'package:internir/utils/app_color.dart';
@@ -21,44 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      _fetchJobs();
-      Provider.of<JobsProvider>(context, listen: false).fetchCategories();
-    });
-  }
-
-  Future<void> _fetchJobs() async {
-    try {
-      final provider = context.read<JobsProvider>();
-      await provider.fetchJobs();
-    } catch (error) {
-      debugPrint(error.toString());
-    }
-  }
-
-  void _nextPage() {
-    final provider = context.read<JobsProvider>();
-    if (provider.hasMore && !provider.loading) {
-      provider.page++;
-      provider.jobs.clear();
-      _fetchJobs();
-    }
-  }
-
-  void _previousPage() {
-    final provider = context.read<JobsProvider>();
-    if (provider.page > 1 && !provider.loading) {
-      provider.page--;
-      provider.jobs.clear();
-      _fetchJobs();
-    }
-  }
-
-  void _filter() {
-    final provider = context.read<JobsProvider>();
-    provider.page = 1;
-    provider.jobs.clear();
-    _fetchJobs();
   }
 
   var formKey = GlobalKey<FormState>();
@@ -134,12 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   actions: [
                     CustomButton(
                       text: 'Filter',
-                      onPressed: () {
-                        if (formKey.currentState!.validate()) {
-                          _filter();
-                          Navigator.pop(context);
-                        }
-                      },
+                      onPressed: () {},
                       backgroundColor: AppColor.indigo,
                       textColor: Colors.white,
                       width: double.infinity,
@@ -196,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(
                           fontFamily: 'Greta Arabic',
                           fontSize: 16 * SizeConfig.textRatio,
-                          color: AppColor.lightblue2),
+                          color: AppColor.lightBlue2),
                     ),
                   ),
                 ],
@@ -204,100 +162,57 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 height: 8 * SizeConfig.verticalBlock,
               ),
-              SizedBox(
-                height: 40 * SizeConfig.verticalBlock,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: jobsProvider.categories.length,
-                  itemBuilder: (context, index) {
-                    final category = jobsProvider.categories[index];
-                    return categoryCard(category.label);
-                  },
-                  separatorBuilder: (context, index) {
-                    return SizedBox(
-                      width: 16 * SizeConfig.horizontalBlock,
-                    );
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 16 * SizeConfig.verticalBlock,
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomButton(
-                    text: "Previous",
-                    backgroundColor: AppColor.mainGreen,
-                    isDisable: jobsProvider.page == 1,
-                    textColor: AppColor.white,
-                    onPressed: () {
-                      _previousPage();
-                    },
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 8 * SizeConfig.horizontalBlock,
-                      vertical: 8 * SizeConfig.verticalBlock,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 16 * SizeConfig.horizontalBlock,
-                  ),
-                  CustomButton(
-                    text: "Next",
-                    backgroundColor: AppColor.mainGreen,
-                    textColor: AppColor.white,
-                    isDisable: !jobsProvider.hasMore,
-                    onPressed: () {
-                      _nextPage();
-                    },
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 8 * SizeConfig.horizontalBlock,
-                      vertical: 8 * SizeConfig.verticalBlock,
-                    ),
-                  ),
-                ],
-              ),
-              jobsProvider.loading
-                  ? const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(20.0),
-                        child: CircularProgressIndicator(),
+
+              // TODO: categories
+              // SizedBox(
+              //   height: 40 * SizeConfig.verticalBlock,
+              //   child: ListView.separated(
+              //     scrollDirection: Axis.horizontal,
+              //     itemCount: jobsProvider.categories.length,
+              //     itemBuilder: (context, index) {
+              //       final category = jobsProvider.categories[index];
+              //       return categoryCard(category.label);
+              //     },
+              //     separatorBuilder: (context, index) {
+              //       return SizedBox(
+              //         width: 16 * SizeConfig.horizontalBlock,
+              //       );
+              //     },
+              //   ),
+              // ),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 4,
+                itemBuilder: (context, index) {
+                  final job = JobModel(
+                    id: '1',
+                    enabled: true,
+                    title: 'Software Developer',
+                    description: 'We are looking for a software developer',
+                    location: 'Cairo, Egypt',
+                    salary: 5000,
+                    category: 'Software Development',
+                    jobType: 'Remotly',
+                    deadline: DateTime.now().add(Duration(days: 7)),
+                    company: 'Google',
+                    createdAt: DateTime.now(),
+                    numberOfApplicants: 0,
+                  );
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        height: 16 * SizeConfig.verticalBlock,
                       ),
-                    )
-                  : jobsProvider.jobs.isNotEmpty
-                      ? ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: jobsProvider.jobs.length,
-                          itemBuilder: (context, index) {
-                            final job = jobsProvider.jobs[index];
-                            return Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SizedBox(
-                                  height: 16 * SizeConfig.verticalBlock,
-                                ),
-                                jobCard(job),
-                                SizedBox(
-                                  height: 16 * SizeConfig.verticalBlock,
-                                ),
-                              ],
-                            );
-                          },
-                        )
-                      : Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text(
-                              'No jobs found',
-                              style: TextStyle(
-                                fontFamily: 'Greta Arabic',
-                                fontSize: 16 * SizeConfig.textRatio,
-                              ),
-                            ),
-                          ),
-                        ),
+                      jobCard(job, isApplied: true),
+                      SizedBox(
+                        height: 16 * SizeConfig.verticalBlock,
+                      ),
+                    ],
+                  );
+                },
+              ),
             ],
           ),
         ),

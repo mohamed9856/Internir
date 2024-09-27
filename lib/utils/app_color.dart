@@ -15,13 +15,15 @@ class AppColor {
 
   static const background = Color(0xFFF8F8F8);
 
-  static const lightblue = Color(0xFF2FA7FE);
+  static const lightBlue = Color(0xFF2FA7FE);
 
-  static const lightblue2 = Color(0xFF0094FF);
+  static const lightBlue2 = Color(0xFF0094FF);
 
   static const mainBlue = Color(0xFF0A66C2);
 
   static const red = Colors.red;
 
   static const white = Colors.white;
+
+  static const black = Colors.black;
 }
