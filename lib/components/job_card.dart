@@ -126,7 +126,7 @@ Widget jobCard(JobModel job, {bool isApplied = false}) {
                     ),
                   // calc time from create at to now
                   Text(
-                    "Posted: ${job.createdAt.year}-${job.createdAt.month}-${job.createdAt.day}",
+                    "${job.createdAt.year}-${job.createdAt.month}-${job.createdAt.day}",
                     softWrap: true,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

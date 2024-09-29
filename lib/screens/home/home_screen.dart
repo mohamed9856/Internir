@@ -98,7 +98,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   actions: [
                     CustomButton(
                       text: 'Filter',
-                      onPressed: () {},
+                      onPressed: () {
+                        jobsProvider.search();
+                        Navigator.pop(context);
+                      },
                       backgroundColor: AppColor.indigo,
                       textColor: Colors.white,
                       width: double.infinity,
@@ -181,29 +184,15 @@ class _HomeScreenState extends State<HomeScreen> {
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: 4,
+                itemCount: jobsProvider.jobs.length,
                 itemBuilder: (context, index) {
-                  final job = JobModel(
-                    id: '1',
-                    enabled: true,
-                    title: 'Software Developer',
-                    description: 'We are looking for a software developer',
-                    location: 'Cairo, Egypt',
-                    salary: 5000,
-                    category: 'Software Development',
-                    jobType: 'Remotly',
-                    deadline: DateTime.now().add(Duration(days: 7)),
-                    company: 'Google',
-                    createdAt: DateTime.now(),
-                    numberOfApplicants: 0,
-                  );
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       SizedBox(
                         height: 16 * SizeConfig.verticalBlock,
                       ),
-                      jobCard(job, isApplied: true),
+                      jobCard(jobsProvider.jobs[index], isApplied: true),
                       SizedBox(
                         height: 16 * SizeConfig.verticalBlock,
                       ),
