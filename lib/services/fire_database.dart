@@ -6,7 +6,7 @@ class FireDatabase {
   static final _firebaseFirestore = FirebaseFirestore.instance;
   static Future<void> addData({
     required String collection,
-    String ?doc,
+    String? doc,
     required Map<String, dynamic> data,
   }) async {
     try {
@@ -37,12 +37,48 @@ class FireDatabase {
     }
   }
 
-  static Future<dynamic> getData(String collection) async {
+  static Future<dynamic> getData(
+    String collection, {
+    String? orderBy,
+    bool descending = false,
+    int? limit,
+    dynamic startAfterValue, // for next page
+    dynamic endBeforeValue, // for previous page
+    bool isPrevious = false, // flag to detect if it is a previous page query
+  }) async {
     try {
-      final data = await _firebaseFirestore.collection(collection).get();
-      return data.docs;
+      Query<Map<String, dynamic>> query =
+          _firebaseFirestore.collection(collection);
+
+      // Apply ordering
+      if (orderBy != null) {
+        query = query.orderBy(orderBy, descending: descending);
+      }
+
+      // For next page
+      if (startAfterValue != null && !isPrevious) {
+        query = query.startAfter([startAfterValue]);
+      }
+
+      // For previous page (reverse the order)
+      if (endBeforeValue != null && isPrevious) {
+        query = query.endBefore([endBeforeValue]);
+      }
+
+      // Apply limit
+      if (limit != null) {
+        if (isPrevious) {
+          query = query.limitToLast(limit);
+        } else {
+          query = query.limit(limit);
+        }
+      }
+
+      // Get results
+      return await query.get();
     } catch (e) {
       print(e);
+      return null;
     }
   }
 

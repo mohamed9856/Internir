@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:internir/components/custom_button.dart';
-import 'package:internir/models/job_model.dart';
-import 'package:internir/utils/app_color.dart';
-import 'package:internir/utils/size_config.dart';
+import 'custom_button.dart';
+import '../models/job_model.dart';
+import '../utils/app_color.dart';
+import '../utils/size_config.dart';
 
 Widget jobCard(JobModel job, {bool isApplied = false}) {
   return Container(

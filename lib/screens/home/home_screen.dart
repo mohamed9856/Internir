@@ -1,15 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:internir/components/custom_button.dart';
-import 'package:internir/components/custom_text_form_field.dart';
-import 'package:internir/components/job_card.dart';
-import 'package:internir/constants/constants.dart';
-import 'package:internir/models/job_model.dart';
-import 'package:internir/providers/jobs_provider.dart';
-import 'package:internir/utils/app_assets.dart';
-import 'package:internir/utils/app_color.dart';
-import 'package:internir/utils/size_config.dart';
+import '../../components/custom_button.dart';
+import '../../components/custom_text_form_field.dart';
+import '../../components/job_card.dart';
+import '../../constants/constants.dart';
+import '../../models/job_model.dart';
+import '../../providers/jobs_provider.dart';
+import '../../utils/app_assets.dart';
+import '../../utils/app_color.dart';
+import '../../utils/size_config.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -181,25 +181,79 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               ),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: jobsProvider.jobs.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(
-                        height: 16 * SizeConfig.verticalBlock,
-                      ),
-                      jobCard(jobsProvider.jobs[index], isApplied: true),
-                      SizedBox(
-                        height: 16 * SizeConfig.verticalBlock,
-                      ),
-                    ],
-                  );
-                },
+              SizedBox(
+                height: 16 * SizeConfig.verticalBlock,
               ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomButton(
+                    text: "Previous",
+                    backgroundColor: AppColor.mainGreen,
+                    isDisable: jobsProvider.page == 0,
+                    textColor: AppColor.white,
+                    fontSize: 14 * SizeConfig.textRatio,
+                    height: 40 * SizeConfig.verticalBlock,
+                    width: 100 * SizeConfig.horizontalBlock,
+                    onPressed: () {
+                      if (!jobsProvider.loading) jobsProvider.previousPage();
+                    },
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8 * SizeConfig.horizontalBlock,
+                      vertical: 8 * SizeConfig.verticalBlock,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 16 * SizeConfig.horizontalBlock,
+                  ),
+                  CustomButton(
+                    text: "Next",
+                    backgroundColor: AppColor.mainGreen,
+                    textColor: AppColor.white,
+                    fontSize: 14 * SizeConfig.textRatio,
+                    height: 40 * SizeConfig.verticalBlock,
+                    width: 100 * SizeConfig.horizontalBlock,
+                    isDisable: !jobsProvider.hasMore,
+                    onPressed: () {
+                      if (!jobsProvider.loading) jobsProvider.nextPage();
+                    },
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8 * SizeConfig.horizontalBlock,
+                      vertical: 8 * SizeConfig.verticalBlock,
+                    ),
+                  ),
+                ],
+              ),
+              (jobsProvider.loading)
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 16 * SizeConfig.verticalBlock,
+                      ),
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(AppColor.mainBlue),
+                      ),
+                    )
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: jobsProvider.jobs.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(
+                              height: 16 * SizeConfig.verticalBlock,
+                            ),
+                            jobCard(jobsProvider.jobs[index], isApplied: true),
+                            SizedBox(
+                              height: 16 * SizeConfig.verticalBlock,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
             ],
           ),
         ),

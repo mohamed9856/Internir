@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:internir/screens/layout/home_layout.dart';
-import 'package:internir/screens/splash/splash_screen.dart';
+import '../screens/layout/home_layout.dart';
+import '../screens/splash/splash_screen.dart';
 
 class AppRoute {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
