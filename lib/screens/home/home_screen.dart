@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:internir/components/custom_button.dart';
 import 'package:internir/components/custom_text_form_field.dart';
 import 'package:internir/components/job_card.dart';
+import 'package:internir/constants/constants.dart';
 import 'package:internir/models/job_model.dart';
 import 'package:internir/providers/jobs_provider.dart';
 import 'package:internir/utils/app_assets.dart';
@@ -162,24 +163,21 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 height: 8 * SizeConfig.verticalBlock,
               ),
-
-              // TODO: categories
-              // SizedBox(
-              //   height: 40 * SizeConfig.verticalBlock,
-              //   child: ListView.separated(
-              //     scrollDirection: Axis.horizontal,
-              //     itemCount: jobsProvider.categories.length,
-              //     itemBuilder: (context, index) {
-              //       final category = jobsProvider.categories[index];
-              //       return categoryCard(category.label);
-              //     },
-              //     separatorBuilder: (context, index) {
-              //       return SizedBox(
-              //         width: 16 * SizeConfig.horizontalBlock,
-              //       );
-              //     },
-              //   ),
-              // ),
+              SizedBox(
+                height: 40 * SizeConfig.verticalBlock,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 20,
+                  itemBuilder: (context, index) {
+                    return categoryCard(jobCategories[index]);
+                  },
+                  separatorBuilder: (context, index) {
+                    return SizedBox(
+                      width: 16 * SizeConfig.horizontalBlock,
+                    );
+                  },
+                ),
+              ),
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
