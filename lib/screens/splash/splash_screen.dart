@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:internir/utils/app_color.dart';
 import 'package:internir/utils/size_config.dart';
 import 'package:internir/screens/layout/home_layout.dart';
+import 'package:internir/screens/onboarding/onboarding_screen.dart';
+import 'package:internir/utils/app_assets.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -25,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     await Future.delayed(const Duration(seconds: 3));
 
-    Navigator.pushReplacementNamed(context, HomeLayout.routeName);
+    Navigator.pushReplacementNamed(context, OnBoardingScreen.routeName);
   }
 
   @override
@@ -37,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/Internir.jpg',
+              AppAssets.logo,
               width: 350 * SizeConfig.horizontalBlock,
               height: 350 * SizeConfig.verticalBlock,
             ),
