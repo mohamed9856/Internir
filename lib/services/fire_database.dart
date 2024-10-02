@@ -4,10 +4,17 @@ class FireDatabase {
   FireDatabase._();
 
   static final _firebaseFirestore = FirebaseFirestore.instance;
-  static Future<void> addData(
-      String collection, Map<String, dynamic> data) async {
+  static Future<void> addData({
+    required String collection,
+    String ?doc,
+    required Map<String, dynamic> data,
+  }) async {
     try {
-      await _firebaseFirestore.collection(collection).add(data);
+      if (doc != null) {
+        await _firebaseFirestore.collection(collection).doc(doc).set(data);
+      } else {
+        await _firebaseFirestore.collection(collection).add(data);
+      }
     } catch (e) {
       print(e);
     }

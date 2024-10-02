@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:internir/providers/index_provider.dart';
 import 'package:internir/providers/jobs_provider.dart';
 import 'package:internir/screens/splash/splash_screen.dart';
+import 'package:internir/services/fire_database.dart';
 import 'package:internir/utils/routes.dart';
 import 'package:internir/utils/size_config.dart';
 import 'package:firebase_core/firebase_core.dart';

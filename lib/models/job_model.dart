@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class JobModel {
   String id;
   String title;
@@ -10,7 +12,6 @@ class JobModel {
   double? salary;
   String? category;
   String? jobType;
-  DateTime? deadline;
 
   JobModel({
     required this.id,
@@ -20,7 +21,6 @@ class JobModel {
     this.salary,
     this.category,
     this.jobType,
-    this.deadline,
     required this.company,
     required this.createdAt,
     required this.numberOfApplicants,
@@ -35,11 +35,10 @@ class JobModel {
       location: json['location'],
       salary: json['salary'],
       category: json['category'],
-      jobType: json['jobType'],
-      deadline: DateTime.parse(json['deadline']),
+      jobType: json['job type'],
       company: json['company'],
-      createdAt: DateTime.parse(json['createdAt']),
-      numberOfApplicants: json['numberOfApplicants'],
+      createdAt: json['createdAt'].toDate().toLocal(),
+      numberOfApplicants: json['number of applicants'],
       enabled: json['enabled'],
     );
   }
@@ -53,7 +52,6 @@ class JobModel {
       'salary': salary,
       'category': category,
       'jobType': jobType,
-      'deadline': deadline.toString(),
       'company': company,
       'createdAt': createdAt.toString(),
       'numberOfApplicants': numberOfApplicants,
@@ -63,6 +61,6 @@ class JobModel {
 
   @override
   String toString() {
-    return 'JobModel{id: $id, title: $title, description: $description, location: $location, salary: $salary, category: $category, jobType: $jobType, deadline: $deadline, company: $company, createdAt: $createdAt, numberOfApplicants: $numberOfApplicants, enabled: $enabled}';
+    return 'JobModel{id: $id, title: $title, description: $description, location: $location, salary: $salary, category: $category, jobType: $jobType, company: $company, createdAt: $createdAt, numberOfApplicants: $numberOfApplicants, enabled: $enabled}';
   }
 }

@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       'Filter jobs',
                       style: TextStyle(
                         color: AppColor.mainBlue,
-                        fontFamily: 'Greta Arabic',
+                        fontFamily: 'NotoSans',
                         fontSize: 20 * SizeConfig.textRatio,
                       ),
                     ),
@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             "Job, Company, Title",
                             style: TextStyle(
-                              fontFamily: 'Greta Arabic',
+                              fontFamily: 'NotoSans',
                               fontSize: 16 * SizeConfig.textRatio,
                               fontWeight: FontWeight.w500,
                             ),
@@ -80,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             "Location",
                             style: TextStyle(
-                              fontFamily: 'Greta Arabic',
+                              fontFamily: 'NotoSans',
                               fontSize: 16 * SizeConfig.textRatio,
                               fontWeight: FontWeight.w500,
                             ),
@@ -145,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Text(
                       "Categories",
                       style: TextStyle(
-                        fontFamily: 'Greta Arabic',
+                        fontFamily: 'NotoSans',
                         fontSize: 20 * SizeConfig.textRatio,
                         fontWeight: FontWeight.w500,
                       ),
@@ -156,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Text(
                       "See all",
                       style: TextStyle(
-                          fontFamily: 'Greta Arabic',
+                          fontFamily: 'NotoSans',
                           fontSize: 16 * SizeConfig.textRatio,
                           color: AppColor.lightBlue2),
                     ),
@@ -224,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Text(
           category,
           style: TextStyle(
-            fontFamily: 'Greta Arabic',
+            fontFamily: 'NotoSans',
             fontSize: 16 * SizeConfig.textRatio,
             color: AppColor.mainBlue,
             fontWeight: FontWeight.w600,

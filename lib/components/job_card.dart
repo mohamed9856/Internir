@@ -124,18 +124,35 @@ Widget jobCard(JobModel job, {bool isApplied = false}) {
                         color: AppColor.grey1,
                       ),
                     ),
-                  // calc time from create at to now
-                  Text(
-                    "${job.createdAt.year}-${job.createdAt.month}-${job.createdAt.day}",
-                    softWrap: true,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 12 * SizeConfig.textRatio,
-                      fontWeight: FontWeight.w500,
-                      color: AppColor.grey1,
+
+                    SizedBox(
+                      height: 4 * SizeConfig.verticalBlock,
                     ),
-                  ),
+                  if (DateTime.now().difference(job.createdAt).inDays < 2)
+                    Text(
+                      "Posted ${DateTime.now().difference(job.createdAt).inHours} Hours Ago",
+                      softWrap: true,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12 * SizeConfig.textRatio,
+                        fontWeight: FontWeight.w500,
+                        color: AppColor.grey1,
+                      ),
+                    ),
+
+                  if (DateTime.now().difference(job.createdAt).inDays >= 2)
+                    Text(
+                      "Posted ${DateTime.now().difference(job.createdAt).inDays} Days Ago",
+                      softWrap: true,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12 * SizeConfig.textRatio,
+                        fontWeight: FontWeight.w500,
+                        color: AppColor.grey1,
+                      ),
+                    ),
                 ],
               ),
             ),

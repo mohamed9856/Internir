@@ -22,7 +22,7 @@ Widget customTextFormField({
   return TextFormField(
     style: TextStyle(
       fontSize: 16 * SizeConfig.textRatio,
-      fontFamily: 'Greta Arabic',
+      fontFamily: 'NotoSans',
     ),
     decoration: InputDecoration(
       hintText: hintText,
@@ -36,7 +36,7 @@ Widget customTextFormField({
       prefixIcon: prefixIcon,
       errorStyle: TextStyle(
         fontSize: 12 * SizeConfig.textRatio,
-        fontFamily: 'Greta Arabic',
+        fontFamily: 'NotoSans',
         color: AppColor.red,
       ),
       filled: true,
