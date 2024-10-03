@@ -43,8 +43,11 @@ class FireDatabase {
     String collection, {
     String? orderBy,
     bool descending = false,
-    int? limit,
+    // List of filters
+    // example: [['field', 'value', OperationFilter.isEqualTo.name],]
     List<List<dynamic>>? filters,
+    // for pagination 
+    int? limit,
     dynamic startAfterValue,
     dynamic endBeforeValue,
     bool isPrevious = false,

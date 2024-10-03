@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:internir/utils/utils.dart';
 import '../models/job_model.dart';
 import '../services/fire_database.dart';
 
 class JobsProvider extends ChangeNotifier {
-  TextEditingController whatController = TextEditingController();
-  TextEditingController whereController = TextEditingController();
   int page = 0;
   int limit = 25;
   bool hasMore = true;
@@ -27,28 +24,6 @@ class JobsProvider extends ChangeNotifier {
       startAfterValue: isNext ? lastDocument['createdAt'] : null,
       endBeforeValue: isPrevious ? firstDocument['createdAt'] : null,
       isPrevious: isPrevious,
-      filters: [
-        [
-          'title',
-          whatController.text,
-          OperationFilter.isGreaterThanOrEqualTo.name
-        ],  
-        [
-          'title',
-          "${whatController.text}\uf8ff",
-          OperationFilter.isLessThanOrEqualTo.name
-        ],
-        [
-          'location',
-          whereController.text,
-          OperationFilter.isGreaterThanOrEqualTo.name
-        ],
-        [
-          'location',
-          "${whereController.text}\uf8ff",
-          OperationFilter.isLessThanOrEqualTo.name
-        ],
-      ],
     );
   }
 
@@ -160,9 +135,5 @@ class JobsProvider extends ChangeNotifier {
     firstDocument = null;
     lastDocument = null;
     await fetchJobs();
-  }
-
-  void search() {
-    refreshData();
   }
 }
