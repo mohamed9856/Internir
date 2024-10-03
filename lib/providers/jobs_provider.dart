@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internir/utils/utils.dart';
 import '../models/job_model.dart';
 import '../services/fire_database.dart';
 
@@ -26,6 +27,28 @@ class JobsProvider extends ChangeNotifier {
       startAfterValue: isNext ? lastDocument['createdAt'] : null,
       endBeforeValue: isPrevious ? firstDocument['createdAt'] : null,
       isPrevious: isPrevious,
+      filters: [
+        [
+          'title',
+          whatController.text,
+          OperationFilter.isGreaterThanOrEqualTo.name
+        ],  
+        [
+          'title',
+          "${whatController.text}\uf8ff",
+          OperationFilter.isLessThanOrEqualTo.name
+        ],
+        [
+          'location',
+          whereController.text,
+          OperationFilter.isGreaterThanOrEqualTo.name
+        ],
+        [
+          'location',
+          "${whereController.text}\uf8ff",
+          OperationFilter.isLessThanOrEqualTo.name
+        ],
+      ],
     );
   }
 
@@ -60,7 +83,7 @@ class JobsProvider extends ChangeNotifier {
 
       checkHasMore(data);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       setLoading(false);
     }
@@ -93,7 +116,7 @@ class JobsProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       setLoading(false);
     }
@@ -126,34 +149,20 @@ class JobsProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       setLoading(false);
     }
   }
 
   Future<void> refreshData() async {
-    page = 1;
+    page = 0;
     firstDocument = null;
     lastDocument = null;
     await fetchJobs();
   }
 
   void search() {
-    jobs = allJobs.where((job) {
-      return (job.title
-                  .toLowerCase()
-                  .contains(whatController.text.toLowerCase()) ||
-              job.description
-                  .toLowerCase()
-                  .contains(whatController.text.toLowerCase()) ||
-              job.company
-                  .toLowerCase()
-                  .contains(whatController.text.toLowerCase())) &&
-          job.location
-              .toLowerCase()
-              .contains(whereController.text.toLowerCase());
-    }).toList();
-    notifyListeners();
+    refreshData();
   }
 }

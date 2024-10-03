@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:internir/utils/utils.dart';
 
 class FireDatabase {
   FireDatabase._();
@@ -16,7 +18,7 @@ class FireDatabase {
         await _firebaseFirestore.collection(collection).add(data);
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -25,7 +27,7 @@ class FireDatabase {
     try {
       await _firebaseFirestore.collection(collection).doc(id).update(data);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -33,7 +35,7 @@ class FireDatabase {
     try {
       await _firebaseFirestore.collection(collection).doc(id).delete();
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -42,9 +44,10 @@ class FireDatabase {
     String? orderBy,
     bool descending = false,
     int? limit,
-    dynamic startAfterValue, // for next page
-    dynamic endBeforeValue, // for previous page
-    bool isPrevious = false, // flag to detect if it is a previous page query
+    List<List<dynamic>>? filters,
+    dynamic startAfterValue,
+    dynamic endBeforeValue,
+    bool isPrevious = false,
   }) async {
     try {
       Query<Map<String, dynamic>> query =
@@ -53,6 +56,44 @@ class FireDatabase {
       // Apply ordering
       if (orderBy != null) {
         query = query.orderBy(orderBy, descending: descending);
+      }
+
+      // Apply filters
+      if (filters != null) {
+        for (final filter in filters) {
+          query = query.where(
+            filter[0],
+            isEqualTo:
+                filter[2] == OperationFilter.isEqualTo.name ? filter[1] : null,
+            isLessThan:
+                filter[2] == OperationFilter.isLessThan.name ? filter[1] : null,
+            isLessThanOrEqualTo:
+                filter[2] == OperationFilter.isLessThanOrEqualTo.name
+                    ? filter[1]
+                    : null,
+            isGreaterThan: filter[2] == OperationFilter.isGreaterThan.name
+                ? filter[1]
+                : null,
+            isGreaterThanOrEqualTo:
+                filter[2] == OperationFilter.isGreaterThanOrEqualTo.name
+                    ? filter[1]
+                    : null,
+            whereIn:
+                filter[2] == OperationFilter.whereIn.name ? filter[1] : null,
+            arrayContains: filter[2] == OperationFilter.arrayContains.name
+                ? filter[1]
+                : null,
+            arrayContainsAny: filter[2] == OperationFilter.arrayContainsAny.name
+                ? filter[1]
+                : null,
+            isNull: filter[2] == OperationFilter.isNull.name ? filter[1] : null,
+            isNotEqualTo: filter[2] == OperationFilter.isNotEqualTo.name
+                ? filter[1]
+                : null,
+            whereNotIn:
+                filter[2] == OperationFilter.whereNotIn.name ? filter[1] : null,
+          );
+        }
       }
 
       // For next page
@@ -77,7 +118,8 @@ class FireDatabase {
       // Get results
       return await query.get();
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
+
       return null;
     }
   }
@@ -88,7 +130,7 @@ class FireDatabase {
           await _firebaseFirestore.collection(collection).doc(id).get();
       return data.data();
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -105,7 +147,7 @@ class FireDatabase {
     try {
       await _firebaseFirestore.collection(collection).doc(id).set(data);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 }

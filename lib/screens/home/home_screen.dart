@@ -5,7 +5,6 @@ import '../../components/custom_button.dart';
 import '../../components/custom_text_form_field.dart';
 import '../../components/job_card.dart';
 import '../../constants/constants.dart';
-import '../../models/job_model.dart';
 import '../../providers/jobs_provider.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/app_color.dart';
@@ -61,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            "Job, Company, Title",
+                            "Title",
                             style: TextStyle(
                               fontFamily: 'NotoSans',
                               fontSize: 16 * SizeConfig.textRatio,
