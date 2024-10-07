@@ -59,6 +59,8 @@ class JobsProvider extends ChangeNotifier {
       checkHasMore(data);
     } catch (e) {
       debugPrint(e.toString());
+      hasMore = false;
+      notifyListeners();
     } finally {
       setLoading(false);
     }

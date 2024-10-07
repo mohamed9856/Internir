@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     scrollDirection: Axis.horizontal,
                     itemCount: 20,
                     itemBuilder: (context, index) {
-                      return categoryCard(jobCategories[index]);
+                      return categoryCard(listCategories[index]);
                     },
                     separatorBuilder: (context, index) {
                       return SizedBox(
@@ -160,7 +160,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               SizedBox(
                                 height: 16 * SizeConfig.verticalBlock,
                               ),
-                              jobCard(jobsProvider.jobs[index], isApplied: true),
+                              jobCard(jobsProvider.jobs[index],
+                                  isApplied: true),
                               SizedBox(
                                 height: 16 * SizeConfig.verticalBlock,
                               ),

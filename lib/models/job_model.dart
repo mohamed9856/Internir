@@ -31,7 +31,7 @@ class JobModel {
       title: json['title'],
       description: json['description'],
       location: json['location'],
-      salary: json['salary'],
+      salary: json['salary'] * 1.0,
       category: json['category'],
       jobType: json['job type'],
       company: json['company'],
