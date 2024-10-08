@@ -1,6 +1,16 @@
-class AdzunaModel {
+import 'package:hive/hive.dart';
+
+part 'adzuna_model.g.dart';
+
+@HiveType(typeId: 0)
+class AdzunaModel extends HiveObject {
+  @HiveField(0)
   double mean;
+
+  @HiveField(1)
   List<Results> results;
+
+  @HiveField(2)
   int count;
 
   AdzunaModel({
@@ -27,22 +37,54 @@ class AdzunaModel {
   }
 }
 
-class Results {
+@HiveType(typeId: 1)
+class Results extends HiveObject {
+  @HiveField(0)
   Category category;
+
+  @HiveField(1)
   String id;
+
+  @HiveField(2)
   Location location;
+
+  @HiveField(3)
   double? longitude;
+
+  @HiveField(4)
   Company company;
+
+  @HiveField(5)
   String redirectUrl;
+
+  @HiveField(6)
   double? latitude;
+
+  @HiveField(7)
   double salaryMin;
+
+  @HiveField(8)
   String description;
+
+  @HiveField(9)
   String adref;
+
+  @HiveField(10)
   double salaryMax;
+
+  @HiveField(11)
   String title;
+
+  @HiveField(12)
   String created;
+
+  @HiveField(13)
   String salaryIsPredicted;
+
+  @HiveField(14)
   String? contractTime;
+
+  @HiveField(15)
   String? contractType;
 
   Results({
@@ -107,8 +149,12 @@ class Results {
   }
 }
 
-class Category {
+@HiveType(typeId: 2)
+class Category extends HiveObject {
+  @HiveField(0)
   String tag;
+
+  @HiveField(1)
   String label;
 
   Category({
@@ -131,8 +177,12 @@ class Category {
   }
 }
 
-class Location {
+@HiveType(typeId: 3)
+class Location extends HiveObject {
+  @HiveField(0)
   List<String> area;
+
+  @HiveField(1)
   String displayName;
 
   Location({
@@ -155,7 +205,9 @@ class Location {
   }
 }
 
-class Company {
+@HiveType(typeId: 4)
+class Company extends HiveObject {
+  @HiveField(0)
   String displayName;
 
   Company({required this.displayName});
