@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:internir/screens/home/home_screen.dart';
 import 'package:internir/utils/routes.dart';
 import 'package:internir/utils/size_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:internir/screens/home/OneCategory.dart';
 import 'utils/app_theme.dart';
 
 void main() async {
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: themeData,
       onGenerateRoute: AppRoute.onGenerateRoute,
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: OneCategory(),
     );
   }
 }
