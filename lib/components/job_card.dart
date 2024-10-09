@@ -125,7 +125,7 @@ Widget jobCard(Results job) {
               text: "Apply",
               width: 100 * SizeConfig.horizontalBlock,
               onPressed: () {},
-              backgroundColor: AppColor.lightblue,
+              backgroundColor: AppColor.lightBlue,
               textColor: Colors.white,
               padding: EdgeInsets.symmetric(
                 horizontal: 16 * SizeConfig.horizontalBlock,

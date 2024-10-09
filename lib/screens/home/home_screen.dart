@@ -21,10 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      _fetchJobs();
-      Provider.of<JobsProvider>(context, listen: false).fetchCategories();
-    });
   }
 
   Future<void> _fetchJobs() async {
@@ -196,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(
                           fontFamily: 'Greta Arabic',
                           fontSize: 16 * SizeConfig.textRatio,
-                          color: AppColor.lightblue2),
+                          color: AppColor.lightBlue2),
                     ),
                   ),
                 ],
@@ -221,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SizedBox(
-                height: 16 * SizeConfig.verticalBlock,
+                height: 32 * SizeConfig.verticalBlock,
               ),
               Row(
                 mainAxisSize: MainAxisSize.max,
@@ -232,12 +228,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     backgroundColor: AppColor.mainGreen,
                     isDisable: jobsProvider.page == 1,
                     textColor: AppColor.white,
+                    height: 40 * SizeConfig.verticalBlock,
+                    width: 100 * SizeConfig.horizontalBlock,
+                    fontSize: 16 * SizeConfig.textRatio,
                     onPressed: () {
                       _previousPage();
                     },
                     padding: EdgeInsets.symmetric(
                       horizontal: 8 * SizeConfig.horizontalBlock,
                       vertical: 8 * SizeConfig.verticalBlock,
+                      
                     ),
                   ),
                   SizedBox(
@@ -246,6 +246,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   CustomButton(
                     text: "Next",
                     backgroundColor: AppColor.mainGreen,
+                    height: 40 * SizeConfig.verticalBlock,
+                    width: 100 * SizeConfig.horizontalBlock,
+                    fontSize: 16 * SizeConfig.textRatio,
                     textColor: AppColor.white,
                     isDisable: !jobsProvider.hasMore,
                     onPressed: () {
