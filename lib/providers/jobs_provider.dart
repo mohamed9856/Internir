@@ -1,52 +1,146 @@
 import 'package:flutter/material.dart';
-import 'package:internir/constants/end_points.dart';
-import 'package:internir/models/adzuna_model.dart';
-import 'package:internir/services/api_client.dart';
+import 'package:internir/utils/utils.dart';
+import '../models/job_model.dart';
+import '../services/fire_database.dart';
 
 class JobsProvider extends ChangeNotifier {
-  List<Results> jobs = [];
-  List<Category> categories = [];
-  int page = 1;
-  String category = "";
+  int page = 0;
+  int limit = 25;
   bool hasMore = true;
+  var lastDocument, firstDocument;
+
+  var allJobs = <JobModel>[];
+  var jobs = <JobModel>[];
   bool loading = false;
+  String category = '';
 
-  TextEditingController whatController = TextEditingController();
-  TextEditingController whereController = TextEditingController();
+  var jobsByCategory = <JobModel>[];
 
-  Future<void> fetchJobs() async {
-    try {
+  Future<dynamic> fetchData({
+    bool isPrevious = false,
+    bool isNext = false,
+  }) async {
+    return await FireDatabase.getData(  
+      'jobs',
+      orderBy: 'createdAt',
+      descending: true,
+      limit: limit,
+      startAfterValue: isNext ? lastDocument['createdAt'] : null,
+      endBeforeValue: isPrevious ? firstDocument['createdAt'] : null,
+      isPrevious: isPrevious,
+      filters: [
+        ['Category', category, OperationFilter.isEqualTo.name],
+      ]
+    );
+  }
+
+  void setLoading(bool value) {
+    loading = value;
+    notifyListeners();
+  }
+
+  void checkHasMore(lastData) {
+    if (lastData.docs.length < limit || lastDocument == null) {
+      hasMore = false;
+    } else {
       hasMore = true;
-      loading = true;
-      notifyListeners();
-      var res = await APIClient.get(
-          "${searchJob.replaceAll('{country}', 'us').replaceAll('{page}', page.toString())}?app_id=${APIClient.appID}&app_key=${APIClient.appKEY}&what=${whatController.text}&where=${whereController.text}&results_per_page=20&category=$category");
-
-      jobs = List<Results>.from(res['results'].map((x) => Results.fromJson(x)));
-      loading = false;
-      if (jobs.length < 20) hasMore = false;
-      notifyListeners();
-    } catch (e) {
-      debugPrint("${e}fetchJobs");
-      loading = false;
-      notifyListeners();
     }
   }
 
-  Future<void> fetchCategories() async {
+  Future<void> fetchJobs() async {
     try {
-      loading = true;
-      notifyListeners();
-      var res = await APIClient.get(
-          "${categoriesJob.replaceAll('{country}', 'us')}?app_id=${APIClient.appID}&app_key=${APIClient.appKEY}");
-      categories =
-          List<Category>.from(res['results'].map((x) => Category.fromJson(x)));
-      loading = false;
-      notifyListeners();
+      setLoading(true);
+      allJobs = [];
+      final data = await fetchData();
+
+      for (final job in data.docs) {
+        allJobs.add(JobModel.fromJson(job.data()));
+      }
+
+      jobs = allJobs;
+      if (data.docs.isNotEmpty) {
+        firstDocument = data.docs.first;
+        lastDocument = data.docs.last;
+      }
+
+      checkHasMore(data);
     } catch (e) {
-      debugPrint("${e}fetchCategories");
-      loading = false;
-      notifyListeners();
+      debugPrint(e.toString());
+    } finally {
+      setLoading(false);
     }
+  }
+
+  Future<void> nextPage() async {
+    try {
+      if (lastDocument != null && hasMore && loading == false) {
+        setLoading(true);
+        final nextPageData = await fetchData(isNext: true);
+
+        if (nextPageData.docs.isNotEmpty) {
+          firstDocument = nextPageData.docs.first;
+          lastDocument = nextPageData.docs.last;
+          page++;
+        } else {
+          hasMore = false;
+          return;
+        }
+
+        allJobs = [];
+
+        for (final job in nextPageData.docs) {
+          allJobs.add(JobModel.fromJson(job.data()));
+        }
+
+        jobs = allJobs;
+
+        checkHasMore(nextPageData);
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  Future<void> previousPage() async {
+    try {
+      if (firstDocument != null && page > 0 && loading == false) {
+        setLoading(true);
+        final previousPageData = await fetchData(isPrevious: true);
+
+        if (previousPageData.docs.isNotEmpty) {
+          firstDocument = previousPageData.docs.first;
+          lastDocument = previousPageData.docs.last;
+          page--;
+        } else {
+          page = 0;
+          return;
+        }
+
+        allJobs = [];
+
+        for (final job in previousPageData.docs) {
+          allJobs.add(JobModel.fromJson(job.data()));
+        }
+
+        jobs = allJobs;
+
+        checkHasMore(previousPageData);
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  Future<void> refreshData() async {
+    page = 0;
+    firstDocument = null;
+    lastDocument = null;
+    await fetchJobs();
   }
 }

@@ -1,10 +1,6 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:internir/components/custom_button.dart';
-import 'package:internir/components/custom_text_form_field.dart';
 import 'package:internir/components/job_card.dart';
 import 'package:internir/providers/jobs_provider.dart';
-import 'package:internir/utils/app_assets.dart';
 import 'package:internir/utils/app_color.dart';
 import 'package:internir/utils/size_config.dart';
 import 'package:provider/provider.dart';
@@ -26,10 +22,7 @@ class _SavedInternshipsState extends State<SavedInternships> {
   }
 
   Future<void> _fetchSavedInternships() async {
-    try {
-      final provider = context.read<JobsProvider>();
-      await provider.fetchJobs();
-    } catch (error) {
+    try {} catch (error) {
       debugPrint(error.toString());
     }
   }
@@ -47,7 +40,7 @@ class _SavedInternshipsState extends State<SavedInternships> {
             color: AppColor.mainBlue,
             fontSize: 30 * SizeConfig.textRatio,
             fontWeight: FontWeight.bold,
-            fontFamily: 'Greta Arabic',
+            fontFamily: 'NotoSans',
           ),
         ),
         backgroundColor: Colors.white,
@@ -63,6 +56,7 @@ class _SavedInternshipsState extends State<SavedInternships> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              /*
               jobsProvider.loading
                   ? const Center(
                 child: Padding(
@@ -97,12 +91,13 @@ class _SavedInternshipsState extends State<SavedInternships> {
                   child: Text(
                     'No saved internships found',
                     style: TextStyle(
-                      fontFamily: 'Greta Arabic',
+                      fontFamily: 'NotoSans',
                       fontSize: 16 * SizeConfig.textRatio,
                     ),
                   ),
                 ),
               ),
+            */
             ],
           ),
         ),

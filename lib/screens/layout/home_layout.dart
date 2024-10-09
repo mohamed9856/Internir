@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:internir/providers/index_provider.dart';
-import 'package:internir/screens/home/home_screen.dart';
-import 'package:internir/screens/saved/saved_internships.dart';
-import 'package:internir/utils/app_assets.dart';
-import 'package:internir/utils/app_color.dart';
+import '../../providers/index_provider.dart';
+import '../home/home_screen.dart';
+import '../saved/saved_internships.dart';
+import '../../utils/app_assets.dart';
+import '../../utils/app_color.dart';
 import 'package:provider/provider.dart';
 
 class HomeLayout extends StatefulWidget {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internir/components/job_card.dart';
+import 'package:internir/constants/constants.dart';
 import 'package:internir/providers/jobs_provider.dart';
 import 'package:provider/provider.dart'; // Ensure you are using the provider package
 
@@ -16,18 +17,25 @@ class _OneCategoryState extends State<OneCategory> {
   @override
   void initState() {
     super.initState();
+
     _fetchJobsForCategory(); // Fetch jobs for the selected category
   }
 
   Future<void> _fetchJobsForCategory() async {
     // Fetch jobs for the selected category
     final jobsProvider = Provider.of<JobsProvider>(context, listen: false);
-    jobsProvider.category = widget.categoryName; // Set the category name
-    await jobsProvider.fetchJobs(); // Fetch jobs based on the category
+    // jobsProvider.category = widget.categoryName; // Set the category name
+    await jobsProvider.fetchData(); // Fetch jobs based on the category
   }
 
   @override
   Widget build(BuildContext context) {
+    var jobProvider = Provider.of<JobsProvider>(context);
+
+    if (jobProvider.jobsByCategory.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -55,13 +63,19 @@ class _OneCategoryState extends State<OneCategory> {
             }
 
             if (jobsProvider.jobs.isEmpty) {
-              return const Center(child: Text('No jobs found in this category.'));
+              return const Center(
+                  child: Text('No jobs found in this category.'));
             }
 
             return ListView.builder(
               itemCount: jobsProvider.jobs.length, // Number of jobs
               itemBuilder: (context, index) {
-                return jobCard(jobsProvider.jobs[index]); // Display the job card
+                return InkWell(
+                  onTap: () {
+                    jobsProvider.category = jobCategories[index];
+                  },
+                  child: Text(jobCategories[index]),
+                ); // Display the job card
               },
             );
           },
