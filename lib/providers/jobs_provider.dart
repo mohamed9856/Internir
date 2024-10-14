@@ -17,15 +17,16 @@ class JobsProvider extends ChangeNotifier {
     bool isPrevious = false,
     bool isNext = false,
   }) async {
-    return await FireDatabase.getData(
-      'jobs',
-      orderBy: 'createdAt',
-      descending: true,
-      limit: limit,
-      startAfterValue: isNext ? lastDocument['createdAt'] : null,
-      endBeforeValue: isPrevious ? firstDocument['createdAt'] : null,
-      isPrevious: isPrevious,
-    );
+    return await FireDatabase.getData('jobs',
+        orderBy: 'createdAt',
+        descending: true,
+        limit: limit,
+        startAfterValue: isNext ? lastDocument['createdAt'] : null,
+        endBeforeValue: isPrevious ? firstDocument['createdAt'] : null,
+        isPrevious: isPrevious,
+        filters: [
+          ['enabled', [true], OperationFilter.whereIn.name],
+        ]);
   }
 
   void setLoading(bool value) {

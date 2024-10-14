@@ -41,7 +41,6 @@ class FireDatabase {
     }
   }
 
-
   static Future<dynamic> getData(
     String collection, {
     String? orderBy,
@@ -63,9 +62,6 @@ class FireDatabase {
       if (orderBy != null) {
         query = query.orderBy(orderBy, descending: descending);
       }
-
-      // Apply filters
-      query = query.where('enabled', isEqualTo: true); // why not work ?
 
       if (filters != null) {
         for (final filter in filters) {
@@ -127,7 +123,6 @@ class FireDatabase {
       return await query.get();
     } catch (e) {
       debugPrint(e.toString());
-
       return null;
     }
   }
