@@ -6,7 +6,7 @@ class FireDatabase {
   FireDatabase._();
 
   static final _firebaseFirestore = FirebaseFirestore.instance;
-  static Future<void> addData({
+  static Future<DocumentReference<Map<String, dynamic>>?> addData({
     required String collection,
     String? doc,
     required Map<String, dynamic> data,
@@ -15,11 +15,13 @@ class FireDatabase {
       if (doc != null) {
         await _firebaseFirestore.collection(collection).doc(doc).set(data);
       } else {
-        await _firebaseFirestore.collection(collection).add(data);
+        // add data with auto generated id
+        return await _firebaseFirestore.collection(collection).add(data);
       }
     } catch (e) {
       debugPrint(e.toString());
     }
+    return null;
   }
 
   static Future<void> updateData(
@@ -39,6 +41,7 @@ class FireDatabase {
     }
   }
 
+
   static Future<dynamic> getData(
     String collection, {
     String? orderBy,
@@ -46,7 +49,7 @@ class FireDatabase {
     // List of filters
     // example: [['field', 'value', OperationFilter.isEqualTo.name],]
     List<List<dynamic>>? filters,
-    // for pagination 
+    // for pagination
     int? limit,
     dynamic startAfterValue,
     dynamic endBeforeValue,
@@ -62,6 +65,8 @@ class FireDatabase {
       }
 
       // Apply filters
+      query = query.where('enabled', isEqualTo: true); // why not work ?
+
       if (filters != null) {
         for (final filter in filters) {
           query = query.where(

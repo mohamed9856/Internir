@@ -1,9 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill/quill_delta.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:internir/components/custom_button.dart';
 import 'package:internir/components/custom_text_form_field.dart';
 import 'package:internir/constants/constants.dart';
-import 'package:internir/constants/end_points.dart';
+import 'package:internir/models/job_model.dart';
+import 'package:internir/providers/Admin/company_provider.dart';
 import 'package:internir/utils/size_config.dart';
+import 'package:internir/utils/utils.dart';
 import '../../providers/index_provider.dart';
 import '../home/home_screen.dart';
 import '../saved/saved_internships.dart';
@@ -28,6 +35,13 @@ class _HomeLayoutState extends State<HomeLayout> {
   ];
 
   var formKey = GlobalKey<FormState>();
+  QuillController descriptionController = QuillController.basic();
+  TextEditingController titleController = TextEditingController();
+  TextEditingController categoryController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
+  TextEditingController salaryController = TextEditingController();
+  TextEditingController employmentTypeController = TextEditingController();
+  TextEditingController selectedCategory = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +50,7 @@ class _HomeLayoutState extends State<HomeLayout> {
       resizeToAvoidBottomInset: true,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          bool enabled = true;
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -70,7 +85,15 @@ class _HomeLayoutState extends State<HomeLayout> {
                         SizedBox(
                           height: 8 * SizeConfig.verticalBlock,
                         ),
-                        customTextFormField(),
+                        customTextFormField(
+                          controller: titleController,
+                          validator: (p0) {
+                            if (p0!.isEmpty) {
+                              return 'Please enter title';
+                            }
+                            return null;
+                          },
+                        ),
                         SizedBox(
                           height: 20 * SizeConfig.verticalBlock,
                         ),
@@ -115,7 +138,6 @@ class _HomeLayoutState extends State<HomeLayout> {
                         
                         */
                         DropdownMenu<String>(
-                          
                           dropdownMenuEntries: listCategories
                               .map((e) => DropdownMenuEntry(
                                     label: e,
@@ -123,10 +145,10 @@ class _HomeLayoutState extends State<HomeLayout> {
                                   ))
                               .toList(),
                           enableFilter: true,
-
                           menuStyle: const MenuStyle(
                             alignment: Alignment.bottomLeft,
                           ),
+                          controller: selectedCategory,
                           requestFocusOnTap: true,
                           onSelected: (country) {},
                           textStyle: const TextStyle(
@@ -135,6 +157,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                             color: AppColor.black,
                           ),
                           initialSelection: listCategories[0],
+                          enabled: false,
                         ),
                         SizedBox(
                           height: 20 * SizeConfig.verticalBlock,
@@ -150,7 +173,15 @@ class _HomeLayoutState extends State<HomeLayout> {
                         SizedBox(
                           height: 8 * SizeConfig.verticalBlock,
                         ),
-                        customTextFormField(),
+                        customTextFormField(
+                          controller: locationController,
+                          validator: (p0) {
+                            if (p0!.isEmpty) {
+                              return 'Please enter location';
+                            }
+                            return null;
+                          },
+                        ),
                         SizedBox(
                           height: 20 * SizeConfig.verticalBlock,
                         ),
@@ -165,7 +196,19 @@ class _HomeLayoutState extends State<HomeLayout> {
                         SizedBox(
                           height: 8 * SizeConfig.verticalBlock,
                         ),
-                        customTextFormField(),
+                        customTextFormField(
+                          controller: salaryController,
+                          validator: (p0) {
+                            try {
+                              if (p0 != null && p0.isNotEmpty) {
+                                double.parse(p0);
+                              }
+                              return null;
+                            } catch (e) {
+                              return 'Please enter valid number for salary';
+                            }
+                          },
+                        ),
                         SizedBox(
                           height: 20 * SizeConfig.verticalBlock,
                         ),
@@ -180,7 +223,9 @@ class _HomeLayoutState extends State<HomeLayout> {
                         SizedBox(
                           height: 8 * SizeConfig.verticalBlock,
                         ),
-                        customTextFormField(),
+                        customTextFormField(
+                          controller: employmentTypeController,
+                        ),
                         // select dropdown
                         SizedBox(
                           height: 20 * SizeConfig.verticalBlock,
@@ -198,8 +243,100 @@ class _HomeLayoutState extends State<HomeLayout> {
                           height: 8 * SizeConfig.verticalBlock,
                         ),
                         // text editor
-                        customTextFormField(
-                          keyboardType: TextInputType.multiline,
+                        QuillSimpleToolbar(
+                          controller: descriptionController,
+                          configurations:
+                              const QuillSimpleToolbarConfigurations(
+                            showClipboardCopy: false,
+                            showClipboardCut: false,
+                            showClipboardPaste: false,
+                          ),
+                        ),
+                        Container(
+                          height: 250 * SizeConfig.verticalBlock,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16 * SizeConfig.horizontalBlock,
+                            vertical: 12 * SizeConfig.verticalBlock,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColor.lightBlue.withOpacity(.08),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: QuillEditor.basic(
+                            controller: descriptionController,
+                            configurations: const QuillEditorConfigurations(
+                              minHeight: double.infinity,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20 * SizeConfig.verticalBlock,
+                        ),
+                        // checkbox for enabled
+                        Row(
+                          children: [
+                            Text(
+                              "Enabled",
+                              style: TextStyle(
+                                fontFamily: 'NotoSans',
+                                fontSize: 16 * SizeConfig.textRatio,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Spacer(),
+                            Checkbox(
+                              value: enabled,
+                              onChanged: (value) {
+                                setState(() {
+                                  enabled = value!;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 32 * SizeConfig.verticalBlock,
+                        ),
+                        CustomButton(
+                          width: double.infinity,
+                          fontSize: 16 * SizeConfig.textRatio,
+                          backgroundColor: AppColor.mainGreen,
+                          textColor: AppColor.white,
+                          padding: EdgeInsets.symmetric(
+                            vertical: 8 * SizeConfig.verticalBlock,
+                            horizontal: 32 * SizeConfig.horizontalBlock,
+                          ),
+                          text: "Post Job",
+                          onPressed: () {
+
+                            if (formKey.currentState!.validate() &&
+                                listCategories.indexWhere((element) =>
+                                        element == selectedCategory.text) !=
+                                    -1) {
+                              var companyProvider =
+                                  Provider.of<CompanyProvider>(context,
+                                      listen: false);
+
+                              companyProvider.addJob(
+                                title: titleController.text,
+                                description:
+                                    encodeQuillContent(descriptionController),
+                                location: locationController.text,
+                                salary: salaryController.text.isNotEmpty
+                                    ? double.parse(
+                                        salaryController.text,
+                                      )
+                                    : null,
+                                category: selectedCategory.text,
+                                employmentType:
+                                    employmentTypeController.text.isNotEmpty
+                                        ? employmentTypeController.text
+                                        : null,
+                                enabled: enabled,
+                              );
+                              Navigator.pop(context);
+                            }
+                          },
                         ),
                       ],
                     ),

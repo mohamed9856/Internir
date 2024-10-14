@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:internir/providers/Admin/company_provider.dart';
 import 'providers/index_provider.dart';
 import 'providers/jobs_provider.dart';
 import 'screens/splash/splash_screen.dart';
@@ -21,6 +22,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => JobsProvider()),
         ChangeNotifierProvider(create: (_) => IndexProvider()),
+        ChangeNotifierProvider(create: (_) => CompanyProvider()),
+        
       ],
       child: const MyApp(),
     ),
