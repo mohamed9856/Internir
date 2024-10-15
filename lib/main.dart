@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'providers/index_provider.dart';
 import 'providers/jobs_provider.dart';
 import 'screens/splash/splash_screen.dart';
 import 'services/fire_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'utils/routes.dart';
 import 'utils/size_config.dart';
 import 'package:firebase_core/firebase_core.dart';
