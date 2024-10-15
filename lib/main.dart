@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:internir/providers/Admin/company_provider.dart';
 import 'providers/index_provider.dart';
 import 'providers/jobs_provider.dart';
 import 'screens/splash/splash_screen.dart';
-import 'services/fire_database.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'utils/routes.dart';
 import 'utils/size_config.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,6 +20,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => JobsProvider()),
         ChangeNotifierProvider(create: (_) => IndexProvider()),
+        ChangeNotifierProvider(create: (_) => CompanyProvider()),
+        
       ],
       child: const MyApp(),
     ),

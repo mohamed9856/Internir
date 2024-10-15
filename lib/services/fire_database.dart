@@ -42,21 +42,21 @@ class FireDatabase {
   }
 
   static Future<dynamic> getData(
-      String collection, {
-        String? orderBy,
-        bool descending = false,
-        // List of filters
-        // example: [['field', 'value', OperationFilter.isEqualTo.name],]
-        List<List<dynamic>>? filters,
-        // for pagination
-        int? limit,
-        dynamic startAfterValue,
-        dynamic endBeforeValue,
-        bool isPrevious = false,
-      }) async {
+    String collection, {
+    String? orderBy,
+    bool descending = false,
+    // List of filters
+    // example: [['field', 'value', OperationFilter.isEqualTo.name],]
+    List<List<dynamic>>? filters,
+    // for pagination
+    int? limit,
+    dynamic startAfterValue,
+    dynamic endBeforeValue,
+    bool isPrevious = false,
+  }) async {
     try {
       Query<Map<String, dynamic>> query =
-      _firebaseFirestore.collection(collection);
+          _firebaseFirestore.collection(collection);
 
       // Apply ordering
       if (orderBy != null) {
@@ -68,22 +68,22 @@ class FireDatabase {
           query = query.where(
             filter[0],
             isEqualTo:
-            filter[2] == OperationFilter.isEqualTo.name ? filter[1] : null,
+                filter[2] == OperationFilter.isEqualTo.name ? filter[1] : null,
             isLessThan:
-            filter[2] == OperationFilter.isLessThan.name ? filter[1] : null,
+                filter[2] == OperationFilter.isLessThan.name ? filter[1] : null,
             isLessThanOrEqualTo:
-            filter[2] == OperationFilter.isLessThanOrEqualTo.name
-                ? filter[1]
-                : null,
+                filter[2] == OperationFilter.isLessThanOrEqualTo.name
+                    ? filter[1]
+                    : null,
             isGreaterThan: filter[2] == OperationFilter.isGreaterThan.name
                 ? filter[1]
                 : null,
             isGreaterThanOrEqualTo:
-            filter[2] == OperationFilter.isGreaterThanOrEqualTo.name
-                ? filter[1]
-                : null,
+                filter[2] == OperationFilter.isGreaterThanOrEqualTo.name
+                    ? filter[1]
+                    : null,
             whereIn:
-            filter[2] == OperationFilter.whereIn.name ? filter[1] : null,
+                filter[2] == OperationFilter.whereIn.name ? filter[1] : null,
             arrayContains: filter[2] == OperationFilter.arrayContains.name
                 ? filter[1]
                 : null,
@@ -95,7 +95,7 @@ class FireDatabase {
                 ? filter[1]
                 : null,
             whereNotIn:
-            filter[2] == OperationFilter.whereNotIn.name ? filter[1] : null,
+                filter[2] == OperationFilter.whereNotIn.name ? filter[1] : null,
           );
         }
       }
@@ -130,7 +130,7 @@ class FireDatabase {
   static Future<dynamic> getDocument(String collection, String id) async {
     try {
       final data =
-      await _firebaseFirestore.collection(collection).doc(id).get();
+          await _firebaseFirestore.collection(collection).doc(id).get();
       return data.data();
     } catch (e) {
       debugPrint(e.toString());

@@ -13,6 +13,8 @@ Widget customTextFormField({
   bool readOnly = false,
   bool enabled = true,
   bool autofocus = false,
+  int minLines = 1,
+  int maxLines = 1,
   void Function(String)? onChanged,
   void Function()? onTap,
   void Function(String)? onFieldSubmitted,
@@ -24,13 +26,14 @@ Widget customTextFormField({
       fontSize: 16 * SizeConfig.textRatio,
       fontFamily: 'NotoSans',
     ),
+    minLines: minLines,
+    maxLines: maxLines,
     decoration: InputDecoration(
       hintText: hintText,
-      isDense: true, 
-
+      isDense: true,
       contentPadding: EdgeInsets.symmetric(
         horizontal: 16 * SizeConfig.horizontalBlock,
-        vertical: 12 * SizeConfig.verticalBlock,  
+        vertical: 12 * SizeConfig.verticalBlock,
       ),
       suffixIcon: suffixIcon,
       prefixIcon: prefixIcon,
