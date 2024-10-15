@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../utils/app_color.dart';
-import '../utils/size_config.dart';
+import 'package:internir/utils/app_color.dart';
+import 'package:internir/utils/size_config.dart';
 
 Widget customTextFormField({
   String? hintText,
@@ -13,8 +13,6 @@ Widget customTextFormField({
   bool readOnly = false,
   bool enabled = true,
   bool autofocus = false,
-  int minLines = 1,
-  int maxLines = 1,
   void Function(String)? onChanged,
   void Function()? onTap,
   void Function(String)? onFieldSubmitted,
@@ -24,22 +22,21 @@ Widget customTextFormField({
   return TextFormField(
     style: TextStyle(
       fontSize: 16 * SizeConfig.textRatio,
-      fontFamily: 'NotoSans',
+      fontFamily: 'Greta Arabic',
     ),
-    minLines: minLines,
-    maxLines: maxLines,
     decoration: InputDecoration(
       hintText: hintText,
-      isDense: true,
+      isDense: true, 
+
       contentPadding: EdgeInsets.symmetric(
         horizontal: 16 * SizeConfig.horizontalBlock,
-        vertical: 12 * SizeConfig.verticalBlock,
+        vertical: 12 * SizeConfig.verticalBlock,  
       ),
       suffixIcon: suffixIcon,
       prefixIcon: prefixIcon,
       errorStyle: TextStyle(
         fontSize: 12 * SizeConfig.textRatio,
-        fontFamily: 'NotoSans',
+        fontFamily: 'Greta Arabic',
         color: AppColor.red,
       ),
       filled: true,

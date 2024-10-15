@@ -10,6 +10,7 @@ class JobModel {
   double? salary;
   String? category;
   String? jobType;
+  DateTime? deadline;
 
   JobModel({
     required this.id,
@@ -19,6 +20,7 @@ class JobModel {
     this.salary,
     this.category,
     this.jobType,
+    this.deadline,
     required this.company,
     required this.createdAt,
     required this.numberOfApplicants,
@@ -31,12 +33,13 @@ class JobModel {
       title: json['title'],
       description: json['description'],
       location: json['location'],
-      salary: (json['salary'] != null ? json['salary'] * 1.0 : null),
+      salary: json['salary'],
       category: json['category'],
-      jobType: json['job type'],
+      jobType: json['jobType'],
+      deadline: DateTime.parse(json['deadline']),
       company: json['company'],
-      createdAt: json['createdAt'].toDate().toLocal(),
-      numberOfApplicants: json['number of applicants'],
+      createdAt: DateTime.parse(json['createdAt']),
+      numberOfApplicants: json['numberOfApplicants'],
       enabled: json['enabled'],
     );
   }
@@ -49,44 +52,17 @@ class JobModel {
       'location': location,
       'salary': salary,
       'category': category,
-      'job type': jobType,
+      'jobType': jobType,
+      'deadline': deadline.toString(),
       'company': company,
       'createdAt': createdAt.toString(),
-      'number of applicants': numberOfApplicants,
+      'numberOfApplicants': numberOfApplicants,
       'enabled': enabled,
     };
   }
 
-  JobModel copyWith({
-    String? id,
-    String? title,
-    String? description,
-    String? location,
-    double? salary,
-    String? category,
-    String? jobType,
-    String? company,
-    DateTime? createdAt,
-    int? numberOfApplicants,
-    bool? enabled,
-  }) {
-    return JobModel(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      location: location ?? this.location,
-      salary: salary ?? this.salary,
-      category: category ?? this.category,
-      company: company ?? this.company,
-      jobType: jobType ?? this.jobType,
-      createdAt: createdAt ?? this.createdAt,
-      numberOfApplicants: numberOfApplicants ?? this.numberOfApplicants,
-      enabled: enabled ?? this.enabled,
-    );
-  }
-
   @override
   String toString() {
-    return 'JobModel{id: $id, title: $title, description: $description, location: $location, salary: $salary, category: $category, jobType: $jobType, company: $company, createdAt: $createdAt, numberOfApplicants: $numberOfApplicants, enabled: $enabled}';
+    return 'JobModel{id: $id, title: $title, description: $description, location: $location, salary: $salary, category: $category, jobType: $jobType, deadline: $deadline, company: $company, createdAt: $createdAt, numberOfApplicants: $numberOfApplicants, enabled: $enabled}';
   }
 }
