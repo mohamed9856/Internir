@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:internir/providers/jobs_provider.dart';
 import 'package:internir/utils/app_color.dart';
 import 'package:internir/utils/size_config.dart';
 import 'package:internir/screens/layout/home_layout.dart';
-import 'package:provider/provider.dart';
+import 'package:internir/screens/onboarding/onboarding_screen.dart';
+import 'package:internir/utils/app_assets.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -24,13 +24,10 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   futureCall() async {
-    var jobProvider = context.read<JobsProvider>();
-    await jobProvider.fetchJobs();
 
     await Future.delayed(const Duration(seconds: 3));
 
-    Navigator.pushNamedAndRemoveUntil(
-        context, HomeLayout.routeName, (route) => false);
+    Navigator.pushReplacementNamed(context, OnBoardingScreen.routeName);
   }
 
   @override
@@ -42,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/Internir.jpg',
+              AppAssets.logo,
               width: 350 * SizeConfig.horizontalBlock,
               height: 350 * SizeConfig.verticalBlock,
             ),
