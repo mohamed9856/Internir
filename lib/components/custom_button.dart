@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utils/app_color.dart';
+import 'package:internir/utils/app_color.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -13,7 +13,7 @@ class CustomButton extends StatelessWidget {
   final EdgeInsets? padding;
   final FontWeight? fontWeight;
   final double? borderRadius;
-  final bool isDisable;
+  final bool   isDisable;
 
   const CustomButton({
     super.key,
@@ -54,7 +54,6 @@ class CustomButton extends StatelessWidget {
               color: textColor,
               fontSize: fontSize ?? 16,
               fontWeight: fontWeight ?? FontWeight.w500,
-              fontFamily: 'NotoSans',
             ),
           ),
         ),
