@@ -40,7 +40,7 @@ class _SavedInternshipsState extends State<SavedInternships> {
             color: AppColor.mainBlue,
             fontSize: 30 * SizeConfig.textRatio,
             fontWeight: FontWeight.bold,
-            fontFamily: 'Greta Arabic',
+            fontFamily: 'NotoSans',
           ),
         ),
         backgroundColor: Colors.white,
@@ -91,7 +91,7 @@ class _SavedInternshipsState extends State<SavedInternships> {
                   child: Text(
                     'No saved internships found',
                     style: TextStyle(
-                      fontFamily: 'Greta Arabic',
+                      fontFamily: 'NotoSans',
                       fontSize: 16 * SizeConfig.textRatio,
                     ),
                   ),
