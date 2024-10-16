@@ -34,6 +34,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
     descriptionController = QuillController(
       readOnly: true,
       document: decodeQuillContent(widget.job.description),
+      configurations: const QuillControllerConfigurations(),
       selection: const TextSelection.collapsed(offset: 0),
     );
     descriptionController.skipRequestKeyboard = true;
@@ -84,9 +85,9 @@ class _ApplyScreenState extends State<ApplyScreen> {
                       ),
                       SizedBox(height: 4 * SizeConfig.verticalBlock),
                       Text(
-                        'Salary: \$${widget.job.salary?.toString() ?? 'N/A'}',
+                        'Number of applys: ${widget.job.numberOfApplicants}',
                         style: TextStyle(
-                          fontSize: 16 * SizeConfig.textRatio,
+                          fontSize: 14 * SizeConfig.textRatio,
                           fontFamily: 'NotoSans',
                           color: Colors.grey,
                         ),
@@ -96,20 +97,21 @@ class _ApplyScreenState extends State<ApplyScreen> {
                 ),
                 SizedBox(height: 24 * SizeConfig.verticalBlock),
                 _buildSectionTitle('Job Description:'),
-                Container(
-                  height: 250 * SizeConfig.verticalBlock,
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16 * SizeConfig.horizontalBlock,
-                    vertical: 12 * SizeConfig.verticalBlock,
-                  ),
-                  child: QuillEditor.basic(
-                    focusNode: FocusNode(
-                      canRequestFocus: false,
+                IntrinsicHeight(
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16 * SizeConfig.horizontalBlock,
+                      vertical: 12 * SizeConfig.verticalBlock,
                     ),
-                    controller: descriptionController,
-                    configurations: const QuillEditorConfigurations(
-                      minHeight: double.infinity,
+                    child: QuillEditor.basic(
+                      focusNode: FocusNode(
+                        canRequestFocus: false,
+                      ),
+                      controller: descriptionController,
+                      configurations: const QuillEditorConfigurations(
+                        minHeight: double.infinity,
+                      ),
                     ),
                   ),
                 ),
@@ -126,6 +128,28 @@ class _ApplyScreenState extends State<ApplyScreen> {
                         ),
                         child: Text(
                           widget.job.jobType!,
+                          style: TextStyle(
+                            fontSize: 14 * SizeConfig.textRatio,
+                            fontFamily: 'NotoSans',
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16 * SizeConfig.verticalBlock),
+                    ],
+                  ),
+                if (widget.job.salary != null)
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildSectionTitle('Salary'),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 16 * SizeConfig.horizontalBlock,
+                          top: 8 * SizeConfig.verticalBlock,
+                          bottom: 12 * SizeConfig.verticalBlock,
+                        ),
+                        child: Text(
+                          '${widget.job.salary!}\$',
                           style: TextStyle(
                             fontSize: 14 * SizeConfig.textRatio,
                             fontFamily: 'NotoSans',
