@@ -160,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               SizedBox(
                                 height: 16 * SizeConfig.verticalBlock,
                               ),
-                              jobCard(jobsProvider.jobs[index],
+                              jobCard(jobsProvider.jobs[index], context,
                                   isApplied: true),
                               SizedBox(
                                 height: 16 * SizeConfig.verticalBlock,
