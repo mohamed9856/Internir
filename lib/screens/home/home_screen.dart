@@ -31,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AppColor.background,
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(

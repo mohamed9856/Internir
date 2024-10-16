@@ -42,197 +42,200 @@ class _ApplyScreenState extends State<ApplyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: const Image(
-                          image: NetworkImage(
-                            'https://dummyimage.com/300x200/000/fff',
-                          ),
-                          fit: BoxFit.cover,
-                          width: 104,
-                          height: 104,
+    return Scaffold(
+      backgroundColor: AppColor.background,
+      appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: AppColor.background,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: const Image(
+                        image: NetworkImage(
+                          'https://dummyimage.com/300x200/000/fff',
                         ),
+                        fit: BoxFit.cover,
+                        width: 104,
+                        height: 104,
                       ),
-                      SizedBox(height: 16 * SizeConfig.verticalBlock),
-                      Text(
-                        widget.job.title,
-                        style: TextStyle(
-                          fontSize: 24 * SizeConfig.textRatio,
-                          fontFamily: 'NotoSans',
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    SizedBox(height: 16 * SizeConfig.verticalBlock),
+                    Text(
+                      widget.job.title,
+                      style: TextStyle(
+                        fontSize: 24 * SizeConfig.textRatio,
+                        fontFamily: 'NotoSans',
+                        fontWeight: FontWeight.bold,
                       ),
-                      Text(
-                        widget.job.company,
-                        style: TextStyle(
-                          fontSize: 18 * SizeConfig.textRatio,
-                          fontFamily: 'NotoSans',
-                          color: Colors.grey,
-                        ),
+                    ),
+                    Text(
+                      widget.job.company,
+                      style: TextStyle(
+                        fontSize: 18 * SizeConfig.textRatio,
+                        fontFamily: 'NotoSans',
+                        color: Colors.grey,
                       ),
-                      SizedBox(height: 4 * SizeConfig.verticalBlock),
-                      Text(
-                        'Number of applys: ${widget.job.numberOfApplicants}',
+                    ),
+                    SizedBox(height: 4 * SizeConfig.verticalBlock),
+                    Text(
+                      'Number of applys: ${widget.job.numberOfApplicants}',
+                      style: TextStyle(
+                        fontSize: 14 * SizeConfig.textRatio,
+                        fontFamily: 'NotoSans',
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 24 * SizeConfig.verticalBlock),
+              _buildSectionTitle('Job Description:'),
+              IntrinsicHeight(
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16 * SizeConfig.horizontalBlock,
+                    vertical: 12 * SizeConfig.verticalBlock,
+                  ),
+                  child: QuillEditor.basic(
+                    focusNode: FocusNode(
+                      canRequestFocus: false,
+                    ),
+                    controller: descriptionController,
+                    configurations: const QuillEditorConfigurations(
+                      minHeight: double.infinity,
+                    ),
+                  ),
+                ),
+              ),
+              if (widget.job.jobType != null)
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildSectionTitle('Job Type:'),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: 16 * SizeConfig.horizontalBlock,
+                        top: 8 * SizeConfig.verticalBlock,
+                        bottom: 12 * SizeConfig.verticalBlock,
+                      ),
+                      child: Text(
+                        widget.job.jobType!,
                         style: TextStyle(
                           fontSize: 14 * SizeConfig.textRatio,
                           fontFamily: 'NotoSans',
-                          color: Colors.grey,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 24 * SizeConfig.verticalBlock),
-                _buildSectionTitle('Job Description:'),
-                IntrinsicHeight(
-                  child: Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16 * SizeConfig.horizontalBlock,
-                      vertical: 12 * SizeConfig.verticalBlock,
                     ),
-                    child: QuillEditor.basic(
-                      focusNode: FocusNode(
-                        canRequestFocus: false,
-                      ),
-                      controller: descriptionController,
-                      configurations: const QuillEditorConfigurations(
-                        minHeight: double.infinity,
-                      ),
-                    ),
-                  ),
+                    SizedBox(height: 16 * SizeConfig.verticalBlock),
+                  ],
                 ),
-                if (widget.job.jobType != null)
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _buildSectionTitle('Job Type:'),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 16 * SizeConfig.horizontalBlock,
-                          top: 8 * SizeConfig.verticalBlock,
-                          bottom: 12 * SizeConfig.verticalBlock,
-                        ),
-                        child: Text(
-                          widget.job.jobType!,
-                          style: TextStyle(
-                            fontSize: 14 * SizeConfig.textRatio,
-                            fontFamily: 'NotoSans',
-                          ),
+              if (widget.job.salary != null)
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildSectionTitle('Salary'),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: 16 * SizeConfig.horizontalBlock,
+                        top: 8 * SizeConfig.verticalBlock,
+                        bottom: 12 * SizeConfig.verticalBlock,
+                      ),
+                      child: Text(
+                        '${widget.job.salary!}\$',
+                        style: TextStyle(
+                          fontSize: 14 * SizeConfig.textRatio,
+                          fontFamily: 'NotoSans',
                         ),
                       ),
-                      SizedBox(height: 16 * SizeConfig.verticalBlock),
-                    ],
-                  ),
-                if (widget.job.salary != null)
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _buildSectionTitle('Salary'),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 16 * SizeConfig.horizontalBlock,
-                          top: 8 * SizeConfig.verticalBlock,
-                          bottom: 12 * SizeConfig.verticalBlock,
-                        ),
-                        child: Text(
-                          '${widget.job.salary!}\$',
-                          style: TextStyle(
-                            fontSize: 14 * SizeConfig.textRatio,
-                            fontFamily: 'NotoSans',
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 16 * SizeConfig.verticalBlock),
-                    ],
-                  ),
-                _buildSectionTitle('Location:'),
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: 16 * SizeConfig.horizontalBlock,
-                    top: 8 * SizeConfig.verticalBlock,
-                    bottom: 12 * SizeConfig.verticalBlock,
-                  ),
-                  child: Text(
-                    widget.job.location,
-                    style: TextStyle(
-                      fontSize: 14 * SizeConfig.textRatio,
-                      fontFamily: 'NotoSans',
                     ),
+                    SizedBox(height: 16 * SizeConfig.verticalBlock),
+                  ],
+                ),
+              _buildSectionTitle('Location:'),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: 16 * SizeConfig.horizontalBlock,
+                  top: 8 * SizeConfig.verticalBlock,
+                  bottom: 12 * SizeConfig.verticalBlock,
+                ),
+                child: Text(
+                  widget.job.location,
+                  style: TextStyle(
+                    fontSize: 14 * SizeConfig.textRatio,
+                    fontFamily: 'NotoSans',
                   ),
                 ),
-                _buildSectionTitle('Created At:'),
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: 16 * SizeConfig.horizontalBlock,
-                    top: 8 * SizeConfig.verticalBlock,
-                    bottom: 12 * SizeConfig.verticalBlock,
-                  ),
-                  child: Text(
-                    '${widget.job.createdAt.month} / ${widget.job.createdAt.year}',
-                    style: TextStyle(
-                      fontSize: 14 * SizeConfig.textRatio,
-                      fontFamily: 'NotoSans',
-                    ),
-                  ),
-                ),
-                _buildSectionTitle('Category:'),
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: 16 * SizeConfig.horizontalBlock,
-                    top: 8 * SizeConfig.verticalBlock,
-                    bottom: 12 * SizeConfig.verticalBlock,
-                  ),
-                  child: Text(
-                    widget.job.category ?? 'No category specified',
-                    style: TextStyle(
-                      fontSize: 14 * SizeConfig.textRatio,
-                      fontFamily: 'NotoSans',
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        bottomNavigationBar: Container(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              IconButton(
-                onPressed: saveJob,
-                icon: isJobSaved
-                    ? const Icon(Icons.bookmark, color: Colors.blue)
-                    : const Icon(Icons.bookmark_border, color: Colors.grey),
               ),
-              Expanded(
-                child: CustomButton(
-                  text: 'Apply',
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(
-                      ApplyToJob.routeName,
-                      arguments: widget.job,
-                    );
-                  },
-                  backgroundColor: AppColor.lightBlue,
-                  textColor: AppColor.white,
+              _buildSectionTitle('Created At:'),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: 16 * SizeConfig.horizontalBlock,
+                  top: 8 * SizeConfig.verticalBlock,
+                  bottom: 12 * SizeConfig.verticalBlock,
+                ),
+                child: Text(
+                  '${widget.job.createdAt.month} / ${widget.job.createdAt.year}',
+                  style: TextStyle(
+                    fontSize: 14 * SizeConfig.textRatio,
+                    fontFamily: 'NotoSans',
+                  ),
+                ),
+              ),
+              _buildSectionTitle('Category:'),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: 16 * SizeConfig.horizontalBlock,
+                  top: 8 * SizeConfig.verticalBlock,
+                  bottom: 12 * SizeConfig.verticalBlock,
+                ),
+                child: Text(
+                  widget.job.category ?? 'No category specified',
+                  style: TextStyle(
+                    fontSize: 14 * SizeConfig.textRatio,
+                    fontFamily: 'NotoSans',
+                  ),
                 ),
               ),
             ],
           ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            IconButton(
+              onPressed: saveJob,
+              icon: isJobSaved
+                  ? const Icon(Icons.bookmark, color: Colors.blue)
+                  : const Icon(Icons.bookmark_border, color: Colors.grey),
+            ),
+            Expanded(
+              child: CustomButton(
+                text: 'Apply',
+                onPressed: () {
+                  Navigator.of(context).pushNamed(
+                    ApplyToJob.routeName,
+                    arguments: widget.job,
+                  );
+                },
+                backgroundColor: AppColor.lightBlue,
+                textColor: AppColor.white,
+              ),
+            ),
+          ],
         ),
       ),
     );
