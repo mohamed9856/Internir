@@ -31,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AppColor.background,
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(
@@ -160,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               SizedBox(
                                 height: 16 * SizeConfig.verticalBlock,
                               ),
-                              jobCard(jobsProvider.jobs[index],
+                              jobCard(jobsProvider.jobs[index], context,
                                   isApplied: true),
                               SizedBox(
                                 height: 16 * SizeConfig.verticalBlock,

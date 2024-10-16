@@ -41,6 +41,7 @@ dependencies:
   timezone: ^0.9.4
   geolocator: ^13.0.1
   flutter_quill: ^10.8.2
+  file_picker: ^8.1.2
 
 dev_dependencies:
   flutter_test:
