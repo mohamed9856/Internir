@@ -8,6 +8,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'utils/app_theme.dart';
+import 'package:internir/screens/authentication/login_screen.dart';
+import 'package:internir/screens/authentication/create_account.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +38,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: themeData,
       onGenerateRoute: AppRoute.onGenerateRoute,
-      initialRoute: SplashScreen.routeName,
+      initialRoute: LoginScreen.routeName,
+      routes: {
+        LoginScreen.routeName: (context) => const LoginScreen(),
+        CreateAccountScreen.routeName: (context) => const CreateAccountScreen(),
+
+      },
     );
   }
 }
