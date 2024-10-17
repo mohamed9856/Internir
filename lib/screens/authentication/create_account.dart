@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 
@@ -36,7 +35,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 children: [
                   TextSpan(
                     text: "Create ",
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
+                      fontFamily: 'Greta Arabic',
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -44,7 +44,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
                   TextSpan(
                     text: "Account",
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
+                      fontFamily: 'Greta Arabic',
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                       color: Colors.indigo,
@@ -57,7 +58,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
             const SizedBox(height: 10),
             Text(
               "Create an account so you can explore all the existing jobs",
-              style: GoogleFonts.poppins(
+              style: TextStyle(
+                fontFamily: 'Greta Arabic',
                 fontSize: 16,
                 color: Colors.grey,
               ),
@@ -251,7 +253,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 ),
                 child: Text(
                   "Register",
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
+                    fontFamily: 'Greta Arabic',
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -266,5 +269,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     );
   }
 }
+
 
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'create_account.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -21,7 +20,8 @@ class LoginScreen extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: "Welcome ",
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
+                      fontFamily: 'Greta Arabic',
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -29,7 +29,8 @@ class LoginScreen extends StatelessWidget {
                   ),
                   TextSpan(
                     text: "Hunters",
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
+                      fontFamily: 'Greta Arabic',
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                       color: Colors.indigo,
@@ -42,7 +43,8 @@ class LoginScreen extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               "Log in with your account",
-              style: GoogleFonts.poppins(
+              style: TextStyle(
+                fontFamily: 'Greta Arabic',
                 fontSize: 16,
                 color: Colors.grey,
               ),
@@ -85,7 +87,8 @@ class LoginScreen extends StatelessWidget {
                 ),
                 child: Text(
                   "Login",
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
+                    fontFamily: 'Greta Arabic',
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -111,4 +114,5 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
+
 
