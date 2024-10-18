@@ -1,9 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'create_account.dart';
+import 'package:internir/screens/home/home_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';
   const LoginScreen({super.key});
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+  bool _passwordVisible = false;
+
+  Future<void> _login() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Logged in successfully!")),
+      );
+
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
+
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to log in: ${e.toString()}")),
+      );
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +61,7 @@ class LoginScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text.rich(
+            const Text.rich(
               TextSpan(
                 children: [
                   TextSpan(
@@ -41,7 +87,7 @@ class LoginScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
-            Text(
+            const Text(
               "Log in with your account",
               style: TextStyle(
                 fontFamily: 'Greta Arabic',
@@ -52,6 +98,7 @@ class LoginScreen extends StatelessWidget {
             ),
             const SizedBox(height: 40),
             TextField(
+              controller: _emailController,
               decoration: InputDecoration(
                 labelText: "Email",
                 filled: true,
@@ -64,7 +111,8 @@ class LoginScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             TextField(
-              obscureText: true,
+              controller: _passwordController,
+              obscureText: !_passwordVisible,
               decoration: InputDecoration(
                 labelText: "Password",
                 filled: true,
@@ -73,19 +121,30 @@ class LoginScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide.none,
                 ),
-                suffixIcon: const Icon(Icons.visibility_off),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _passwordVisible = !_passwordVisible;
+                    });
+                  },
+                ),
               ),
             ),
             const SizedBox(height: 30),
-            SizedBox(
+            _isLoading
+                ? const CircularProgressIndicator()
+                : SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: _login,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 15),
                   backgroundColor: Colors.indigo,
                 ),
-                child: Text(
+                child: const Text(
                   "Login",
                   style: TextStyle(
                     fontFamily: 'Greta Arabic',
@@ -114,5 +173,4 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
-
 
