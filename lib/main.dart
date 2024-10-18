@@ -3,6 +3,7 @@ import 'package:internir/providers/Admin/company_auth_provider.dart';
 import 'package:internir/providers/Admin/company_provider.dart';
 import 'providers/index_provider.dart';
 import 'providers/jobs_provider.dart';
+import 'providers/saved_jobs_provider.dart';
 import 'screens/splash/splash_screen.dart';
 import 'utils/routes.dart';
 import 'utils/size_config.dart';
@@ -24,6 +25,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => CompanyProvider()),
         ChangeNotifierProvider(create: (_) => CompnayAuthProvider()),
         
+        ChangeNotifierProvider(create: (_) => JobSaveProvider()),
       ],
       child: const MyApp(),
     ),
