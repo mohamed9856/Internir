@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internir/screens/authentication/admin/company_sign_up.dart';
 import 'package:internir/utils/app_assets.dart';
 import 'package:internir/utils/app_color.dart';
 import 'package:internir/utils/size_config.dart';
@@ -97,7 +98,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       ElevatedButton(
                         onPressed: () {
                           Navigator.pushReplacementNamed(
-                              context, HomeLayout.routeName);
+                              context, CompanySignUp.routeName);
                         },
                         child: Text(
                           'Employee',
@@ -162,7 +163,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       2,
-                          (index) => buildDot(index, _currentPage),
+                      (index) => buildDot(index, _currentPage),
                     ),
                   ),
                 ),

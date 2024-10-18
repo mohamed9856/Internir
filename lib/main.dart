@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internir/providers/Admin/company_auth_provider.dart';
 import 'package:internir/providers/Admin/company_provider.dart';
 import 'providers/index_provider.dart';
 import 'providers/jobs_provider.dart';
@@ -22,6 +23,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => JobsProvider()),
         ChangeNotifierProvider(create: (_) => IndexProvider()),
         ChangeNotifierProvider(create: (_) => CompanyProvider()),
+        ChangeNotifierProvider(create: (_) => CompnayAuthProvider()),
+        
         ChangeNotifierProvider(create: (_) => JobSaveProvider()),
       ],
       child: const MyApp(),
