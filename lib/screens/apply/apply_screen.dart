@@ -6,6 +6,8 @@ import 'package:internir/screens/apply/apply_to_job.dart';
 import 'package:internir/utils/app_color.dart';
 import 'package:internir/utils/size_config.dart';
 import 'package:internir/utils/utils.dart';
+import 'package:internir/providers/saved_jobs_provider.dart';
+import 'package:provider/provider.dart';
 
 class ApplyScreen extends StatefulWidget {
   const ApplyScreen({super.key, required this.job});
@@ -18,14 +20,14 @@ class ApplyScreen extends StatefulWidget {
 }
 
 class _ApplyScreenState extends State<ApplyScreen> {
-  bool isJobSaved = false;
+  //bool isJobSaved = false;
   QuillController descriptionController = QuillController.basic();
 
-  void saveJob() {
-    setState(() {
-      isJobSaved = !isJobSaved;
-    });
-  }
+  // void saveJob() {
+  //   setState(() {
+  //     isJobSaved = !isJobSaved;
+  //   });
+  // }
 
   @override
   void initState() {
@@ -42,6 +44,8 @@ class _ApplyScreenState extends State<ApplyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final jobSaveProvider = Provider.of<JobSaveProvider>(context);
+
     return Scaffold(
       backgroundColor: AppColor.background,
       appBar: AppBar(
@@ -217,8 +221,10 @@ class _ApplyScreenState extends State<ApplyScreen> {
         child: Row(
           children: [
             IconButton(
-              onPressed: saveJob,
-              icon: isJobSaved
+              onPressed: () {
+                jobSaveProvider.toggleSaveJob(widget.job.id);  // Toggle job save state
+              },
+              icon: jobSaveProvider.isJobSaved(widget.job.id)
                   ? const Icon(Icons.bookmark, color: Colors.blue)
                   : const Icon(Icons.bookmark_border, color: Colors.grey),
             ),
