@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internir/providers/category_provider.dart';
 import 'package:internir/screens/splash/splash_screen.dart';
 import 'package:internir/utils/routes.dart';
 import 'package:internir/utils/size_config.dart';
@@ -19,6 +20,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => JobsProvider()),
         ChangeNotifierProvider(create: (_) => IndexProvider()),
+        ChangeNotifierProvider(create: (_) => CategoryProvider()),
+        
       ],
       child: const MyApp(),
     ),

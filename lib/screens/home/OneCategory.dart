@@ -9,6 +9,8 @@ class OneCategory extends StatefulWidget {
 
   const OneCategory({super.key, required this.categoryName});
 
+  static const String routeName = 'oneCategory';
+
   @override
   State<OneCategory> createState() => _OneCategoryState();
 }
@@ -32,9 +34,9 @@ class _OneCategoryState extends State<OneCategory> {
   Widget build(BuildContext context) {
     var jobProvider = Provider.of<JobsProvider>(context);
 
-    if (jobProvider.jobsByCategory.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    // if (jobProvider.jobsByCategory.isEmpty) {
+    //   return const Center(child: CircularProgressIndicator());
+    // }
 
     return Scaffold(
       appBar: AppBar(

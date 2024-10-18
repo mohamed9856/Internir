@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:internir/screens/home/OneCategory.dart';
 import '../../components/custom_button.dart';
 import '../../components/job_card.dart';
 import '../../constants/constants.dart';
@@ -160,7 +161,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               SizedBox(
                                 height: 16 * SizeConfig.verticalBlock,
                               ),
-                              jobCard(jobsProvider.jobs[index], isApplied: true),
+                              jobCard(jobsProvider.jobs[index],
+                                  isApplied: true),
                               SizedBox(
                                 height: 16 * SizeConfig.verticalBlock,
                               ),
@@ -178,6 +180,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget categoryCard(String category) {
     return InkWell(
+      onTap: () {
+        Navigator.pushNamed(
+          context,
+          OneCategory.routeName,
+          arguments: category,
+        );
+      },
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: 12 * SizeConfig.horizontalBlock,
