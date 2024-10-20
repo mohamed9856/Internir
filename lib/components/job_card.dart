@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:internir/components/custom_button.dart';
-import 'package:internir/models/adzuna_model.dart';
-import 'package:internir/utils/app_color.dart';
-import 'package:internir/utils/size_config.dart';
-import 'package:internir/utils/utils.dart';
+import 'package:internir/screens/apply/apply_screen.dart';
+import 'custom_button.dart';
+import '../models/job_model.dart';
+import '../utils/app_color.dart';
+import '../utils/size_config.dart';
 
-Widget jobCard(Results job) {
+Widget jobCard(JobModel job, BuildContext context, {bool isApplied = false}) {
   return Container(
     padding: EdgeInsets.symmetric(
       horizontal: 16 * SizeConfig.horizontalBlock,
@@ -45,24 +45,44 @@ Widget jobCard(Results job) {
             SizedBox(
               width: 8 * SizeConfig.horizontalBlock,
             ),
-            Text(
-              "Posted: ${timeFormat(job.created)}",
-              softWrap: true,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 12 * SizeConfig.textRatio,
-                fontWeight: FontWeight.w500,
-                color: AppColor.grey1,
+            if (isApplied == true)
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 8 * SizeConfig.horizontalBlock,
+                  vertical: 4 * SizeConfig.verticalBlock,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColor.mainGreen,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.check_circle_outline_outlined,
+                      color: AppColor.white,
+                      size: 20 * SizeConfig.textRatio,
+                    ),
+                    SizedBox(
+                      width: 4 * SizeConfig.horizontalBlock,
+                    ),
+                    Text(
+                      "Applied",
+                      style: TextStyle(
+                        fontSize: 12 * SizeConfig.textRatio,
+                        color: AppColor.white,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
           ],
         ),
         SizedBox(
           height: 3 * SizeConfig.verticalBlock,
         ),
         Text(
-          job.company.displayName,
+          job.company,
           softWrap: true,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -73,16 +93,17 @@ Widget jobCard(Results job) {
           ),
         ),
         SizedBox(
-          height: 16 * SizeConfig.verticalBlock,
+          height: 4 * SizeConfig.verticalBlock,
         ),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Location: ${job.location.displayName}",
+                    "Location: ${job.location}${(job.jobType != null) ? " (${job.jobType})" : ""}",
                     softWrap: true,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -92,20 +113,36 @@ Widget jobCard(Results job) {
                       color: AppColor.grey1,
                     ),
                   ),
-                  Text(
-                    "Salary: ${job.salaryMin} - ${job.salaryMax}",
-                    softWrap: true,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 12 * SizeConfig.textRatio,
-                      fontWeight: FontWeight.w500,
-                      color: AppColor.grey1,
-                    ),
-                  ),
-                  if (job.contractTime != null)
+                  if (job.salary != null)
                     Text(
-                      "Hours: ${job.contractTime}",
+                      "Salary: ${job.salary}",
+                      softWrap: true,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12 * SizeConfig.textRatio,
+                        fontWeight: FontWeight.w500,
+                        color: AppColor.grey1,
+                      ),
+                    ),
+                  SizedBox(
+                    height: 4 * SizeConfig.verticalBlock,
+                  ),
+                  if (DateTime.now().difference(job.createdAt).inDays < 2)
+                    Text(
+                      "Posted ${DateTime.now().difference(job.createdAt).inHours} Hours Ago",
+                      softWrap: true,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12 * SizeConfig.textRatio,
+                        fontWeight: FontWeight.w500,
+                        color: AppColor.grey1,
+                      ),
+                    ),
+                  if (DateTime.now().difference(job.createdAt).inDays >= 2)
+                    Text(
+                      "Posted ${DateTime.now().difference(job.createdAt).inDays} Days Ago",
                       softWrap: true,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -124,7 +161,13 @@ Widget jobCard(Results job) {
             CustomButton(
               text: "Apply",
               width: 100 * SizeConfig.horizontalBlock,
-              onPressed: () {},
+              height: 40 * SizeConfig.verticalBlock,
+              onPressed: () {
+                Navigator.of(context).pushNamed(
+                  ApplyScreen.routeName,
+                  arguments: job,
+                );
+              },
               backgroundColor: AppColor.lightBlue,
               textColor: Colors.white,
               padding: EdgeInsets.symmetric(
