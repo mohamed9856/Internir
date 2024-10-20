@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:internir/screens/authentication/login_screen.dart';
 import 'package:internir/screens/home/home_screen.dart';
+import 'package:internir/screens/layout/home_layout.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants/constants.dart';
@@ -99,11 +100,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         var jobProvider = context.read<JobsProvider>();
         await jobProvider.fetchJobs();
 
-        Navigator.pushReplacement(
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (_) => const HomeScreen(),
+            builder: (_) => const HomeLayout(),
+            
           ),
+          (route) => false,
         );
       } on FirebaseAuthException catch (e) {
         String errorMessage = '';

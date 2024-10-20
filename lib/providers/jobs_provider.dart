@@ -12,6 +12,9 @@ class JobsProvider extends ChangeNotifier {
   var allJobs = <JobModel>[];
   var jobs = <JobModel>[];
   bool loading = false;
+  String category = '';
+
+  var jobsByCategory = <JobModel>[];
 
   Future<dynamic> fetchData({
     bool isPrevious = false,
