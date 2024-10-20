@@ -1,4 +1,4 @@
-const List<String> jobCategories = [
+const List<String> listCategories = [
   'Information Technology (IT)',
   'Engineering',
   'Marketing',
