@@ -20,6 +20,7 @@ Widget customTextFormField({
   void Function(String)? onFieldSubmitted,
   void Function(String?)? onSaved,
   void Function()? onEditingComplete,
+  Color? hintColor,
 }) {
   return TextFormField(
     style: TextStyle(
@@ -31,6 +32,12 @@ Widget customTextFormField({
     decoration: InputDecoration(
       hintText: hintText,
       isDense: true,
+      hintStyle: TextStyle(
+        fontFamily: 'NotoSans',
+        fontSize: 16 * SizeConfig.textRatio,
+        fontWeight: FontWeight.w300,
+        color: hintColor,
+      ),
       contentPadding: EdgeInsets.symmetric(
         horizontal: 16 * SizeConfig.horizontalBlock,
         vertical: 12 * SizeConfig.verticalBlock,
