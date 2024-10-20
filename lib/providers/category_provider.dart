@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internir/constants/constants.dart';
 import 'package:internir/utils/utils.dart';
 import '../models/job_model.dart';
 import '../services/fire_database.dart';
@@ -13,6 +14,7 @@ class CategoryProvider extends ChangeNotifier {
   var jobs = <JobModel>[];
   bool loading = false;
   String category = '';
+  var allCategory = jobCategories;
 
   var jobsByCategory = <JobModel>[];
 
@@ -20,18 +22,16 @@ class CategoryProvider extends ChangeNotifier {
     bool isPrevious = false,
     bool isNext = false,
   }) async {
-    return await FireDatabase.getData(  
-      'jobs',
-      orderBy: 'createdAt',
-      descending: true,
-      limit: limit,
-      startAfterValue: isNext ? lastDocument['createdAt'] : null,
-      endBeforeValue: isPrevious ? firstDocument['createdAt'] : null,
-      isPrevious: isPrevious,
-      filters: [
-        ['Category', category, OperationFilter.isEqualTo.name],
-      ]
-    );
+    return await FireDatabase.getData('jobs',
+        orderBy: 'createdAt',
+        descending: true,
+        limit: limit,
+        startAfterValue: isNext ? lastDocument['createdAt'] : null,
+        endBeforeValue: isPrevious ? firstDocument['createdAt'] : null,
+        isPrevious: isPrevious,
+        filters: [
+          ['category', category, OperationFilter.isEqualTo.name],
+        ]);
   }
 
   void setLoading(bool value) {
@@ -142,5 +142,13 @@ class CategoryProvider extends ChangeNotifier {
     firstDocument = null;
     lastDocument = null;
     await fetchJobs();
+  }
+
+  void searchCategory(String value) {
+    allCategory = jobCategories
+        .where(
+            (category) => category.toLowerCase().contains(value.toLowerCase()))
+        .toList();
+    notifyListeners();
   }
 }

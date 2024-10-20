@@ -1,7 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:internir/screens/home/OneCategory.dart';
+import 'package:internir/components/category_card.dart';
+import 'package:internir/screens/category/one_category.dart';
 import '../../components/custom_button.dart';
 import '../../components/job_card.dart';
 import '../../constants/constants.dart';
@@ -67,7 +68,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, OneCategory.routeName);
+                      },
                       child: Text(
                         "See all",
                         style: TextStyle(
@@ -87,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     scrollDirection: Axis.horizontal,
                     itemCount: 20,
                     itemBuilder: (context, index) {
-                      return categoryCard(jobCategories[index]);
+                      return categoryCard(category: jobCategories[index], context: context);
                     },
                     separatorBuilder: (context, index) {
                       return SizedBox(
@@ -171,42 +174,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
               ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget categoryCard(String category) {
-    return InkWell(
-      onTap: () {
-        Navigator.pushNamed(
-          context,
-          OneCategory.routeName,
-          arguments: category,
-        );
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 12 * SizeConfig.horizontalBlock,
-          vertical: 8 * SizeConfig.verticalBlock,
-        ),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: AppColor.mainBlue,
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: Center(
-          child: Text(
-            category,
-            style: TextStyle(
-              fontFamily: 'NotoSans',
-              fontSize: 16 * SizeConfig.textRatio,
-              color: AppColor.mainBlue,
-              fontWeight: FontWeight.w600,
             ),
           ),
         ),

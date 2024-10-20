@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:internir/screens/home/OneCategory.dart';
+import 'package:internir/screens/category/one_category.dart';
+import 'package:internir/screens/category/categories.dart';
 import '../screens/layout/home_layout.dart';
 import '../screens/splash/splash_screen.dart';
 
@@ -16,6 +17,8 @@ class AppRoute {
             builder: (_) => OneCategory(
                   categoryName: categoryName,
                 ));
+      case Categories.routeName:
+        return MaterialPageRoute(builder: (_) => const Categories());
       default:
         return MaterialPageRoute(builder: (_) => errorRoute());
     }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:internir/components/job_card.dart';
 import 'package:internir/constants/constants.dart';
 import 'package:internir/providers/jobs_provider.dart';
 import 'package:provider/provider.dart'; // Ensure you are using the provider package
