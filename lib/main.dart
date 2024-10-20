@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:internir/providers/index_provider.dart';
 import 'package:internir/providers/jobs_provider.dart';
-import 'package:internir/screens/layout/home_layout.dart';
+import 'package:internir/screens/home/home_screen.dart';
+import 'package:internir/screens/profile/edit_profile_screen.dart';
+import 'package:internir/screens/profile/profile_screen.dart';
+import 'package:internir/screens/saved/saved_internships.dart';
+import 'package:internir/screens/splash/splash_screen.dart';
 import 'package:internir/utils/routes.dart';
 import 'package:internir/utils/size_config.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -28,7 +32,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -37,7 +40,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: themeData,
       onGenerateRoute: AppRoute.onGenerateRoute,
-      home: const HomeLayout(),
+      home: const SplashScreen()
     );
   }
 }

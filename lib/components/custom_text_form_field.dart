@@ -26,7 +26,7 @@ Widget customTextFormField({
     ),
     decoration: InputDecoration(
       hintText: hintText,
-      isDense: true, 
+      isDense: true,
 
       contentPadding: EdgeInsets.symmetric(
         horizontal: 16 * SizeConfig.horizontalBlock,
