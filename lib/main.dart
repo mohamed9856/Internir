@@ -1,5 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:internir/providers/index_provider.dart';
+import 'package:internir/providers/jobs_provider.dart';
+import 'package:internir/screens/home/home_screen.dart';
+import 'package:internir/screens/profile/edit_profile_screen.dart';
+import 'package:internir/screens/profile/profile_screen.dart';
+import 'package:internir/screens/saved/saved_internships.dart';
 import 'package:internir/providers/category_provider.dart';
 import 'package:internir/screens/splash/splash_screen.dart';
 import 'package:internir/utils/routes.dart';
@@ -57,11 +63,11 @@ class MyApp extends StatelessWidget {
       theme: themeData,
       onGenerateRoute: AppRoute.onGenerateRoute,
       initialRoute: SplashScreen.routeName,
-      routes: {
-        LoginScreen.routeName: (context) => const LoginScreen(),
-        CreateAccountScreen.routeName: (context) => const CreateAccountScreen(),
-        HomeLayout.routeName: (context) => const HomeLayout(),
-      },
+      // routes: {
+      //   LoginScreen.routeName: (context) => const LoginScreen(),
+      //   CreateAccountScreen.routeName: (context) => const CreateAccountScreen(),
+      //   HomeLayout.routeName: (context) => const HomeLayout(),
+      // },
     );
   }
 }

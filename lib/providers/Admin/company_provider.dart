@@ -23,7 +23,7 @@ class CompanyProvider extends ChangeNotifier {
           'salary': salary,
           'category': category,
           'job type': employmentType,
-          'createdAt': Timestamp.fromDate( DateTime.now()),
+          'createdAt': Timestamp.fromDate(DateTime.now()),
           'number of applicants': 0,
           'enabled': enabled,
         },

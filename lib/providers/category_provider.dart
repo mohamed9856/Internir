@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+  import 'package:flutter/material.dart';
 import 'package:internir/constants/constants.dart';
 import 'package:internir/utils/utils.dart';
 import '../models/job_model.dart';
