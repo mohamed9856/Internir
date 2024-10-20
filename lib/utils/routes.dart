@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:internir/screens/authentication/create_account.dart';
+import 'package:internir/screens/authentication/login_screen.dart';
 import 'package:internir/screens/category/one_category.dart';
 import 'package:internir/screens/category/categories.dart';
 import '../screens/layout/home_layout.dart';
@@ -33,11 +35,13 @@ class AppRoute {
       case ApplyScreen.routeName:
         final job = settings.arguments as JobModel;
         return MaterialPageRoute(builder: (_) => ApplyScreen(job: job));
-
+      case CreateAccountScreen.routeName:
+        return MaterialPageRoute(builder: (_) => const CreateAccountScreen());
       case ApplyToJob.routeName:
         final job = settings.arguments as JobModel;
         return MaterialPageRoute(builder: (_) => ApplyToJob(job: job));
-
+      case LoginScreen.routeName:
+        return MaterialPageRoute(builder: (_) => const LoginScreen());
       default:
         return MaterialPageRoute(builder: (_) => errorRoute());
     }
