@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:internir/providers/jobs_provider.dart';
+import 'package:internir/screens/authentication/login_screen.dart';
 import 'package:internir/utils/app_color.dart';
 import 'package:internir/utils/size_config.dart';
 import 'package:internir/screens/layout/home_layout.dart';
@@ -12,6 +14,7 @@ class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   static const String routeName = '/splash';
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -25,11 +28,19 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
-  futureCall() async {
-    await Future.delayed(const Duration(seconds: 3));
+  Future<void> futureCall() async {
     var jobProvider = context.read<JobsProvider>();
-    await jobProvider.fetchJobs();
-    Navigator.pushReplacementNamed(context, OnBoardingScreen.routeName);
+    User? user = FirebaseAuth.instance.currentUser;
+
+    await Future.delayed(const Duration(seconds: 3));
+    if (user != null) {
+      await jobProvider.fetchJobs();
+      Navigator.pushNamedAndRemoveUntil(
+          context, HomeLayout.routeName, (route) => false);
+    } else {
+      Navigator.pushNamedAndRemoveUntil(
+          context, LoginScreen.routeName, (route) => false);
+    }
   }
 
   @override
