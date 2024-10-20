@@ -1,4 +1,4 @@
-const List<String> jobCategories = [
+const List<String> listCategories = [
   'Information Technology (IT)',
   'Engineering',
   'Marketing',
@@ -19,7 +19,6 @@ const List<String> jobCategories = [
   'Data Engineer',
   'Game Developer',
   'Cloud Architect',
-
 
   'AI Engineer',
   'System Architect',
@@ -134,9 +133,8 @@ const List<String> jobCategories = [
   'VoIP Engineer',
   'Web Architect',
   'Web Application Developer',
-  'Web Security Engineer'
-
-      'Healthcare',
+  'Web Security Engineer',
+  'Healthcare',
   'Web Developer',
   'Education',
   'Customer Service',
@@ -305,5 +303,4 @@ const List<String> jobCategories = [
   'Packaging',
   'Quality Control',
   'Safety and Compliance',
-
 ];
