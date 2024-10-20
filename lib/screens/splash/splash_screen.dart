@@ -28,13 +28,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> futureCall() async {
     var jobProvider = context.read<JobsProvider>();
-    await jobProvider.fetchJobs();
-
     User? user = FirebaseAuth.instance.currentUser;
 
     await Future.delayed(const Duration(seconds: 3));
-
     if (user != null) {
+      await jobProvider.fetchJobs();
       Navigator.pushNamedAndRemoveUntil(
           context, HomeLayout.routeName, (route) => false);
     } else {

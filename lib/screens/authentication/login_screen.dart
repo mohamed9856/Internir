@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import '../../providers/jobs_provider.dart';
 import 'create_account.dart';
 import 'package:internir/screens/home/home_screen.dart';
 
@@ -34,6 +36,9 @@ class _LoginScreenState extends State<LoginScreen> {
         const SnackBar(content: Text("Logged in successfully!")),
       );
 
+
+      var jobProvider = context.read<JobsProvider>();
+      await jobProvider.fetchJobs();
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const HomeScreen()),

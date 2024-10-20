@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:internir/providers/Admin/company_provider.dart';
+import 'package:internir/screens/layout/home_layout.dart';
 import 'providers/index_provider.dart';
 import 'providers/jobs_provider.dart';
 import 'screens/splash/splash_screen.dart';
@@ -44,6 +46,7 @@ class MyApp extends StatelessWidget {
       routes: {
         LoginScreen.routeName: (context) => const LoginScreen(),
         CreateAccountScreen.routeName: (context) => const CreateAccountScreen(),
+        HomeLayout.routeName: (context) => const HomeLayout(),
       },
     );
   }

@@ -1,12 +1,18 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:internir/screens/authentication/login_screen.dart';
 import 'package:internir/screens/home/home_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../../constants/constants.dart';
+import '../../providers/jobs_provider.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   static const String routeName = '/create-account';
@@ -20,7 +26,8 @@ class CreateAccountScreen extends StatefulWidget {
 class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final _formKey = GlobalKey<FormState>();
   final ImagePicker _imagePicker = ImagePicker();
-  var _isLoading = false;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool _isLoading = false;
 
   String? selectedCategory;
   String? selectedGender;
@@ -35,13 +42,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
-  final List<String> categories = [
-    'UI/UX',
-    'Web Development',
-    'Mobile Development',
-    'Data Science',
-    'DevOps'
-  ];
   final List<String> genderOptions = [
     'Male',
     'Female',
@@ -52,7 +52,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   bool _isConfirmPasswordVisible = false;
 
   Future<void> _signUp() async {
-    _isLoading = true;
     if (_formKey.currentState!.validate()) {
       String email = _emailController.text;
       String password = _passwordController.text;
@@ -68,13 +67,38 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       }
 
       try {
+        setState(() {
+          _isLoading = true;
+        });
+
         UserCredential userCredential =
             await _auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
 
-        _isLoading = false;
+        String userId = userCredential.user!.uid;
+
+        await _firestore.collection('users').doc(userId).set({
+          'image': selectedImage?.path,
+          'username': _usernameController.text,
+          'email': email,
+          'phone': _phoneController.text,
+          'dob': _dobController.text,
+          'category': selectedCategory,
+          'gender': selectedGender,
+          'cvFile': selectedCvFile,
+          'appliedJobs': [],
+          'savedJobs': [],
+        });
+
+        setState(() {
+          _isLoading = false;
+        });
+
+        var jobProvider = context.read<JobsProvider>();
+        await jobProvider.fetchJobs();
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -105,7 +129,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   Future<void> _pickImage(ImageSource source) async {
     final XFile? pickedImage = await _imagePicker.pickImage(
       source: source,
-      imageQuality: 85, // Optionally compress the image
+      imageQuality: 85,
     );
     if (pickedImage != null) {
       setState(() {
@@ -263,12 +287,16 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
                 ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  if (value!.isEmpty) {
                     return 'Email is required';
                   }
-                  if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                    return 'Enter a valid email';
+                  // regix for email validation
+                  var reg = RegExp(
+                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+                  if (!reg.hasMatch(value)) {
+                    return 'Invalid email';
                   }
+
                   return null;
                 },
               ),
@@ -398,7 +426,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
                 ),
                 value: selectedCategory,
-                items: categories
+                items: listCategories
                     .map((category) => DropdownMenuItem(
                           value: category,
                           child: Text(category),
@@ -491,7 +519,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     backgroundColor: Colors.indigo,
                   ),
                   child: (_isLoading)
-                      ? const CircularProgressIndicator()
+                      ? const CircularProgressIndicator(color: Colors.white,)
                       : const Text(
                           'Register',
                           style: TextStyle(
@@ -505,7 +533,11 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    LoginScreen.routeName,
+                    (route) => false,
+                  );
                 },
                 child: const Text(
                   "Sign In",
