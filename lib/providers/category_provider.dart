@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
+  import 'package:flutter/material.dart';
+import 'package:internir/constants/constants.dart';
 import 'package:internir/utils/utils.dart';
 import '../models/job_model.dart';
 import '../services/fire_database.dart';
 
-class JobsProvider extends ChangeNotifier {
+class CategoryProvider extends ChangeNotifier {
   int page = 0;
   int limit = 25;
   bool hasMore = true;
@@ -13,6 +14,7 @@ class JobsProvider extends ChangeNotifier {
   var jobs = <JobModel>[];
   bool loading = false;
   String category = '';
+  var allCategory = listCategories;
 
   var jobsByCategory = <JobModel>[];
 
@@ -28,7 +30,7 @@ class JobsProvider extends ChangeNotifier {
         endBeforeValue: isPrevious ? firstDocument['createdAt'] : null,
         isPrevious: isPrevious,
         filters: [
-          ['enabled', [true], OperationFilter.whereIn.name],
+          ['category', category, OperationFilter.isEqualTo.name],
         ]);
   }
 
@@ -55,7 +57,7 @@ class JobsProvider extends ChangeNotifier {
         allJobs.add(JobModel.fromJson(job.data()));
       }
 
-      jobs = allJobs;
+      jobsByCategory = allJobs;
       if (data.docs.isNotEmpty) {
         firstDocument = data.docs.first;
         lastDocument = data.docs.last;
@@ -64,8 +66,6 @@ class JobsProvider extends ChangeNotifier {
       checkHasMore(data);
     } catch (e) {
       debugPrint(e.toString());
-      hasMore = false;
-      notifyListeners();
     } finally {
       setLoading(false);
     }
@@ -142,5 +142,18 @@ class JobsProvider extends ChangeNotifier {
     firstDocument = null;
     lastDocument = null;
     await fetchJobs();
+  }
+
+  void searchCategory(String value) {
+    allCategory = listCategories
+        .where(
+            (category) => category.toLowerCase().contains(value.toLowerCase()))
+        .toList();
+    notifyListeners();
+  }
+
+  void setCategory(String category) {
+    this.category = category;
+    notifyListeners();
   }
 }

@@ -31,13 +31,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
       builder: (BuildContext context) {
         return SafeArea(
           child: ListView.builder(
-            itemCount: jobCategories.length, // The number of options
+            itemCount: listCategories.length, // The number of options
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(jobCategories[index]),
+                title: Text(listCategories[index]),
                 onTap: () {
                   setState(() {
-                    category.text = jobCategories[index];
+                    category.text = listCategories[index];
                   });
                   Navigator.pop(context);
                 },

@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:internir/utils/app_color.dart';
@@ -17,6 +20,34 @@ class _ApplyToJobState extends State<ApplyToJob> {
   final _formKey = GlobalKey<FormState>();
   String? _pickedFileName;
   bool _isFilePicked = false;
+  String? _userImagePath;
+  String? _username;
+  String? _category;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData();
+  }
+
+  Future<void> _fetchUserData() async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (doc.exists) {
+        setState(() {
+          _userImagePath = doc['image'] as String?;
+          _username = doc['username'] as String?;
+          _category = doc['category'] as String?;
+        });
+      }
+    }
+  }
 
   Future<void> _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -67,11 +98,9 @@ class _ApplyToJobState extends State<ApplyToJob> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Flexible(
-          child: Text(
-            'Apply to ${widget.job.title}',
-            overflow: TextOverflow.visible,
-          ),
+        title: Text(
+          'Apply to ${widget.job.title}',
+          overflow: TextOverflow.visible,
         ),
       ),
       body: SingleChildScrollView(
@@ -80,26 +109,31 @@ class _ApplyToJobState extends State<ApplyToJob> {
           key: _formKey,
           child: Column(
             children: [
-              const Row(
+              Row(
                 children: [
                   CircleAvatar(
                     radius: 32,
-                    backgroundImage: NetworkImage(
-                      'https://dummyimage.com/300x200/000/fff',
-                    ),
+                    backgroundImage: _userImagePath != null
+                        ? FileImage(
+                            File(_userImagePath!),
+                          )
+                        : null,
+                    child: _userImagePath == null
+                        ? const Icon(Icons.person, size: 32)
+                        : null,
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Mohamed Ayman',
-                        style: TextStyle(
+                        _username ?? 'No name',
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text('Flutter Developer'),
+                      Text(_category ?? 'No category'),
                     ],
                   ),
                 ],
@@ -162,7 +196,7 @@ class _ApplyToJobState extends State<ApplyToJob> {
                 ),
               ),
               const SizedBox(height: 16),
-              Container(
+              SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () => _uploadResume(context),
