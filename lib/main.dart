@@ -23,7 +23,6 @@ void main() async {
         ChangeNotifierProvider(create: (_) => JobsProvider()),
         ChangeNotifierProvider(create: (_) => IndexProvider()),
         ChangeNotifierProvider(create: (_) => CompanyProvider()),
-        
       ],
       child: const MyApp(),
     ),
@@ -41,11 +40,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: themeData,
       onGenerateRoute: AppRoute.onGenerateRoute,
-      initialRoute: LoginScreen.routeName,
+      initialRoute: SplashScreen.routeName,
       routes: {
         LoginScreen.routeName: (context) => const LoginScreen(),
         CreateAccountScreen.routeName: (context) => const CreateAccountScreen(),
-
       },
     );
   }

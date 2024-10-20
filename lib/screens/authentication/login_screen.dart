@@ -5,6 +5,7 @@ import 'package:internir/screens/home/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';
+
   const LoginScreen({super.key});
 
   @override
@@ -29,17 +30,14 @@ class _LoginScreenState extends State<LoginScreen> {
         password: _passwordController.text.trim(),
       );
 
-
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Logged in successfully!")),
       );
-
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
-
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to log in: ${e.toString()}")),
@@ -137,24 +135,24 @@ class _LoginScreenState extends State<LoginScreen> {
             _isLoading
                 ? const CircularProgressIndicator()
                 : SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _login,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  backgroundColor: Colors.indigo,
-                ),
-                child: const Text(
-                  "Login",
-                  style: TextStyle(
-                    fontFamily: 'Greta Arabic',
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _login,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        backgroundColor: Colors.indigo,
+                      ),
+                      child: const Text(
+                        "Login",
+                        style: TextStyle(
+                          fontFamily: 'Greta Arabic',
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
             const SizedBox(height: 20),
             Center(
               child: TextButton(
@@ -173,4 +171,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-

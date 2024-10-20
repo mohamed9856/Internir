@@ -1,11 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
 import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:image_picker/image_picker.dart';
 import 'package:internir/screens/home/home_screen.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   static const String routeName = '/create-account';
+
   const CreateAccountScreen({super.key});
 
   @override
@@ -14,6 +19,8 @@ class CreateAccountScreen extends StatefulWidget {
 
 class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final _formKey = GlobalKey<FormState>();
+  final ImagePicker _imagePicker = ImagePicker();
+  var _isLoading = false;
 
   String? selectedCategory;
   String? selectedGender;
@@ -25,16 +32,27 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _dobController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
-  final List<String> categories = ['UI/UX', 'Web Development', 'Mobile Development', 'Data Science', 'DevOps'];
-  final List<String> genderOptions = ['Male', 'Female'];
+  final List<String> categories = [
+    'UI/UX',
+    'Web Development',
+    'Mobile Development',
+    'Data Science',
+    'DevOps'
+  ];
+  final List<String> genderOptions = [
+    'Male',
+    'Female',
+  ];
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
 
   Future<void> _signUp() async {
+    _isLoading = true;
     if (_formKey.currentState!.validate()) {
       String email = _emailController.text;
       String password = _passwordController.text;
@@ -42,20 +60,26 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
       if (password != confirmPassword) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Passwords do not match')),
+          const SnackBar(
+            content: Text('Passwords do not match'),
+          ),
         );
         return;
       }
 
       try {
-        UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        UserCredential userCredential =
+            await _auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
 
+        _isLoading = false;
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
+          MaterialPageRoute(
+            builder: (_) => const HomeScreen(),
+          ),
         );
       } on FirebaseAuthException catch (e) {
         String errorMessage = '';
@@ -71,8 +95,39 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
           SnackBar(content: Text(errorMessage)),
         );
       } catch (e) {
-        print(e);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
       }
+    }
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final XFile? pickedImage = await _imagePicker.pickImage(
+      source: source,
+      imageQuality: 85, // Optionally compress the image
+    );
+    if (pickedImage != null) {
+      setState(() {
+        selectedImage = File(pickedImage.path);
+      });
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        _dobController.text =
+            "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-"
+            "${pickedDate.day.toString().padLeft(2, '0')}";
+      });
     }
   }
 
@@ -126,21 +181,41 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               ),
               const SizedBox(height: 40),
               GestureDetector(
-                onTap: () async {
-                  FilePickerResult? result = await FilePicker.platform.pickFiles(
-                    type: FileType.image,
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return SafeArea(
+                        child: Wrap(
+                          children: <Widget>[
+                            ListTile(
+                              leading: const Icon(Icons.photo_library),
+                              title: const Text('Gallery'),
+                              onTap: () {
+                                _pickImage(ImageSource.gallery);
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.camera_alt),
+                              title: const Text('Camera'),
+                              onTap: () {
+                                _pickImage(ImageSource.camera);
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   );
-                  if (result != null) {
-                    setState(() {
-                      selectedImage = File(result.files.single.path!);
-                    });
-                  }
                 },
                 child: CircleAvatar(
                   radius: 50,
                   backgroundImage: selectedImage != null
                       ? FileImage(selectedImage!)
-                      : const AssetImage('assets/images/profile.png') as ImageProvider,
+                      : const AssetImage('assets/images/profile.png')
+                          as ImageProvider,
                   child: const Align(
                     alignment: Alignment.bottomRight,
                     child: Icon(
@@ -153,6 +228,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: _usernameController,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(20),
+                ],
                 decoration: InputDecoration(
                   labelText: "Username",
                   filled: true,
@@ -164,7 +242,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Username is required';
+                    return 'A valid username is required';
                   }
                   return null;
                 },
@@ -172,6 +250,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: _emailController,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(50),
+                ],
                 decoration: InputDecoration(
                   labelText: "Email",
                   filled: true,
@@ -194,6 +275,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: _phoneController,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(15),
+                ],
+                keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
                   labelText: "Phone",
                   filled: true,
@@ -204,8 +289,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
                 ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Phone number is required';
+                  if (value == null || value.trim().isEmpty) {
+                    return 'A valid phone number is required';
                   }
                   return null;
                 },
@@ -213,7 +298,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: _dobController,
+                readOnly: true,
+                onTap: () {
+                  _selectDate(context);
+                },
                 decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.calendar_month),
                   labelText: "Date Of Birth",
                   filled: true,
                   fillColor: Colors.blue.shade50,
@@ -223,7 +313,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
                 ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  if (value == null || value.trim().isEmpty) {
                     return 'Date of birth is required';
                   }
                   return null;
@@ -243,7 +333,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      _isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                     ),
                     onPressed: () {
                       setState(() {
@@ -253,7 +345,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
                 ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  if (value == null || value.trim().isEmpty) {
                     return 'Password is required';
                   }
                   if (value.length < 6) {
@@ -276,7 +368,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      _isConfirmPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                     ),
                     onPressed: () {
                       setState(() {
@@ -286,7 +380,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
                 ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  if (value == null || value.trim().isEmpty) {
                     return 'Confirm your password';
                   }
                   return null;
@@ -306,9 +400,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 value: selectedCategory,
                 items: categories
                     .map((category) => DropdownMenuItem(
-                  value: category,
-                  child: Text(category),
-                ))
+                          value: category,
+                          child: Text(category),
+                        ))
                     .toList(),
                 onChanged: (value) {
                   setState(() {
@@ -335,10 +429,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 ),
                 value: selectedGender,
                 items: genderOptions
-                    .map((gender) => DropdownMenuItem(
-                  value: gender,
-                  child: Text(gender),
-                ))
+                    .map(
+                      (gender) => DropdownMenuItem(
+                        value: gender,
+                        child: Text(gender),
+                      ),
+                    )
                     .toList(),
                 onChanged: (value) {
                   setState(() {
@@ -355,7 +451,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               const SizedBox(height: 20),
               GestureDetector(
                 onTap: () async {
-                  FilePickerResult? result = await FilePicker.platform.pickFiles(
+                  FilePickerResult? result =
+                      await FilePicker.platform.pickFiles(
                     type: FileType.custom,
                     allowedExtensions: ['pdf'],
                   );
@@ -384,9 +481,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
                 ),
               ),
-
-              const SizedBox(height: 20),
-              SizedBox(
+              Container(
+                padding: const EdgeInsets.only(top: 20, right: 10, left: 10),
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _signUp,
@@ -394,14 +490,27 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     backgroundColor: Colors.indigo,
                   ),
-                  child: const Text(
-                    "Register",
-                    style: TextStyle(
-                      fontFamily: 'Greta Arabic',
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                  child: (_isLoading)
+                      ? const CircularProgressIndicator()
+                      : const Text(
+                          'Register',
+                          style: TextStyle(
+                            fontFamily: 'Greta Arabic',
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  "Sign In",
+                  style: TextStyle(
+                    fontSize: 20,
                   ),
                 ),
               ),
@@ -412,4 +521,3 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     );
   }
 }
-
