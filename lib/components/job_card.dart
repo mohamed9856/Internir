@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:internir/screens/apply/apply_screen.dart';
 import 'custom_button.dart';
 import '../models/job_model.dart';
 import '../utils/app_color.dart';
 import '../utils/size_config.dart';
 
-Widget jobCard(JobModel job, {bool isApplied = false}) {
+Widget jobCard(JobModel job, BuildContext context, {bool isApplied = false}) {
   return Container(
     padding: EdgeInsets.symmetric(
       horizontal: 16 * SizeConfig.horizontalBlock,
@@ -124,10 +125,9 @@ Widget jobCard(JobModel job, {bool isApplied = false}) {
                         color: AppColor.grey1,
                       ),
                     ),
-
-                    SizedBox(
-                      height: 4 * SizeConfig.verticalBlock,
-                    ),
+                  SizedBox(
+                    height: 4 * SizeConfig.verticalBlock,
+                  ),
                   if (DateTime.now().difference(job.createdAt).inDays < 2)
                     Text(
                       "Posted ${DateTime.now().difference(job.createdAt).inHours} Hours Ago",
@@ -140,7 +140,6 @@ Widget jobCard(JobModel job, {bool isApplied = false}) {
                         color: AppColor.grey1,
                       ),
                     ),
-
                   if (DateTime.now().difference(job.createdAt).inDays >= 2)
                     Text(
                       "Posted ${DateTime.now().difference(job.createdAt).inDays} Days Ago",
@@ -163,7 +162,12 @@ Widget jobCard(JobModel job, {bool isApplied = false}) {
               text: "Apply",
               width: 100 * SizeConfig.horizontalBlock,
               height: 40 * SizeConfig.verticalBlock,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(
+                  ApplyScreen.routeName,
+                  arguments: job,
+                );
+              },
               backgroundColor: AppColor.lightBlue,
               textColor: Colors.white,
               padding: EdgeInsets.symmetric(

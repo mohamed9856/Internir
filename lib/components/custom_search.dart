@@ -22,7 +22,7 @@ class CustomSearch extends StatelessWidget {
       padding: EdgeInsets.symmetric(
         horizontal: SizeConfig.horizontalBlock * 8,
       ),
-      height: SizeConfig.verticalBlock * 52,
+      // height: SizeConfig.verticalBlock * 52,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(50),
@@ -40,6 +40,7 @@ class CustomSearch extends StatelessWidget {
         cursorColor: AppColor.black,
         controller: controller,
         decoration: InputDecoration(
+          // isDense: true,
           hintText: hintText,
           hintStyle: TextStyle(
             color: color,

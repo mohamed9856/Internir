@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:internir/constants/constants.dart';
-import 'package:internir/providers/jobs_provider.dart';
+import 'package:internir/components/job_card.dart';
+import 'package:internir/providers/category_provider.dart';
+import 'package:internir/utils/size_config.dart';
 import 'package:provider/provider.dart'; // Ensure you are using the provider package
 
 class OneCategory extends StatefulWidget {
@@ -23,24 +24,21 @@ class _OneCategoryState extends State<OneCategory> {
   }
 
   Future<void> _fetchJobsForCategory() async {
-    // Fetch jobs for the selected category
-    final jobsProvider = Provider.of<JobsProvider>(context, listen: false);
-    // jobsProvider.category = widget.categoryName; // Set the category name
-    await jobsProvider.fetchData(); // Fetch jobs based on the category
+    WidgetsBinding.instance.addPostFrameCallback((duration) async {
+      final categoryProvider =
+          Provider.of<CategoryProvider>(context, listen: false);
+      // jobsProvider.category = widget.categoryName; // Set the category name
+      await categoryProvider.fetchJobs(); // Fetch jobs based on the category
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    var jobProvider = Provider.of<JobsProvider>(context);
-
-    // if (jobProvider.jobsByCategory.isEmpty) {
-    //   return const Center(child: CircularProgressIndicator());
-    // }
-
+    var categoryProvider = Provider.of<CategoryProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.categoryName, // Display the selected category
+          widget.categoryName,
           style: const TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
@@ -49,39 +47,28 @@ class _OneCategoryState extends State<OneCategory> {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context); // Go back to the previous screen
+            Navigator.pop(context);
           },
           icon: const Icon(Icons.keyboard_backspace_sharp),
           iconSize: 40,
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Consumer<JobsProvider>(
-          builder: (context, jobsProvider, child) {
-            if (jobsProvider.loading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (jobsProvider.jobs.isEmpty) {
-              return const Center(
-                  child: Text('No jobs found in this category.'));
-            }
-
-            return ListView.builder(
-              itemCount: jobsProvider.jobs.length, // Number of jobs
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    jobsProvider.category = jobCategories[index];
-                  },
-                  child: Text(jobCategories[index]),
-                ); // Display the job card
-              },
-            );
-          },
-        ),
-      ),
+      body: (categoryProvider.loading)
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(16),
+              child: ListView.separated(
+                separatorBuilder: (context, index) => SizedBox(
+                  height: 16 * SizeConfig.verticalBlock,
+                ),
+                itemCount: categoryProvider.jobsByCategory.length,
+                itemBuilder: (context, index) {
+                  return jobCard(
+                      categoryProvider.jobsByCategory[index], context,
+                      isApplied: true); // Display the job card
+                },
+              ),
+            ),
     );
   }
 }

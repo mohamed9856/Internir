@@ -14,30 +14,38 @@ class Categories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var categoryProvider = Provider.of<CategoryProvider>(context);
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          CustomSearch(
-            onChanged: (category) => categoryProvider.searchCategory(category),
-            color: AppColor.grey2,
-            hintText: "Search Categories",
+    return Scaffold(
+      appBar: AppBar(),
+      body: Padding(
+        padding: const EdgeInsets.all(12),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              CustomSearch(
+                onChanged: (category) => categoryProvider.searchCategory(category),
+                color: AppColor.grey2,
+                hintText: "Search Categories",
+              ),
+              SizedBox(
+                height: 32 * SizeConfig.verticalBlock,
+              ),
+              
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) => categoryCard(
+                  category: categoryProvider.allCategory[index],
+                  context: context,
+                ),
+                separatorBuilder: (context, index) => SizedBox(
+                  height: 20 * SizeConfig.verticalBlock,
+                ),
+                itemCount: categoryProvider.allCategory.length,
+              )
+            
+            ],
           ),
-          SizedBox(
-            height: 20 * SizeConfig.verticalBlock,
-          ),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) => categoryCard(
-              category: categoryProvider.allCategory[index],
-              context: context,
-            ),
-            separatorBuilder: (context, index) => SizedBox(
-              height: 20 * SizeConfig.verticalBlock,
-            ),
-            itemCount: categoryProvider.allCategory.length,
-          )
-        ],
+        ),
       ),
     );
   }

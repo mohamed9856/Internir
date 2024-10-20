@@ -14,7 +14,7 @@ class CategoryProvider extends ChangeNotifier {
   var jobs = <JobModel>[];
   bool loading = false;
   String category = '';
-  var allCategory = jobCategories;
+  var allCategory = listCategories;
 
   var jobsByCategory = <JobModel>[];
 
@@ -57,7 +57,7 @@ class CategoryProvider extends ChangeNotifier {
         allJobs.add(JobModel.fromJson(job.data()));
       }
 
-      jobs = allJobs;
+      jobsByCategory = allJobs;
       if (data.docs.isNotEmpty) {
         firstDocument = data.docs.first;
         lastDocument = data.docs.last;
@@ -145,10 +145,15 @@ class CategoryProvider extends ChangeNotifier {
   }
 
   void searchCategory(String value) {
-    allCategory = jobCategories
+    allCategory = listCategories
         .where(
             (category) => category.toLowerCase().contains(value.toLowerCase()))
         .toList();
+    notifyListeners();
+  }
+
+  void setCategory(String category) {
+    this.category = category;
     notifyListeners();
   }
 }

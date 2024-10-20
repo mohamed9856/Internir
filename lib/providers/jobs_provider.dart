@@ -28,7 +28,7 @@ class JobsProvider extends ChangeNotifier {
         endBeforeValue: isPrevious ? firstDocument['createdAt'] : null,
         isPrevious: isPrevious,
         filters: [
-          ['Category', category, OperationFilter.isEqualTo.name],
+          ['enabled', [true], OperationFilter.whereIn.name],
         ]);
   }
 
@@ -64,6 +64,8 @@ class JobsProvider extends ChangeNotifier {
       checkHasMore(data);
     } catch (e) {
       debugPrint(e.toString());
+      hasMore = false;
+      notifyListeners();
     } finally {
       setLoading(false);
     }

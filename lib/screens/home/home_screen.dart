@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:internir/components/category_card.dart';
+import 'package:internir/screens/category/categories.dart';
 import 'package:internir/screens/category/one_category.dart';
 import '../../components/custom_button.dart';
 import '../../components/job_card.dart';
@@ -33,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AppColor.background,
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(
@@ -69,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, OneCategory.routeName);
+                        Navigator.pushNamed(context, Categories.routeName);
                       },
                       child: Text(
                         "See all",
@@ -90,7 +92,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     scrollDirection: Axis.horizontal,
                     itemCount: 20,
                     itemBuilder: (context, index) {
-                      return categoryCard(category: jobCategories[index], context: context);
+                      return categoryCard(
+                          category: listCategories[index], context: context);
                     },
                     separatorBuilder: (context, index) {
                       return SizedBox(
@@ -164,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               SizedBox(
                                 height: 16 * SizeConfig.verticalBlock,
                               ),
-                              jobCard(jobsProvider.jobs[index],
+                              jobCard(jobsProvider.jobs[index], context,
                                   isApplied: true),
                               SizedBox(
                                 height: 16 * SizeConfig.verticalBlock,
