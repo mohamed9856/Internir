@@ -70,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextSpan(
                     text: "Welcome ",
                     style: TextStyle(
-                      fontFamily: 'Greta Arabic',
+                      fontFamily: 'NotoSans',
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextSpan(
                     text: "Hunters",
                     style: TextStyle(
-                      fontFamily: 'Greta Arabic',
+                      fontFamily: 'NotoSans',
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                       color: Colors.indigo,
@@ -93,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const Text(
               "Log in with your account",
               style: TextStyle(
-                fontFamily: 'Greta Arabic',
+                fontFamily: 'NotoSans',
                 fontSize: 16,
                 color: Colors.grey,
               ),
@@ -150,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: const Text(
                         "Login",
                         style: TextStyle(
-                          fontFamily: 'Greta Arabic',
+                          fontFamily: 'NotoSans',
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,

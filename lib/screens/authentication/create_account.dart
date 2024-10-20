@@ -174,7 +174,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     TextSpan(
                       text: "Create ",
                       style: TextStyle(
-                        fontFamily: 'Greta Arabic',
+                        fontFamily: 'NotoSans',
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
@@ -183,7 +183,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     TextSpan(
                       text: "Account",
                       style: TextStyle(
-                        fontFamily: 'Greta Arabic',
+                        fontFamily: 'NotoSans',
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
                         color: Colors.indigo,
@@ -197,7 +197,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               const Text(
                 "Create an account so you can explore all the existing jobs",
                 style: TextStyle(
-                  fontFamily: 'Greta Arabic',
+                  fontFamily: 'NotoSans',
                   fontSize: 16,
                   color: Colors.grey,
                 ),
@@ -523,7 +523,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       : const Text(
                           'Register',
                           style: TextStyle(
-                            fontFamily: 'Greta Arabic',
+                            fontFamily: 'NotoSans',
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
