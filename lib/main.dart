@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:internir/providers/index_provider.dart';
 import 'package:internir/providers/jobs_provider.dart';
+import 'package:internir/screens/home/home_screen.dart';
+import 'package:internir/screens/profile/edit_profile_screen.dart';
+import 'package:internir/screens/profile/profile_screen.dart';
+import 'package:internir/screens/saved/saved_internships.dart';
 import 'package:internir/screens/splash/splash_screen.dart';
 import 'package:internir/utils/routes.dart';
 import 'package:internir/utils/size_config.dart';
@@ -36,7 +40,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: themeData,
       onGenerateRoute: AppRoute.onGenerateRoute,
-      home: const SplashScreen(),
+      home: const SplashScreen()
     );
   }
 }
