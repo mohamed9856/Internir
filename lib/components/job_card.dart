@@ -158,7 +158,26 @@ Widget jobCard(JobModel job, BuildContext context, {bool isApplied = false}) {
             SizedBox(
               width: 16 * SizeConfig.horizontalBlock,
             ),
-            CustomButton(
+            (isApplied)
+                ? CustomButton(
+              text: "Know More",
+              width: 160 * SizeConfig.horizontalBlock,
+              height: 40 * SizeConfig.verticalBlock,
+              onPressed: () {
+                Navigator.of(context).pushNamed(
+                  ApplyScreen.routeName,
+                  arguments: job,
+                );
+              },
+              backgroundColor: AppColor.lightBlue,
+              textColor: Colors.white,
+              padding: EdgeInsets.symmetric(
+                horizontal: 16 * SizeConfig.horizontalBlock,
+                vertical: 8 * SizeConfig.verticalBlock,
+              ),
+              fontSize: 14 * SizeConfig.textRatio,
+            )
+                : CustomButton(
               text: "Apply",
               width: 100 * SizeConfig.horizontalBlock,
               height: 40 * SizeConfig.verticalBlock,

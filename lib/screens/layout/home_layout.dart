@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:internir/providers/index_provider.dart';
+import 'package:internir/screens/home/home_screen.dart';
+import 'package:internir/screens/profile/profile_screen.dart';
+import 'package:internir/screens/saved/saved_internships.dart';
+import 'package:internir/utils/app_assets.dart';
+import 'package:internir/utils/app_color.dart';
+import 'package:provider/provider.dart';
 import 'package:internir/components/custom_button.dart';
 import 'package:internir/components/custom_text_form_field.dart';
 import 'package:internir/constants/constants.dart';
 import 'package:internir/providers/Admin/company_provider.dart';
 import 'package:internir/utils/size_config.dart';
 import 'package:internir/utils/utils.dart';
-import '../../providers/index_provider.dart';
+import 'package:internir/providers/index_provider.dart';
+import '../apply_list/applied_list.dart';
 import '../home/home_screen.dart';
 import '../saved/saved_internships.dart';
 import '../../utils/app_assets.dart';
@@ -17,6 +25,7 @@ import 'package:internir/models/job_model.dart';
 
 class HomeLayout extends StatefulWidget {
   const HomeLayout({super.key});
+
   static const routeName = '/home-layout';
 
   @override
@@ -26,9 +35,9 @@ List<JobModel> savedJobs = [];
 class _HomeLayoutState extends State<HomeLayout> {
   var pages = [
     const HomeScreen(),
-    Container(),
+    const ApplyListScreen(),
     const SavedInternships(),
-    Container(),
+    const ProfilePage(),
   ];
 
   var formKey = GlobalKey<FormState>();
@@ -109,7 +118,6 @@ class _HomeLayoutState extends State<HomeLayout> {
                           ),
 
                           DropdownButtonFormField(
-
                             items: [
                               for (var i = 0; i < listCategories.length; ++i)
                                 DropdownMenuItem(
@@ -121,7 +129,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                               selectedCategory.text = value.toString();
                             },
                             // initial value
-                            value:selectedCategory.text =  listCategories[0],
+                            value: selectedCategory.text = listCategories[0],
                             style: TextStyle(
                               fontSize: 16 * SizeConfig.textRatio,
                               fontFamily: 'NotoSans',
@@ -310,7 +318,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                             ],
                           ),
                           SizedBox(
-                            height: 32 * SizeConfig.verticalBlock, 
+                            height: 32 * SizeConfig.verticalBlock,
                           ),
                           CustomButton(
                             width: double.infinity,
