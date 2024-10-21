@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:internir/screens/authentication/login_screen.dart';
 import 'package:internir/screens/profile/edit_profile_screen.dart';
 import 'package:internir/screens/profile/resume_screen.dart';
 import 'package:internir/screens/profile/settings_screen.dart';
@@ -86,7 +87,7 @@ class _ProfilePageState extends State<ProfilePage> {
               onTap: () async {
                 await FirebaseAuth.instance.signOut();
                 Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => Container()));
+                    MaterialPageRoute(builder: (context) => const LoginScreen()));
               }),
           ]
         )
