@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:internir/screens/apply/apply_screen.dart';
+import 'package:provider/provider.dart';
 import 'custom_button.dart';
 import '../models/job_model.dart';
 import '../utils/app_color.dart';
 import '../utils/size_config.dart';
+import '../providers/saved_jobs_provider.dart';
 
 Widget savedJobCard(JobModel job, BuildContext context) {
   return Container(
@@ -27,15 +29,29 @@ Widget savedJobCard(JobModel job, BuildContext context) {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          job.title,
-          softWrap: true,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontSize: 16 * SizeConfig.textRatio,
-            fontWeight: FontWeight.bold,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                job.title,
+                softWrap: true,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 16 * SizeConfig.textRatio,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete, color: Colors.blue),
+              onPressed: () {
+                Provider.of<JobSaveProvider>(context, listen: false)
+                    .toggleSaveJob(job.id);
+              },
+            ),
+          ],
         ),
         SizedBox(height: 3 * SizeConfig.verticalBlock),
         Text(

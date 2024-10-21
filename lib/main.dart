@@ -1,17 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:internir/providers/category_provider.dart';
-import 'package:internir/screens/splash/splash_screen.dart';
-import 'package:internir/utils/routes.dart';
-import 'package:internir/utils/size_config.dart';
-import 'providers/index_provider.dart';
-import 'providers/jobs_provider.dart';
-import 'package:internir/providers/Admin/company_auth_provider.dart';
 import 'package:internir/providers/Admin/company_provider.dart';
+import 'package:internir/providers/saved_jobs_provider.dart';
 import 'package:internir/screens/layout/home_layout.dart';
 import 'providers/index_provider.dart';
 import 'providers/jobs_provider.dart';
-import 'providers/saved_jobs_provider.dart';
 import 'screens/splash/splash_screen.dart';
 import 'utils/routes.dart';
 import 'utils/size_config.dart';
@@ -31,13 +24,8 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => JobsProvider()),
-        ChangeNotifierProvider(create: (_) => IndexProvider()),
-        ChangeNotifierProvider(create: (_) => CategoryProvider()),
-        
-        ChangeNotifierProvider(create: (_) => CompanyProvider()),
-        ChangeNotifierProvider(create: (_) => CompnayAuthProvider()),
-        
         ChangeNotifierProvider(create: (_) => JobSaveProvider()),
+        ChangeNotifierProvider(create: (_) => IndexProvider()),
         ChangeNotifierProvider(create: (_) => CompanyProvider()),
       ],
       child: const MyApp(),
@@ -57,12 +45,7 @@ class MyApp extends StatelessWidget {
       theme: themeData,
       onGenerateRoute: AppRoute.onGenerateRoute,
       initialRoute: SplashScreen.routeName,
-      routes: {
-        LoginScreen.routeName: (context) => const LoginScreen(),
-        CreateAccountScreen.routeName: (context) => const CreateAccountScreen(),
-        HomeLayout.routeName: (context) => const HomeLayout(),
-      },
+
     );
   }
 }
-

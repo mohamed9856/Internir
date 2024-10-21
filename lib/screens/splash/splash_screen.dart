@@ -6,8 +6,6 @@ import 'package:internir/screens/authentication/login_screen.dart';
 import 'package:internir/utils/app_color.dart';
 import 'package:internir/utils/size_config.dart';
 import 'package:internir/screens/layout/home_layout.dart';
-import 'package:internir/screens/onboarding/onboarding_screen.dart';
-import 'package:internir/utils/app_assets.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -52,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              AppAssets.logo,
+              'assets/images/Internir.jpg',
               width: 350 * SizeConfig.horizontalBlock,
               height: 350 * SizeConfig.verticalBlock,
             ),

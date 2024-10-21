@@ -20,7 +20,6 @@ const List<String> listCategories = [
   'Game Developer',
   'Cloud Architect',
 
-  
   'AI Engineer',
   'System Architect',
   'Blockchain Developer',
@@ -134,8 +133,7 @@ const List<String> listCategories = [
   'VoIP Engineer',
   'Web Architect',
   'Web Application Developer',
-  'Web Security Engineer'
-
+  'Web Security Engineer',
   'Healthcare',
   'Web Developer',
   'Education',
@@ -305,5 +303,4 @@ const List<String> listCategories = [
   'Packaging',
   'Quality Control',
   'Safety and Compliance',
-
 ];
