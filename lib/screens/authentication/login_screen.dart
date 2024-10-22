@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:internir/screens/authentication/admin/company_sign_up.dart';
-import 'package:internir/screens/dashboard/dashboard_screen.dart';
+import 'admin/company_sign_up.dart';
+import '../dashboard/dashboard_screen.dart';
 import '../../providers/onboarding_provider.dart';
 import '../layout/home_layout.dart';
 import 'package:provider/provider.dart';

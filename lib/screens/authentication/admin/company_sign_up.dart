@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:internir/screens/authentication/login_screen.dart';
+import '../login_screen.dart';
 import '../../../components/custom_button.dart';
 import '../../../components/custom_text_form_field.dart';
 import '../../../providers/Admin/company_auth_provider.dart';

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import '../providers/category_provider.dart';
 import '../screens/category/one_category.dart';
 import '../utils/app_color.dart';
 import '../utils/size_config.dart';
-import 'package:provider/provider.dart';
 
 Widget categoryCard({
   required String category,

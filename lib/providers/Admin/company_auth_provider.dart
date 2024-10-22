@@ -66,7 +66,7 @@ class CompnayAuthProvider with ChangeNotifier {
       localImage = image;
       isLocalImage = true;
     }
-    company = company!.copyWith(
+    company = company.copyWith(
       image: isLocalImage ? null : newCompany.image,
       id: newCompany.id,
       name: newCompany.name,
@@ -124,7 +124,7 @@ class CompnayAuthProvider with ChangeNotifier {
       String? urlImage;
       if (isLocalImage && localImage != null) {
         urlImage = await FireStorage.uploadFile(
-          path: 'company/${company.id}',
+          path: 'company/$uid',
           fileName: 'profile.png',
           file: localImage!,
         );

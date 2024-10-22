@@ -9,8 +9,8 @@ import '../screens/onboarding/onboarding_screen.dart';
 import '../models/job_model.dart';
 import '../screens/apply/apply_screen.dart';
 import '../screens/apply/apply_to_job.dart';
-import 'package:internir/screens/category/one_category.dart';
-import 'package:internir/screens/category/categories.dart';
+import '../screens/category/one_category.dart';
+import '../screens/category/categories.dart';
 
 class AppRoute {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {

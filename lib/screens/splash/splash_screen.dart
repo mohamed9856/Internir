@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:internir/screens/dashboard/dashboard_screen.dart';
-import 'package:internir/screens/onboarding/onboarding_screen.dart';
-import 'package:internir/services/fire_database.dart';
+import '../dashboard/dashboard_screen.dart';
+import '../onboarding/onboarding_screen.dart';
+import '../../services/fire_database.dart';
 import '../../providers/jobs_provider.dart';
 import '../../utils/app_color.dart';
 import '../../utils/size_config.dart';

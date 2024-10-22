@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:internir/components/custom_button.dart';
-import 'package:internir/components/custom_text_form_field.dart';
-import 'package:internir/constants/constants.dart';
-import 'package:internir/providers/Admin/company_provider.dart';
-import 'package:internir/utils/utils.dart';
+import '../../components/custom_button.dart';
+import '../../components/custom_text_form_field.dart';
+import '../../constants/constants.dart';
+import '../../providers/Admin/company_provider.dart';
+import '../../utils/utils.dart';
 import 'package:provider/provider.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/app_color.dart';
 import '../../utils/size_config.dart';
-import '../../providers/jobs_provider.dart';
 import '../../providers/Admin/company_auth_provider.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -48,7 +47,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     var companyAuthProvider = Provider.of<CompnayAuthProvider>(context);
 
     // Fallback values for company name and image
-    String name = companyAuthProvider.company.name ?? "Loading...";
+    String name = companyAuthProvider.company.name.isNotEmpty
+        ? companyAuthProvider.company.name
+        : "Loading...";
     String? companyImage = companyAuthProvider.company.image;
 
     return Scaffold(
@@ -167,8 +168,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           i < listCategories.length;
                                           ++i)
                                         DropdownMenuItem(
-                                          child: Text(listCategories[i]),
                                           value: listCategories[i],
+                                          child: Text(listCategories[i]),
                                         ),
                                     ],
                                     onChanged: (value) {

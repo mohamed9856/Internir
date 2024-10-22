@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:internir/models/company_model.dart';
+import '../../models/company_model.dart';
 import '../../models/job_model.dart';
 import '../../services/fire_database.dart';
 

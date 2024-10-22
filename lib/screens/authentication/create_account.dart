@@ -8,7 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'login_screen.dart';
-import '../home/home_screen.dart';
 import '../layout/home_layout.dart';
 import 'package:provider/provider.dart';
 
