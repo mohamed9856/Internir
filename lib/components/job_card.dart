@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:internir/screens/apply/apply_screen.dart';
+import '../screens/apply/apply_screen.dart';
 import 'custom_button.dart';
 import '../models/job_model.dart';
 import '../utils/app_color.dart';

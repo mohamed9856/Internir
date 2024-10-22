@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:internir/screens/authentication/admin/company_sign_up.dart';
-import 'package:internir/screens/authentication/login_screen.dart';
-import 'package:internir/utils/app_assets.dart';
-import 'package:internir/utils/app_color.dart';
-import 'package:internir/utils/size_config.dart';
-import 'package:internir/screens/layout/home_layout.dart';
+import '../authentication/admin/company_sign_up.dart';
+import '../authentication/login_screen.dart';
+import '../../utils/app_assets.dart';
+import '../../utils/app_color.dart';
+import '../../utils/size_config.dart';
+import '../layout/home_layout.dart';
 import 'package:provider/provider.dart';
-import 'package:internir/providers/onboarding_provider.dart';
+import '../../providers/onboarding_provider.dart';
 
 class OnBoardingScreen extends StatelessWidget {
   const OnBoardingScreen({super.key});
@@ -91,6 +91,7 @@ class OnBoardingScreen extends StatelessWidget {
                     children: [
                       ElevatedButton(
                         onPressed: () {
+                          onboardingProvider.setType(0);
                           Navigator.pushReplacementNamed(
                               context, CompanySignUp.routeName);
                         },
@@ -106,6 +107,7 @@ class OnBoardingScreen extends StatelessWidget {
                       const SizedBox(width: 20),
                       ElevatedButton(
                         onPressed: () {
+                          onboardingProvider.setType(1);
                           Navigator.pushReplacementNamed(
                               context, LoginScreen.routeName);
                         },
@@ -136,7 +138,8 @@ class OnBoardingScreen extends StatelessWidget {
                 if (onboardingProvider.currentPage == 1)
                   TextButton(
                     onPressed: () {
-                      onboardingProvider.setPage(onboardingProvider.currentPage - 1);
+                      onboardingProvider
+                          .setPage(onboardingProvider.currentPage - 1);
                       pageController.previousPage(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeInOut,
@@ -151,21 +154,21 @@ class OnBoardingScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       2,
-                          (index) => buildDot(index, onboardingProvider.currentPage),
+                      (index) =>
+                          buildDot(index, onboardingProvider.currentPage),
                     ),
                   ),
                 ),
-
                 if (onboardingProvider.currentPage == 0)
                   TextButton(
                     onPressed: () {
-                      onboardingProvider.setPage(onboardingProvider.currentPage + 1);
+                      onboardingProvider
+                          .setPage(onboardingProvider.currentPage + 1);
                       pageController.nextPage(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeInOut,

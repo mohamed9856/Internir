@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:internir/utils/app_color.dart';
-import 'package:internir/models/job_model.dart';
+import '../../utils/app_color.dart';
+import '../../models/job_model.dart';
 
 class ApplyToJob extends StatefulWidget {
   const ApplyToJob({super.key, required this.job});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:internir/utils/utils.dart';
+import '../utils/utils.dart';
 import '../models/job_model.dart';
 import '../services/fire_database.dart';
 

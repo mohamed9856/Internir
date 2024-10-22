@@ -7,9 +7,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:image_picker/image_picker.dart';
-import 'package:internir/screens/authentication/login_screen.dart';
-import 'package:internir/screens/home/home_screen.dart';
-import 'package:internir/screens/layout/home_layout.dart';
+import 'login_screen.dart';
+import '../home/home_screen.dart';
+import '../layout/home_layout.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants/constants.dart';

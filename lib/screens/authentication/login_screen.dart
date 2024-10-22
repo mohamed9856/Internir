@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:internir/screens/layout/home_layout.dart';
+import 'package:internir/screens/authentication/admin/company_sign_up.dart';
+import 'package:internir/screens/dashboard/dashboard_screen.dart';
+import '../../providers/onboarding_provider.dart';
+import '../layout/home_layout.dart';
 import 'package:provider/provider.dart';
 import '../../providers/jobs_provider.dart';
 import 'create_account.dart';
-import 'package:internir/screens/home/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';
@@ -37,13 +39,23 @@ class _LoginScreenState extends State<LoginScreen> {
         const SnackBar(content: Text("Logged in successfully!")),
       );
 
-      var jobProvider = context.read<JobsProvider>();
-      await jobProvider.fetchJobs();
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (_) => const HomeLayout()),
-        (route) => false,
-      );
+      var onBoardingProvider = context.read<OnboardingProvider>();
+      if (onBoardingProvider.type == 0) {
+        // for admin
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const DashboardScreen()),
+          (route) => false,
+        );
+      } else {
+        var jobProvider = context.read<JobsProvider>();
+        await jobProvider.fetchJobs();
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeLayout()),
+          (route) => false,
+        );
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to log in: ${e.toString()}")),
@@ -57,6 +69,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final onboardingProvider = context.watch<OnboardingProvider>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -163,7 +177,11 @@ class _LoginScreenState extends State<LoginScreen> {
             Center(
               child: TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, CreateAccountScreen.routeName);
+                  if (onboardingProvider.type == 1) {
+                    Navigator.pushNamedAndRemoveUntil(context, CreateAccountScreen.routeName, (route) => false);
+                  } else {
+                    Navigator.pushNamedAndRemoveUntil(context, CompanySignUp.routeName, (route) => false);
+                  }
                 },
                 child: const Text(
                   "Create new account",

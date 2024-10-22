@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:internir/providers/jobs_provider.dart';
-import 'package:internir/utils/app_color.dart';
-import 'package:internir/utils/size_config.dart';
-import 'package:internir/components/job_card.dart';
+import '../../providers/jobs_provider.dart';
+import '../../utils/app_color.dart';
+import '../../utils/size_config.dart';
+import '../../components/job_card.dart';
 
 class ApplyListScreen extends StatefulWidget {
   const ApplyListScreen({super.key});

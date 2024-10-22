@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:internir/providers/category_provider.dart';
-import 'package:internir/screens/category/one_category.dart';
-import 'package:internir/utils/app_color.dart';
-import 'package:internir/utils/size_config.dart';
+import '../providers/category_provider.dart';
+import '../screens/category/one_category.dart';
+import '../utils/app_color.dart';
+import '../utils/size_config.dart';
 import 'package:provider/provider.dart';
 
 Widget categoryCard({

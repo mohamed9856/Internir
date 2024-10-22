@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:internir/components/category_card.dart';
-import 'package:internir/screens/category/categories.dart';
-import 'package:internir/screens/category/one_category.dart';
+import '../../components/category_card.dart';
+import '../category/categories.dart';
+import '../category/one_category.dart';
 import '../../components/custom_button.dart';
 import '../../components/job_card.dart';
 import '../../constants/constants.dart';

@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:internir/screens/authentication/login_screen.dart';
-import 'package:internir/screens/profile/edit_profile_screen.dart';
-import 'package:internir/screens/profile/resume_screen.dart';
-import 'package:internir/screens/profile/settings_screen.dart';
-import 'package:internir/screens/profile/widgets/profile_options.dart';
-import 'package:internir/utils/size_config.dart';
+import '../authentication/login_screen.dart';
+import 'edit_profile_screen.dart';
+import 'resume_screen.dart';
+import 'settings_screen.dart';
+import 'widgets/profile_options.dart';
+import '../../utils/size_config.dart';
 
 import '../../utils/app_color.dart';
 

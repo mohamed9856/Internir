@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:internir/components/custom_button.dart';
-import 'package:internir/models/job_model.dart';
-import 'package:internir/screens/apply/apply_to_job.dart';
-import 'package:internir/utils/app_color.dart';
-import 'package:internir/utils/size_config.dart';
-import 'package:internir/utils/utils.dart';
-import 'package:internir/providers/saved_jobs_provider.dart';
+import '../../components/custom_button.dart';
+import '../../models/job_model.dart';
+import 'apply_to_job.dart';
+import '../../utils/app_color.dart';
+import '../../utils/size_config.dart';
+import '../../utils/utils.dart';
+import '../../providers/saved_jobs_provider.dart';
 import 'package:provider/provider.dart';
 
 class ApplyScreen extends StatefulWidget {

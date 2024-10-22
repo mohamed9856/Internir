@@ -1,6 +1,6 @@
   import 'package:flutter/material.dart';
-import 'package:internir/constants/constants.dart';
-import 'package:internir/utils/utils.dart';
+import '../constants/constants.dart';
+import '../utils/utils.dart';
 import '../models/job_model.dart';
 import '../services/fire_database.dart';
 
@@ -25,10 +25,10 @@ class CategoryProvider extends ChangeNotifier {
     return await FireDatabase.getData('jobs',
         orderBy: 'createdAt',
         descending: true,
-        limit: limit,
-        startAfterValue: isNext ? lastDocument['createdAt'] : null,
-        endBeforeValue: isPrevious ? firstDocument['createdAt'] : null,
-        isPrevious: isPrevious,
+        // limit: limit,
+        // startAfterValue: isNext ? lastDocument['createdAt'] : null,
+        // endBeforeValue: isPrevious ? firstDocument['createdAt'] : null,
+        // isPrevious: isPrevious,
         filters: [
           ['category', category, OperationFilter.isEqualTo.name],
         ]);
