@@ -66,7 +66,7 @@ class CompnayAuthProvider with ChangeNotifier {
       localImage = image;
       isLocalImage = true;
     }
-    company = company!.copyWith(
+    company = company.copyWith(
       image: isLocalImage ? null : newCompany.image,
       jobs: newCompany.jobs,
       id: newCompany.id,

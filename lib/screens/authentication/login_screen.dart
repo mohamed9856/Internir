@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:internir/screens/layout/home_layout.dart';
 import 'package:provider/provider.dart';
-import '../../providers/jobs_provider.dart';
+import 'package:internir/providers/jobs_provider.dart';
 import 'create_account.dart';
-import 'package:internir/screens/home/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';

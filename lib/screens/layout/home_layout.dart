@@ -14,13 +14,7 @@ import 'package:internir/constants/constants.dart';
 import 'package:internir/providers/Admin/company_provider.dart';
 import 'package:internir/utils/size_config.dart';
 import 'package:internir/utils/utils.dart';
-import 'package:internir/providers/index_provider.dart';
-import '../apply_list/applied_list.dart';
-import '../home/home_screen.dart';
-import '../saved/saved_internships.dart';
-import '../../utils/app_assets.dart';
-import '../../utils/app_color.dart';
-import 'package:provider/provider.dart';
+import 'package:internir/screens/apply_list/applied_list.dart';
 import 'package:internir/models/job_model.dart';
 
 class HomeLayout extends StatefulWidget {

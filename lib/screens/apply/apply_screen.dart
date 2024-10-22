@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:provider/provider.dart';
+
 import 'package:internir/components/custom_button.dart';
 import 'package:internir/models/job_model.dart';
 import 'package:internir/screens/apply/apply_to_job.dart';
@@ -7,7 +9,6 @@ import 'package:internir/utils/app_color.dart';
 import 'package:internir/utils/size_config.dart';
 import 'package:internir/utils/utils.dart';
 import 'package:internir/providers/saved_jobs_provider.dart';
-import 'package:provider/provider.dart';
 
 class ApplyScreen extends StatefulWidget {
   const ApplyScreen({super.key, required this.job});
@@ -20,14 +21,7 @@ class ApplyScreen extends StatefulWidget {
 }
 
 class _ApplyScreenState extends State<ApplyScreen> {
-  //bool isJobSaved = false;
   QuillController descriptionController = QuillController.basic();
-
-  // void saveJob() {
-  //   setState(() {
-  //     isJobSaved = !isJobSaved;
-  //   });
-  // }
 
   @override
   void initState() {
@@ -93,7 +87,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
                     ),
                     SizedBox(height: 4 * SizeConfig.verticalBlock),
                     Text(
-                      'Number of applys: ${widget.job.numberOfApplicants}',
+                      'Number of applies: ${widget.job.numberOfApplicants}',
                       style: TextStyle(
                         fontSize: 14 * SizeConfig.textRatio,
                         fontFamily: 'NotoSans',
@@ -222,7 +216,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
           children: [
             IconButton(
               onPressed: () {
-                jobSaveProvider.toggleSaveJob(widget.job.id);  // Toggle job save state
+                jobSaveProvider.toggleSaveJob(widget.job.id);
               },
               icon: jobSaveProvider.isJobSaved(widget.job.id)
                   ? const Icon(Icons.bookmark, color: Colors.blue)

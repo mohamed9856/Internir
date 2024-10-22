@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:internir/components/custom_button.dart';
 import 'package:internir/components/custom_text_form_field.dart';
-import 'package:internir/models/company_model.dart';
 import 'package:internir/providers/Admin/company_auth_provider.dart';
 import 'package:internir/screens/layout/home_layout.dart';
 import 'package:internir/utils/app_assets.dart';

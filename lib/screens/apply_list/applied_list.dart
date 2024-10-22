@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +18,35 @@ class ApplyListScreen extends StatefulWidget {
 }
 
 class _ApplyListScreenState extends State<ApplyListScreen> {
+  final List<String> _appliedJobs = [];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final User? user = FirebaseAuth.instance.currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppliedJobs();
+  }
+
+  Future<void> _loadAppliedJobs() async {
+    if (user != null) {
+      DocumentSnapshot userSnapshot =
+          await _firestore.collection('users').doc(user!.uid).get();
+
+      if (userSnapshot.exists) {
+        List<String> appliedJobs =
+            List<String>.from(userSnapshot['appliedJobs'] ?? []);
+        setState(() {
+          _appliedJobs.addAll(appliedJobs);
+        });
+      }
+    }
+  }
+
+  bool isJobApplied(String jobId) {
+    return _appliedJobs.contains(jobId);
+  }
+
   @override
   Widget build(BuildContext context) {
     final jobsProvider = context.watch<JobsProvider>();
@@ -34,38 +65,34 @@ class _ApplyListScreenState extends State<ApplyListScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: (jobsProvider.loading)
-              ? Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 16 * SizeConfig.verticalBlock,
-                  ),
-                  child: const CircularProgressIndicator(
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(AppColor.mainBlue),
-                  ),
-                )
-              : ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: jobsProvider.jobs.length,
-                  itemBuilder: (context, index) {
+        child: (jobsProvider.loading)
+            ? Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: 16 * SizeConfig.verticalBlock,
+                ),
+                child: const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColor.mainBlue),
+                ),
+              )
+            : ListView.builder(
+                itemCount: jobsProvider.jobs.length,
+                itemBuilder: (context, index) {
+                  final jobId = jobsProvider.jobs[index].id;
+
+                  if (isJobApplied(jobId)) {
                     return Column(
-                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        SizedBox(
-                          height: 16 * SizeConfig.verticalBlock,
-                        ),
+                        SizedBox(height: 16 * SizeConfig.verticalBlock),
                         jobCard(jobsProvider.jobs[index], context,
                             isApplied: true),
-                        SizedBox(
-                          height: 16 * SizeConfig.verticalBlock,
-                        ),
+                        SizedBox(height: 16 * SizeConfig.verticalBlock),
                       ],
                     );
-                  },
-                ),
-        ),
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
+              ),
       ),
     );
   }

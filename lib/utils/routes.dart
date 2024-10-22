@@ -6,8 +6,6 @@ import 'package:internir/screens/category/categories.dart';
 import '../screens/layout/home_layout.dart';
 import '../screens/splash/splash_screen.dart';
 import 'package:internir/screens/authentication/admin/company_sign_up.dart';
-import 'package:internir/screens/layout/home_layout.dart';
-import 'package:internir/screens/splash/splash_screen.dart';
 import 'package:internir/screens/onboarding/onboarding_screen.dart';
 import '../models/job_model.dart';
 import '../screens/apply/apply_screen.dart';

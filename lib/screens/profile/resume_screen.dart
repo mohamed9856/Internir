@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:internir/components/custom_button.dart';
 import 'package:internir/screens/profile/widgets/my_pdf_card.dart';
 import 'package:internir/utils/size_config.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import '../../utils/app_color.dart';
+import 'package:internir/utils/app_color.dart';
 
 class ResumePage extends StatefulWidget {
   const ResumePage({super.key});
