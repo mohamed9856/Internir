@@ -1,4 +1,8 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 
@@ -20,13 +24,50 @@ class MyPdf extends StatefulWidget {
 
 class _MyPdfState extends State<MyPdf> {
  DateTime? lastModified;
+ final currentUser = FirebaseAuth.instance.currentUser;
+ String? resume;
+
+// Function to upload PDF
+  Future<void> uploadPdf() async {
+    // Use file_picker to pick a PDF
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+
+    if (result != null) {
+      File file = File(result.files.single.path!);
+
+      // Uploading file to Firebase Storage
+      try {
+        // Create a reference to the storage location
+        Reference ref = FirebaseStorage.instance.ref('pdfs/${file.path.split('/').last}');
+        UploadTask uploadTask = ref.putFile(file);
+
+        // Wait for the upload to complete
+        TaskSnapshot snapshot = await uploadTask;
+        String downloadUrl = await snapshot.ref.getDownloadURL();
+
+        // Save the download URL in Firestore
+        if (currentUser != null) {
+          await FirebaseFirestore.instance.collection("users").doc(currentUser!.uid).update({
+            'cvFile': downloadUrl,
+          });
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('PDF uploaded successfully!')));
+
+      } catch (e) {
+        print("Error uploading PDF: $e");
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to upload PDF.')));
+      }
+    }
+  }
+
+
 
   @override
   void initState() {
     super.initState();
-    _lastModifiedDate(); // Get the file modification date when the widget initializes
+    _lastModifiedDate();
   }
-
 
   //---- Function to show the confirmation dialog ----\\
   Future<void> _showDeleteConfirmation() async {

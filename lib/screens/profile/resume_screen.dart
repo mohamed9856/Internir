@@ -32,12 +32,14 @@ class _ResumePageState extends State<ResumePage> {
       });
     }
   }
-  // Remove file from the list
+
+  //----REMOVE FILE----\\
   void removeFile(File file) {
     setState(() {
       uploadedFiles.remove(file);
     });
   }
+
 
 
   @override

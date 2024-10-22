@@ -40,8 +40,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _dobController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   final List<String> genderOptions = [
     'Male',
