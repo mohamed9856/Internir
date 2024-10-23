@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../providers/index_provider.dart';
 import '../home/home_screen.dart';
@@ -8,19 +7,7 @@ import '../saved/saved_internships.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/app_color.dart';
 import 'package:provider/provider.dart';
-import '../../components/custom_button.dart';
-import '../../components/custom_text_form_field.dart';
-import '../../constants/constants.dart';
-import '../../providers/Admin/company_provider.dart';
-import '../../utils/size_config.dart';
-import '../../utils/utils.dart';
-import '../../providers/index_provider.dart';
 import '../apply_list/applied_list.dart';
-import '../home/home_screen.dart';
-import '../saved/saved_internships.dart';
-import '../../utils/app_assets.dart';
-import '../../utils/app_color.dart';
-import 'package:provider/provider.dart';
 import '../../models/job_model.dart';
 
 class HomeLayout extends StatefulWidget {

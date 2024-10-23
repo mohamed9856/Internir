@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'admin/company_sign_up.dart';
@@ -5,7 +6,7 @@ import '../dashboard/dashboard_screen.dart';
 import '../../providers/onboarding_provider.dart';
 import '../layout/home_layout.dart';
 import 'package:provider/provider.dart';
-import '../../providers/jobs_provider.dart';
+import 'package:internir/providers/jobs_provider.dart';
 import 'create_account.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -38,9 +39,12 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Logged in successfully!")),
       );
+      var user = await FirebaseFirestore.instance
+          .collection('company')
+          .doc(userCredential.user!.uid);
+      var doc = await user.get();
 
-      var onBoardingProvider = context.read<OnboardingProvider>();
-      if (onBoardingProvider.type == 0) {
+      if (doc.exists) {
         // for admin
         Navigator.pushAndRemoveUntil(
           context,
@@ -178,9 +182,11 @@ class _LoginScreenState extends State<LoginScreen> {
               child: TextButton(
                 onPressed: () {
                   if (onboardingProvider.type == 1) {
-                    Navigator.pushNamedAndRemoveUntil(context, CreateAccountScreen.routeName, (route) => false);
+                    Navigator.pushNamedAndRemoveUntil(context,
+                        CreateAccountScreen.routeName, (route) => false);
                   } else {
-                    Navigator.pushNamedAndRemoveUntil(context, CompanySignUp.routeName, (route) => false);
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, CompanySignUp.routeName, (route) => false);
                   }
                 },
                 child: const Text(

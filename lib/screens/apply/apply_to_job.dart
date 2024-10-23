@@ -1,10 +1,11 @@
-import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import '../../utils/app_color.dart';
-import '../../models/job_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:internir/screens/layout/home_layout.dart';
+
+import 'package:internir/utils/app_color.dart';
+import 'package:internir/models/job_model.dart';
 
 class ApplyToJob extends StatefulWidget {
   const ApplyToJob({super.key, required this.job});
@@ -18,11 +19,17 @@ class ApplyToJob extends StatefulWidget {
 
 class _ApplyToJobState extends State<ApplyToJob> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+
   String? _pickedFileName;
-  bool _isFilePicked = false;
-  String? _userImagePath;
+  String? _userImageURL;
   String? _username;
+  String? _email;
+  String? _phone;
   String? _category;
+  bool _isFilePicked = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -41,9 +48,13 @@ class _ApplyToJobState extends State<ApplyToJob> {
 
       if (doc.exists) {
         setState(() {
-          _userImagePath = doc['image'] as String?;
+          _userImageURL = doc['image'] as String?;
           _username = doc['username'] as String?;
           _category = doc['category'] as String?;
+          _email = doc['email'] as String?;
+          _phone = doc['phone'] as String?;
+          _emailController.text = _email!;
+          _phoneController.text = _phone!;
         });
       }
     }
@@ -72,24 +83,103 @@ class _ApplyToJobState extends State<ApplyToJob> {
 
   void _uploadResume(BuildContext context) {
     if (_isFilePicked) {
+      ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Resume uploaded!')),
       );
     } else {
+      ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please pick a file first!')),
       );
     }
   }
 
-  void _sendApplication(BuildContext context) {
-    if (_formKey.currentState?.validate() ?? false) {
+  Future<void> addJobToUserAppliedJobs(String userId, String jobId) async {
+    try {
+      await FirebaseFirestore.instance.collection('users').doc(userId).update({
+        'appliedJobs': FieldValue.arrayUnion([jobId]),
+      });
+    } catch (error) {
+      ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Application sent!')),
+        const SnackBar(
+          content: Text('There has been an error!'),
+        ),
       );
+    }
+  }
+
+  Future<void> _sendApplication(BuildContext context) async {
+    setState(() {
+      _isLoading = true;
+    });
+    if (_formKey.currentState!.validate()) {
+      if (!_isFilePicked) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please upload your resume before applying!'),
+          ),
+        );
+        return;
+      }
+
+      try {
+        String companyId = widget.job.companyID;
+
+        String email = _emailController.text;
+        String phone = _phoneController.text;
+
+        Map<String, dynamic> applicationData = {
+          'email': email,
+          'phone': phone,
+          'jobId': widget.job.id,
+          'jobTitle': widget.job.title,
+          'appliedAt': FieldValue.serverTimestamp(),
+          'status': 'pending',
+          'userId': FirebaseAuth.instance.currentUser!.uid,
+          'username': _username,
+          'category': _category,
+        };
+
+        await FirebaseFirestore.instance
+            .collection('company')
+            .doc(companyId)
+            .collection('jobs')
+            .doc(widget.job.id)
+            .collection('applications').
+            doc(FirebaseAuth.instance.currentUser!.uid)
+            .set(applicationData);
+
+        // increase number  of application
+        await FirebaseFirestore.instance
+            .collection('jobs')
+            .doc(widget.job.id)
+            .update({'number of applications': FieldValue.increment(1)});
+
+        User? user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          await addJobToUserAppliedJobs(user.uid, widget.job.id);
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Application sent successfully!')),
+        );
+
+        setState(() {
+          _pickedFileName = null;
+          _isFilePicked = false;
+        });
+
+        Navigator.pop(context);
+        Navigator.pop(context);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error sending application: $e')),
+        );
+      }
       setState(() {
-        _pickedFileName = null;
-        _isFilePicked = false;
+        _isLoading = false;
       });
     }
   }
@@ -113,12 +203,10 @@ class _ApplyToJobState extends State<ApplyToJob> {
                 children: [
                   CircleAvatar(
                     radius: 32,
-                    backgroundImage: _userImagePath != null
-                        ? FileImage(
-                            File(_userImagePath!),
-                          )
+                    backgroundImage: _userImageURL != null
+                        ? NetworkImage(_userImageURL!)
                         : null,
-                    child: _userImagePath == null
+                    child: _userImageURL == null
                         ? const Icon(Icons.person, size: 32)
                         : null,
                   ),
@@ -140,6 +228,8 @@ class _ApplyToJobState extends State<ApplyToJob> {
               ),
               const SizedBox(height: 16),
               TextFormField(
+                controller: _emailController,
+                // initialValue: _email,
                 decoration: const InputDecoration(labelText: 'Email'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -150,6 +240,7 @@ class _ApplyToJobState extends State<ApplyToJob> {
               ),
               const SizedBox(height: 16),
               TextFormField(
+                controller: _phoneController,
                 decoration: const InputDecoration(labelText: 'Phone'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -223,7 +314,9 @@ class _ApplyToJobState extends State<ApplyToJob> {
                   foregroundColor: Colors.white,
                 ),
                 onPressed: () => _sendApplication(context),
-                child: const Text('Send'),
+                child: _isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text('Send'),
               ),
             ),
           ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internir/screens/applications/applications.dart';
 import '../screens/authentication/admin/company_sign_up.dart';
 import '../screens/authentication/create_account.dart';
 import '../screens/authentication/login_screen.dart';
@@ -43,6 +44,8 @@ class AppRoute {
                 ));
       case Categories.routeName:
         return MaterialPageRoute(builder: (_) => const Categories());
+      case Applications.routeName:
+        return MaterialPageRoute(builder: (_) => const Applications());
 
       default:
         return MaterialPageRoute(builder: (_) => errorRoute());
