@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:internir/components/job_card.dart';
-import 'package:internir/providers/category_provider.dart';
-import 'package:internir/utils/size_config.dart';
+import '../../components/job_card.dart';
+import '../../providers/category_provider.dart';
+import '../../utils/size_config.dart';
 import 'package:provider/provider.dart'; // Ensure you are using the provider package
 
 class OneCategory extends StatefulWidget {

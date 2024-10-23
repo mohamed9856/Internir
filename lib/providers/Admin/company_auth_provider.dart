@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:internir/models/company_model.dart';
-import 'package:internir/services/fire_database.dart';
-import 'package:internir/services/fire_storage.dart';
+import '../../models/company_model.dart';
+import '../../services/fire_database.dart';
+import '../../services/fire_storage.dart';
 
 class CompnayAuthProvider with ChangeNotifier {
   CompanyModel company = CompanyModel(
@@ -13,7 +13,6 @@ class CompnayAuthProvider with ChangeNotifier {
     phone: '',
     address: '',
     description: '',
-    jobs: [],
   );
 
   bool isPasswordVisible = false;
@@ -49,14 +48,15 @@ class CompnayAuthProvider with ChangeNotifier {
         address: data['address'],
         description: data['description'],
         image: data['image'],
-        jobs: data['jobs'],
       );
       isLocalImage = false;
       notifyListeners();
     } catch (e) {
-      print(e);
+      debugPrint(e.toString() + ' initCompany');
     }
   }
+
+  Future<void> fetchJobs() async {}
 
   void changeCompany({
     required CompanyModel newCompany,
@@ -66,9 +66,8 @@ class CompnayAuthProvider with ChangeNotifier {
       localImage = image;
       isLocalImage = true;
     }
-    company = company!.copyWith(
+    company = company.copyWith(
       image: isLocalImage ? null : newCompany.image,
-      jobs: newCompany.jobs,
       id: newCompany.id,
       name: newCompany.name,
       email: newCompany.email,
@@ -125,18 +124,18 @@ class CompnayAuthProvider with ChangeNotifier {
       String? urlImage;
       if (isLocalImage && localImage != null) {
         urlImage = await FireStorage.uploadFile(
-          path: 'company/${company.id}',
+          path: 'company/$uid',
           fileName: 'profile.png',
           file: localImage!,
         );
         isLocalImage = false;
       }
-      company = company.copyWith(id: uid, jobs: [], image: urlImage);
+      company = company.copyWith(id: uid, image: urlImage);
 
-      await FireDatabase.updateData(
-        'company',
-        company.id,
-        company.toJson(),
+      await FireDatabase.addData(
+        collection: 'company',
+        doc: company.id,
+        data: company.toJson(),
       );
       return true;
     } catch (error) {

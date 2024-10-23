@@ -7,6 +7,7 @@ class JobModel {
   int numberOfApplicants;
   bool enabled;
   String company;
+  String companyID;
   double? salary;
   String? category;
   String? jobType;
@@ -16,6 +17,7 @@ class JobModel {
     required this.title,
     required this.description,
     required this.location,
+    required this.companyID,
     this.salary,
     this.category,
     this.jobType,
@@ -38,6 +40,7 @@ class JobModel {
       createdAt: json['createdAt'].toDate().toLocal(),
       numberOfApplicants: json['number of applicants'],
       enabled: json['enabled'],
+      companyID: json['companyID'],
     );
   }
 
@@ -54,6 +57,7 @@ class JobModel {
       'createdAt': createdAt.toString(),
       'number of applicants': numberOfApplicants,
       'enabled': enabled,
+      'companyID': companyID
     };
   }
 
@@ -69,6 +73,7 @@ class JobModel {
     DateTime? createdAt,
     int? numberOfApplicants,
     bool? enabled,
+    String? companyID
   }) {
     return JobModel(
       id: id ?? this.id,
@@ -82,11 +87,12 @@ class JobModel {
       createdAt: createdAt ?? this.createdAt,
       numberOfApplicants: numberOfApplicants ?? this.numberOfApplicants,
       enabled: enabled ?? this.enabled,
+      companyID: companyID ?? this.companyID
     );
   }
 
   @override
   String toString() {
-    return 'JobModel{id: $id, title: $title, description: $description, location: $location, salary: $salary, category: $category, jobType: $jobType, company: $company, createdAt: $createdAt, numberOfApplicants: $numberOfApplicants, enabled: $enabled}';
+    return 'JobModel{id: $id, title: $title, description: $description, location: $location, salary: $salary, category: $category, jobType: $jobType, company: $company, createdAt: $createdAt, numberOfApplicants: $numberOfApplicants, enabled: $enabled, companyID: $companyID}';
   }
 }

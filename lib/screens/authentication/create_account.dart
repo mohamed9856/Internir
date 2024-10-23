@@ -7,9 +7,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:image_picker/image_picker.dart';
-import 'package:internir/screens/authentication/login_screen.dart';
-import 'package:internir/screens/home/home_screen.dart';
-import 'package:internir/screens/layout/home_layout.dart';
+import 'login_screen.dart';
+import '../layout/home_layout.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants/constants.dart';
@@ -177,7 +176,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     TextSpan(
                       text: "Create ",
                       style: TextStyle(
-                        fontFamily: 'Greta Arabic',
+                        fontFamily: 'NotoSans',
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
@@ -186,7 +185,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     TextSpan(
                       text: "Account",
                       style: TextStyle(
-                        fontFamily: 'Greta Arabic',
+                        fontFamily: 'NotoSans',
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
                         color: Colors.indigo,
@@ -200,7 +199,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               const Text(
                 "Create an account so you can explore all the existing jobs",
                 style: TextStyle(
-                  fontFamily: 'Greta Arabic',
+                  fontFamily: 'NotoSans',
                   fontSize: 16,
                   color: Colors.grey,
                 ),
@@ -526,7 +525,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       : const Text(
                           'Register',
                           style: TextStyle(
-                            fontFamily: 'Greta Arabic',
+                            fontFamily: 'NotoSans',
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,

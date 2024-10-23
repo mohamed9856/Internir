@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:internir/components/custom_button.dart';
-import 'package:internir/screens/profile/widgets/my_pdf_card.dart';
-import 'package:internir/utils/size_config.dart';
+import '../../components/custom_button.dart';
+import 'widgets/my_pdf_card.dart';
+import '../../utils/size_config.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import '../../utils/app_color.dart';
 

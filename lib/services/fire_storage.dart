@@ -13,7 +13,10 @@ class FireStorage {
     required Uint8List file,
   }) async {
     Reference ref = _storage.ref().child(path).child(fileName);
-    UploadTask uploadTask = ref.putData(file);
+    UploadTask uploadTask = ref.putData(
+      file,
+      SettableMetadata(contentType: 'image/png'),
+    );
     TaskSnapshot taskSnapshot = await uploadTask;
     return await taskSnapshot.ref.getDownloadURL();
   }

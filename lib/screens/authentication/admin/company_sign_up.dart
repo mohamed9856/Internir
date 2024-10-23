@@ -2,15 +2,15 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:internir/components/custom_button.dart';
-import 'package:internir/components/custom_text_form_field.dart';
-import 'package:internir/providers/Admin/company_auth_provider.dart';
-import 'package:internir/screens/dashboard/dashboard_screen.dart';
-import 'package:internir/utils/app_assets.dart';
-import 'package:internir/utils/app_color.dart';
-import 'package:internir/utils/size_config.dart';
+import '../login_screen.dart';
+import '../../../components/custom_button.dart';
+import '../../../components/custom_text_form_field.dart';
+import '../../../providers/Admin/company_auth_provider.dart';
+import '../../dashboard/dashboard_screen.dart';
+import '../../../utils/app_assets.dart';
+import '../../../utils/app_color.dart';
+import '../../../utils/size_config.dart';
 import 'package:provider/provider.dart';
-
 
 class CompanySignUp extends StatefulWidget {
   static const String routeName = '/home';
@@ -39,7 +39,7 @@ class _CompanySignUp extends State<CompanySignUp> {
   @override
   Widget build(BuildContext context) {
     final CompnayAuthProvider compnayAuthProvider =
-    context.watch<CompnayAuthProvider>();
+        context.watch<CompnayAuthProvider>();
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
@@ -61,13 +61,13 @@ class _CompanySignUp extends State<CompanySignUp> {
                             radius: 100,
                             onBackgroundImageError: (exception, stackTrace) {},
                             backgroundImage: (!compnayAuthProvider
-                                .isNetworkImage())
+                                    .isNetworkImage())
                                 ? MemoryImage(compnayAuthProvider.localImage!)
                                 : (compnayAuthProvider.company.image == null)
-                                ? AssetImage(AppAssets.noProfileImage
-                                .replaceAll('assets/', ''))
-                                : NetworkImage(
-                                compnayAuthProvider.company.image!),
+                                    ? AssetImage(AppAssets.noProfileImage
+                                        .replaceAll('assets/', ''))
+                                    : NetworkImage(
+                                        compnayAuthProvider.company.image!),
                           ),
                           Positioned(
                             bottom: -5,
@@ -84,16 +84,16 @@ class _CompanySignUp extends State<CompanySignUp> {
                                 compnayAuthProvider.changeCompany(
                                   image: imageFile,
                                   newCompany:
-                                  compnayAuthProvider.company.copyWith(
+                                      compnayAuthProvider.company.copyWith(
                                     name: compnayAuthProvider.company.name,
                                     email: compnayAuthProvider.company.email,
                                     password:
-                                    compnayAuthProvider.company.password,
+                                        compnayAuthProvider.company.password,
                                     phone: compnayAuthProvider.company.phone,
                                     address:
-                                    compnayAuthProvider.company.address,
+                                        compnayAuthProvider.company.address,
                                     description:
-                                    compnayAuthProvider.company.description,
+                                        compnayAuthProvider.company.description,
                                   ),
                                 );
                               },
@@ -150,19 +150,19 @@ class _CompanySignUp extends State<CompanySignUp> {
                         obscureText: !compnayAuthProvider.isPasswordVisible,
                         suffixIcon: compnayAuthProvider.isPasswordVisible
                             ? IconButton(
-                          onPressed: () {
-                            compnayAuthProvider
-                                .togglePasswordVisibility();
-                          },
-                          icon: const Icon(Icons.remove_red_eye),
-                        )
+                                onPressed: () {
+                                  compnayAuthProvider
+                                      .togglePasswordVisibility();
+                                },
+                                icon: const Icon(Icons.remove_red_eye),
+                              )
                             : IconButton(
-                          onPressed: () {
-                            compnayAuthProvider
-                                .togglePasswordVisibility();
-                          },
-                          icon: const Icon(Icons.visibility_off),
-                        ),
+                                onPressed: () {
+                                  compnayAuthProvider
+                                      .togglePasswordVisibility();
+                                },
+                                icon: const Icon(Icons.visibility_off),
+                              ),
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Password is required';
@@ -177,22 +177,22 @@ class _CompanySignUp extends State<CompanySignUp> {
                         controller: confirmPasswordController,
                         hintText: 'Confirm Password',
                         obscureText:
-                        !compnayAuthProvider.isConfirmPasswordVisible,
+                            !compnayAuthProvider.isConfirmPasswordVisible,
                         suffixIcon: compnayAuthProvider.isConfirmPasswordVisible
                             ? IconButton(
-                          onPressed: () {
-                            compnayAuthProvider
-                                .toggleConfirmPasswordVisibility();
-                          },
-                          icon: const Icon(Icons.remove_red_eye),
-                        )
+                                onPressed: () {
+                                  compnayAuthProvider
+                                      .toggleConfirmPasswordVisibility();
+                                },
+                                icon: const Icon(Icons.remove_red_eye),
+                              )
                             : IconButton(
-                          onPressed: () {
-                            compnayAuthProvider
-                                .toggleConfirmPasswordVisibility();
-                          },
-                          icon: const Icon(Icons.visibility_off),
-                        ),
+                                onPressed: () {
+                                  compnayAuthProvider
+                                      .toggleConfirmPasswordVisibility();
+                                },
+                                icon: const Icon(Icons.visibility_off),
+                              ),
                         hintColor: AppColor.grey1,
                         prefixIcon: const Icon(Icons.lock),
                         validator: (value) {
@@ -281,12 +281,30 @@ class _CompanySignUp extends State<CompanySignUp> {
                             if (res) {
                               Navigator.pushNamed(
                                 context,
-                               DashboardScreen.routeName,
+                                DashboardScreen.routeName,
                               );
                             }
                           }
                         },
                         text: 'Sign Up',
+                      ),
+                      SizedBox(
+                        height: 16 * SizeConfig.verticalBlock,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            LoginScreen.routeName,
+                            (route) => false,
+                          );
+                        },
+                        child: const Text(
+                          "Sign In",
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
                       ),
                     ],
                   ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:internir/components/category_card.dart';
-import 'package:internir/components/custom_search.dart';
-import 'package:internir/providers/category_provider.dart';
-import 'package:internir/utils/app_color.dart';
-import 'package:internir/utils/size_config.dart';
+import '../../components/category_card.dart';
+import '../../components/custom_search.dart';
+import '../../providers/category_provider.dart';
+import '../../utils/app_color.dart';
+import '../../utils/size_config.dart';
 import 'package:provider/provider.dart';
 
 class Categories extends StatelessWidget {
