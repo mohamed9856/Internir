@@ -1,70 +1,125 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import '../../components/job_card.dart';
 import '../../providers/jobs_provider.dart';
 import '../../utils/app_color.dart';
 import '../../utils/size_config.dart';
-import '../../components/job_card.dart';
 
 class ApplyListScreen extends StatefulWidget {
   const ApplyListScreen({super.key});
-
-  static const String routeName = 'appliedList';
 
   @override
   State<ApplyListScreen> createState() => _ApplyListScreenState();
 }
 
 class _ApplyListScreenState extends State<ApplyListScreen> {
+  final List<String> _appliedJobs = [];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final User? user = FirebaseAuth.instance.currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppliedJobs();
+  }
+
+  Future<void> _loadAppliedJobs() async {
+    if (user != null) {
+      DocumentSnapshot userSnapshot =
+      await _firestore.collection('users').doc(user!.uid).get();
+
+      if (userSnapshot.exists) {
+        List<String> appliedJobs =
+        List<String>.from(userSnapshot['appliedJobs'] ?? []);
+        setState(() {
+          _appliedJobs.addAll(appliedJobs);
+        });
+      }
+    }
+  }
+
+  bool isJobApplied(String jobId) {
+    return _appliedJobs.contains(jobId);
+  }
+
   @override
   Widget build(BuildContext context) {
     final jobsProvider = context.watch<JobsProvider>();
 
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          'My Applied Internships',
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'NotoSans',
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColor.background,
+        body: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 16 * SizeConfig.horizontalBlock,
+            vertical: 20 * SizeConfig.verticalBlock,
           ),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: (jobsProvider.loading)
-              ? Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 16 * SizeConfig.verticalBlock,
+          child: Column(
+            children: [
+              SizedBox(height: 20 * SizeConfig.verticalBlock),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'My Applied Internships',
+                    style: TextStyle(
+                      color: AppColor.mainBlue,
+                      fontSize: 25 * SizeConfig.textRatio,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'NotoSans',
+                    ),
                   ),
-                  child: const CircularProgressIndicator(
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(AppColor.mainBlue),
+                ],
+              ),
+              SizedBox(height: 16 * SizeConfig.verticalBlock),
+              Expanded(
+                child: jobsProvider.loading
+                    ? Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        AppColor.mainBlue),
                   ),
                 )
-              : ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
+                    : _appliedJobs.isEmpty
+                    ? Center(
+                  child: Text(
+                    "No applied internships.",
+                    style: TextStyle(
+                      fontFamily: 'NotoSans',
+                      fontSize: 16 * SizeConfig.textRatio,
+                      color: Colors.grey,
+                    ),
+                  ),
+                )
+                    : ListView.builder(
                   itemCount: jobsProvider.jobs.length,
                   itemBuilder: (context, index) {
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(
-                          height: 16 * SizeConfig.verticalBlock,
-                        ),
-                        jobCard(jobsProvider.jobs[index], context,
-                            isApplied: true),
-                        SizedBox(
-                          height: 16 * SizeConfig.verticalBlock,
-                        ),
-                      ],
-                    );
+                    final jobId = jobsProvider.jobs[index].id;
+
+                    if (isJobApplied(jobId)) {
+                      return Column(
+                        children: [
+                          SizedBox(
+                              height:
+                              16 * SizeConfig.verticalBlock),
+                          jobCard(jobsProvider.jobs[index],
+                              context,
+                              isApplied: true),
+                          SizedBox(
+                              height:
+                              16 * SizeConfig.verticalBlock),
+                        ],
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
                   },
                 ),
+              ),
+            ],
+          ),
         ),
       ),
     );

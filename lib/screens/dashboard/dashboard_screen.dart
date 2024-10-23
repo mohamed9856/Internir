@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:internir/screens/applications/applications.dart';
 import '../../components/custom_button.dart';
 import '../../components/custom_text_form_field.dart';
 import '../../constants/constants.dart';
@@ -35,7 +36,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   var formKey = GlobalKey<FormState>();
   QuillController descriptionController = QuillController.basic();
   TextEditingController titleController = TextEditingController();
-  TextEditingController categoryController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   TextEditingController salaryController = TextEditingController();
   TextEditingController employmentTypeController = TextEditingController();
@@ -95,7 +95,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 onPressed: () async {
                   await FirebaseAuth.instance.signOut();
                 },
-                icon: Icon(Icons.home),
+                icon: Icon(Icons.logout),
               ),
               Text(
                 'All Internships',
@@ -458,7 +458,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           DataCell(Text(job.numberOfApplicants.toString())),
                           DataCell(
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                companyProvider.selectedJob = job;
+                                Navigator.pushNamed(
+                                    context, Applications.routeName);
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColor.mainBlue,
                               ),

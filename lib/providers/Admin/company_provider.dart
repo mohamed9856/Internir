@@ -1,13 +1,47 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+import 'package:internir/models/application_model.dart';
 import '../../models/company_model.dart';
 import '../../models/job_model.dart';
 import '../../services/fire_database.dart';
 
 class CompanyProvider extends ChangeNotifier {
   List<JobModel> jobs = [];
+  List<ApplicationModel> applications = [];
   bool loading = false;
+
+  JobModel? selectedJob;
+
+  Future<void> fetchApplications() async {
+    try {
+      loading = true;
+      notifyListeners();
+      var companyId = FirebaseAuth.instance.currentUser!.uid;
+
+      var allApplications = await FirebaseFirestore.instance
+          .collection('company')
+          .doc(companyId)
+          .collection('jobs')
+          .doc(selectedJob!.id)
+          .collection('applications')
+          .get();
+
+      for (var element in allApplications.docs) {
+        applications.add(ApplicationModel.fromJson(element.data()));
+      }
+
+      notifyListeners();
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      loading = false;
+      notifyListeners();
+    }
+  }
+
+  void initFieldsEdit() {}
 
   Future<void> fetchJobs() async {
     try {
@@ -32,8 +66,6 @@ class CompanyProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-  
 
   Future<void> addJob({
     required String title,
@@ -126,6 +158,29 @@ class CompanyProvider extends ChangeNotifier {
       debugPrint(e.toString());
     } finally {
       loading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateStatus(ApplicationModel application, String s) async {
+    var last = application.status;
+    try {
+      application.status = s;
+      notifyListeners();
+      var companyId = FirebaseAuth.instance.currentUser!.uid;
+      await FirebaseFirestore.instance
+          .collection('company')
+          .doc(companyId)
+          .collection('jobs')
+          .doc(selectedJob!.id)
+          .collection('applications').
+          doc(application.userId).
+          update({'status': s});
+
+    notifyListeners();
+    } catch (e) {
+      debugPrint(e.toString());
+      application.status = last;
       notifyListeners();
     }
   }

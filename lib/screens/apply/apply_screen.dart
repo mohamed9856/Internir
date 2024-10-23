@@ -1,13 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import '../../components/custom_button.dart';
-import '../../models/job_model.dart';
-import 'apply_to_job.dart';
-import '../../utils/app_color.dart';
-import '../../utils/size_config.dart';
-import '../../utils/utils.dart';
-import '../../providers/saved_jobs_provider.dart';
 import 'package:provider/provider.dart';
+
+import 'package:internir/components/custom_button.dart';
+import 'package:internir/models/job_model.dart';
+import 'package:internir/screens/apply/apply_to_job.dart';
+import 'package:internir/utils/app_color.dart';
+import 'package:internir/utils/size_config.dart';
+import 'package:internir/utils/utils.dart';
+import 'package:internir/providers/saved_jobs_provider.dart';
 
 class ApplyScreen extends StatefulWidget {
   const ApplyScreen({super.key, required this.job});
@@ -20,26 +22,41 @@ class ApplyScreen extends StatefulWidget {
 }
 
 class _ApplyScreenState extends State<ApplyScreen> {
-  //bool isJobSaved = false;
-  QuillController descriptionController = QuillController.basic();
+  QuillController _descriptionController = QuillController.basic();
+  String? _companyImage;
 
-  // void saveJob() {
-  //   setState(() {
-  //     isJobSaved = !isJobSaved;
-  //   });
-  // }
+  Future<void> fetchCompanyImage() async {
+    String companyUid = widget.job.companyID;
+    try {
+      DocumentSnapshot companyDoc = await FirebaseFirestore.instance
+          .collection('company')
+          .doc(companyUid)
+          .get();
+
+      if (companyDoc.exists) {
+        _companyImage = companyDoc.get('image');
+      } else {
+        print('Company document does not exist');
+      }
+    } catch (e) {
+      print('Error fetching company image: $e');
+    }
+  }
+
 
   @override
   void initState() {
     super.initState();
 
-    descriptionController = QuillController(
+    _descriptionController = QuillController(
       readOnly: true,
       document: decodeQuillContent(widget.job.description),
       configurations: const QuillControllerConfigurations(),
       selection: const TextSelection.collapsed(offset: 0),
     );
-    descriptionController.skipRequestKeyboard = true;
+    _descriptionController.skipRequestKeyboard = true;
+
+    fetchCompanyImage();
   }
 
   @override
@@ -65,9 +82,9 @@ class _ApplyScreenState extends State<ApplyScreen> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(16),
-                      child: const Image(
+                      child: Image(
                         image: NetworkImage(
-                          'https://dummyimage.com/300x200/000/fff',
+                          _companyImage ?? 'https://dummyimage.com/300x200/000/fff',
                         ),
                         fit: BoxFit.cover,
                         width: 104,
@@ -93,7 +110,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
                     ),
                     SizedBox(height: 4 * SizeConfig.verticalBlock),
                     Text(
-                      'Number of applys: ${widget.job.numberOfApplicants}',
+                      'Number of applies: ${widget.job.numberOfApplicants}',
                       style: TextStyle(
                         fontSize: 14 * SizeConfig.textRatio,
                         fontFamily: 'NotoSans',
@@ -116,7 +133,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
                     focusNode: FocusNode(
                       canRequestFocus: false,
                     ),
-                    controller: descriptionController,
+                    controller: _descriptionController,
                     configurations: const QuillEditorConfigurations(
                       minHeight: double.infinity,
                     ),
@@ -222,7 +239,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
           children: [
             IconButton(
               onPressed: () {
-                jobSaveProvider.toggleSaveJob(widget.job.id);  // Toggle job save state
+                jobSaveProvider.toggleSaveJob(widget.job.id);
               },
               icon: jobSaveProvider.isJobSaved(widget.job.id)
                   ? const Icon(Icons.bookmark, color: Colors.blue)

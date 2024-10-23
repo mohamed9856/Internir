@@ -279,9 +279,10 @@ class _CompanySignUp extends State<CompanySignUp> {
                             );
 
                             if (res) {
-                              Navigator.pushNamed(
+                              Navigator.pushNamedAndRemoveUntil(
                                 context,
                                 DashboardScreen.routeName,
+                                (route) => false,
                               );
                             }
                           }
