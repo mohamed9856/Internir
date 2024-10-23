@@ -150,12 +150,13 @@ class _ApplyToJobState extends State<ApplyToJob> {
             .collection('applications').
             doc(FirebaseAuth.instance.currentUser!.uid)
             .set(applicationData);
-
+        
         // increase number  of application
         await FirebaseFirestore.instance
             .collection('jobs')
             .doc(widget.job.id)
-            .update({'number of applications': FieldValue.increment(1)});
+            .update({'number of applicants': FieldValue.increment(1)});
+        widget.job.numberOfApplicants = widget.job.numberOfApplicants + 1;
 
         User? user = FirebaseAuth.instance.currentUser;
         if (user != null) {
