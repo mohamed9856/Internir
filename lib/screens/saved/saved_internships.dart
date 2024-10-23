@@ -73,6 +73,7 @@ class _SavedInternshipsState extends State<SavedInternships> {
                         id: '',
                         title: '',
                         company: '',
+                        companyID: '',
                         description: '',
                         salary: null,
                         location: '',

@@ -59,6 +59,7 @@ class CompanyProvider extends ChangeNotifier {
           'createdAt': Timestamp.fromDate(DateTime.now()),
           'number of applicants': 0,
           'enabled': enabled,
+          'companyID': FirebaseAuth.instance.currentUser!.uid
         },
       );
 

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import '../../components/custom_button.dart';
@@ -90,6 +91,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              IconButton(
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
+                },
+                icon: Icon(Icons.home),
+              ),
               Text(
                 'All Internships',
                 style: TextStyle(
