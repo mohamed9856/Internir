@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:provider/provider.dart';
@@ -21,19 +22,41 @@ class ApplyScreen extends StatefulWidget {
 }
 
 class _ApplyScreenState extends State<ApplyScreen> {
-  QuillController descriptionController = QuillController.basic();
+  QuillController _descriptionController = QuillController.basic();
+  String? _companyImage;
+
+  Future<void> fetchCompanyImage() async {
+    String? companyUid = widget.job.company;
+    try {
+      DocumentSnapshot companyDoc = await FirebaseFirestore.instance
+          .collection('company')
+          .doc(companyUid)
+          .get();
+
+      if (companyDoc.exists) {
+        _companyImage = companyDoc.get('image');
+      } else {
+        print('Company document does not exist');
+      }
+    } catch (e) {
+      print('Error fetching company image: $e');
+    }
+  }
+
 
   @override
   void initState() {
     super.initState();
 
-    descriptionController = QuillController(
+    _descriptionController = QuillController(
       readOnly: true,
       document: decodeQuillContent(widget.job.description),
       configurations: const QuillControllerConfigurations(),
       selection: const TextSelection.collapsed(offset: 0),
     );
-    descriptionController.skipRequestKeyboard = true;
+    _descriptionController.skipRequestKeyboard = true;
+
+    fetchCompanyImage();
   }
 
   @override
@@ -59,9 +82,9 @@ class _ApplyScreenState extends State<ApplyScreen> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(16),
-                      child: const Image(
+                      child: Image(
                         image: NetworkImage(
-                          'https://dummyimage.com/300x200/000/fff',
+                          _companyImage ?? 'https://dummyimage.com/300x200/000/fff',
                         ),
                         fit: BoxFit.cover,
                         width: 104,
@@ -110,7 +133,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
                     focusNode: FocusNode(
                       canRequestFocus: false,
                     ),
-                    controller: descriptionController,
+                    controller: _descriptionController,
                     configurations: const QuillEditorConfigurations(
                       minHeight: double.infinity,
                     ),

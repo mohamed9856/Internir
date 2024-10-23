@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:internir/screens/layout/home_layout.dart';
 
 import 'package:internir/utils/app_color.dart';
 import 'package:internir/models/job_model.dart';
@@ -24,8 +25,11 @@ class _ApplyToJobState extends State<ApplyToJob> {
   String? _pickedFileName;
   String? _userImageURL;
   String? _username;
+  String? _email;
+  String? _phone;
   String? _category;
   bool _isFilePicked = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -47,6 +51,8 @@ class _ApplyToJobState extends State<ApplyToJob> {
           _userImageURL = doc['image'] as String?;
           _username = doc['username'] as String?;
           _category = doc['category'] as String?;
+          _email = doc['email'] as String?;
+          _phone = doc['phone'] as String?;
         });
       }
     }
@@ -93,11 +99,19 @@ class _ApplyToJobState extends State<ApplyToJob> {
         'appliedJobs': FieldValue.arrayUnion([jobId]),
       });
     } catch (error) {
-      print('Error updating user\'s applied jobs: $error');
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('There has been an error!'),
+        ),
+      );
     }
   }
 
   Future<void> _sendApplication(BuildContext context) async {
+    setState(() {
+      _isLoading = true;
+    });
     if (_formKey.currentState!.validate()) {
       if (!_isFilePicked) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -141,11 +155,21 @@ class _ApplyToJobState extends State<ApplyToJob> {
           _pickedFileName = null;
           _isFilePicked = false;
         });
+
+        Navigator.popUntil(
+          context,
+          ModalRoute.withName(
+            HomeLayout.routeName,
+          ),
+        );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error sending application: $e')),
         );
       }
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -194,6 +218,7 @@ class _ApplyToJobState extends State<ApplyToJob> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _emailController,
+                initialValue: _email,
                 decoration: const InputDecoration(labelText: 'Email'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -205,6 +230,7 @@ class _ApplyToJobState extends State<ApplyToJob> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _phoneController,
+                initialValue: _phone,
                 decoration: const InputDecoration(labelText: 'Phone'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -278,7 +304,9 @@ class _ApplyToJobState extends State<ApplyToJob> {
                   foregroundColor: Colors.white,
                 ),
                 onPressed: () => _sendApplication(context),
-                child: const Text('Send'),
+                child: _isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text('Send'),
               ),
             ),
           ],

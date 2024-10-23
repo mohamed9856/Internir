@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -80,16 +80,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         String? imageUrl;
         if (selectedImage != null) {
           imageUrl = await _uploadImageToStorage(selectedImage!, userId);
-        } else {
-          setState(() {
-            _isLoading = false;
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('No image has been uploaded'),
-            ),
-          );
-          return;
         }
 
         await _firestore.collection('users').doc(userId).set({
@@ -152,14 +142,22 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   }
 
   Future<void> _pickImage(ImageSource source) async {
-    final XFile? pickedImage = await _imagePicker.pickImage(
-      source: source,
-      imageQuality: 85,
-    );
-    if (pickedImage != null) {
-      setState(() {
-        selectedImage = File(pickedImage.path);
-      });
+    try {
+      final XFile? pickedImage = await _imagePicker.pickImage(
+        source: source,
+        imageQuality: 85,
+      );
+      if (pickedImage != null) {
+        setState(() {
+          selectedImage = File(pickedImage.path);
+        });
+      } else {
+        print('No image selected.');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $e')),
+      );
     }
   }
 
@@ -317,7 +315,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   }
                   // regix for email validation
                   var reg = RegExp(
-                      r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
+                    r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+                  );
                   if (!reg.hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
