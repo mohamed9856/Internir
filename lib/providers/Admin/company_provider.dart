@@ -18,6 +18,7 @@ class CompanyProvider extends ChangeNotifier {
     try {
       loading = true;
       notifyListeners();
+      applications.clear();
       var companyId = FirebaseAuth.instance.currentUser!.uid;
 
       var allApplications = await FirebaseFirestore.instance
