@@ -189,12 +189,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 )),
 
             //----SAVED BUTTON----\\
-            SizedBox(height: SizeConfig.screenHeight * 0.230),
+            SizedBox(height: SizeConfig.screenHeight * 0.220),
             CustomButton(
               text: 'Save Changes',
               onPressed: updateData,
               fontSize: 25,
-              padding: const EdgeInsets.only(top: 20, bottom: 20),
+              padding: const EdgeInsets.only(top: 15, bottom: 15),
+              textColor: AppColor.lightGrey,
+              backgroundColor: AppColor.indigo,
             )
           ],
         ),

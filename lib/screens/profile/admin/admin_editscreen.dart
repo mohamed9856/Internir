@@ -176,12 +176,14 @@ class _AdminEditProfileScreenState extends State<AdminEditProfileScreen> {
             SizedBox(height: SizeConfig.screenHeight * 0.016),
 
             //----SAVED BUTTON----\\
-            SizedBox(height: SizeConfig.screenHeight * 0.230),
+            SizedBox(height: SizeConfig.screenHeight * 0.200),
             CustomButton(
               text: 'Save Changes',
               onPressed: updateData,
               fontSize: 25,
               padding: const EdgeInsets.only(top: 20, bottom: 20),
+              textColor: AppColor.lightGrey,
+              backgroundColor: AppColor.indigo,
             )
           ],
         ),
