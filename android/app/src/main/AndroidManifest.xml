@@ -2,18 +2,11 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 4e83b9faaf982a1a79fc315c23f60838a3760e38
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-=======
->>>>>>> b7d6cb1b7f5586edb130f2824bd9ccabf3078ca6
 
     <application
         android:label="Internir"
