@@ -24,8 +24,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async{
-      await futureCall();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      futureCall();
     });
   }
 
@@ -60,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              AppAssets.logo,
+              'assets/images/Internir.jpg',
               width: 350 * SizeConfig.horizontalBlock,
               height: 350 * SizeConfig.verticalBlock,
             ),

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:internir/screens/applications/applications.dart';
 import 'package:internir/screens/profile/admin/admin_profile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+import 'package:internir/screens/applications/applications.dart';
 import '../../components/custom_button.dart';
 import '../../components/custom_text_form_field.dart';
 import '../../constants/constants.dart';
@@ -47,7 +51,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     var companyProvider = Provider.of<CompanyProvider>(context);
     var companyAuthProvider = Provider.of<CompnayAuthProvider>(context);
 
-    // Fallback values for company name and image
     String name = companyAuthProvider.company.name.isNotEmpty
         ? companyAuthProvider.company.name
         : "Loading...";

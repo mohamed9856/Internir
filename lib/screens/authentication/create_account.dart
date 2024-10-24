@@ -11,6 +11,9 @@ import 'package:internir/providers/jobs_provider.dart';
 import 'package:internir/screens/authentication/login_screen.dart';
 import 'package:internir/screens/layout/home_layout.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
+
+import 'authenticate_email.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   static const String routeName = '/create-account';
@@ -93,19 +96,33 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
           'savedJobs': [],
         });
 
+        await _sendVerificationEmail(email);
+
         setState(() {
           _isLoading = false;
         });
 
+        const AuthenticateEmail();
+
         var jobProvider = context.read<JobsProvider>();
         await jobProvider.fetchJobs();
 
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const HomeLayout(),
-          ),
-          (route) => false,
+        Navigator.of(context).pushReplacementNamed(
+          LoginScreen.routeName,
+        );
+
+        AlertDialog(
+          title: const Text('Email Verified'),
+          content: const Text('Your email has been successfully verified!'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pushReplacementNamed(LoginScreen.routeName);
+              },
+              child: const Text('OK'),
+            ),
+          ],
         );
       } on FirebaseAuthException catch (e) {
         String errorMessage = '';
@@ -138,6 +155,16 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         .child('$userId.jpg');
     await ref.putFile(image);
     return await ref.getDownloadURL();
+  }
+
+  Future<void> _sendVerificationEmail(String email) async {
+    User? user = _auth.currentUser;
+    if (user != null && !user.emailVerified) {
+      await user.sendEmailVerification();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Verification email sent to $email')),
+      );
+    }
   }
 
   Future<void> _pickImage(ImageSource source) async {

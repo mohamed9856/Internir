@@ -3,6 +3,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET"/>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4e83b9faaf982a1a79fc315c23f60838a3760e38
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA" />

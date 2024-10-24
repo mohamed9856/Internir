@@ -12,6 +12,7 @@ class ProfileSettingsPage extends StatefulWidget {
 }
 
 class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
+  bool _notificationsEnabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +32,30 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
         child: ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
+            //---- NOTIFICATION TOGGLE WITH ICON ----\\
+            ListTile(
+              leading: const Icon(
+                Icons.notifications_none,
+                size: 30,
+                color: AppColor.mainBlue,
+              ),
+              title: const Text(
+                'Enable Notifications',
+                style: TextStyle(fontSize: 18),
+              ),
+              trailing: Switch(
+                value: _notificationsEnabled,
+                onChanged: (bool value) {
+                  setState(() {
+                    _notificationsEnabled = value;
+                  });
+                },
+                activeColor: AppColor.mainBlue,
+                inactiveThumbColor: AppColor.indigo,
+              ),
+            ),
+            const Divider(),
+
             //---- CHANGE PASSWORD ----\\
             ListTile(
               leading: const Icon(Icons.lock_outline,

@@ -1,17 +1,4 @@
 class ApplicationModel {
-  /*
-
-          'email': email,
-          'phone': phone,
-          'jobId': widget.job.id,
-          'jobTitle': widget.job.title,
-          'appliedAt': FieldValue.serverTimestamp(),
-          'status': 'pending',
-          'userId': FirebaseAuth.instance.currentUser!.uid,
-          'username': _username,
-          'category': _category,
-            */
-
   String username;
   String email;
   String phone;
