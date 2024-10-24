@@ -29,7 +29,6 @@ class CompanyProvider extends ChangeNotifier {
           .get();
 
       for (var element in allApplications.docs) {
-        print(element);
         applications.add(ApplicationModel.fromJson(element.data()));
       }
 

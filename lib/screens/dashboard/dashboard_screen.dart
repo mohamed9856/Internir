@@ -459,7 +459,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           DataCell(
                             ElevatedButton(
                               onPressed: () {
+                                print(job);
                                 companyProvider.selectedJob = job;
+                                print(companyProvider.selectedJob);
                                 Navigator.pushNamed(
                                     context, Applications.routeName);
                               },

@@ -27,6 +27,7 @@ class _ApplicationsState extends State<Applications> {
       var companyProvider =
           Provider.of<CompanyProvider>(context, listen: false);
       companyProvider.fetchApplications();
+      print( companyProvider.selectedJob!.title);
       titleController.text = companyProvider.selectedJob!.title;
       selectedCategory.text = companyProvider.selectedJob!.category ?? '';
       locationController.text = companyProvider.selectedJob!.location;
