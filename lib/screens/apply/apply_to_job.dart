@@ -1,9 +1,9 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:internir/screens/layout/home_layout.dart';
-
+import 'package:internir/services/fire_storage.dart';
 import 'package:internir/utils/app_color.dart';
 import 'package:internir/models/job_model.dart';
 
@@ -30,6 +30,7 @@ class _ApplyToJobState extends State<ApplyToJob> {
   String? _category;
   bool _isFilePicked = false;
   bool _isLoading = false;
+  Uint8List? file;
 
   @override
   void initState() {
@@ -48,11 +49,13 @@ class _ApplyToJobState extends State<ApplyToJob> {
 
       if (doc.exists) {
         setState(() {
-          _userImageURL = doc['image'] as String?;
-          _username = doc['username'] as String?;
-          _category = doc['category'] as String?;
-          _email = doc['email'] as String?;
-          _phone = doc['phone'] as String?;
+          _userImageURL = doc['image'] as String? ?? '';  // Fallback to empty string if null
+          _username = doc['username'] as String? ?? 'No name';  // Fallback to 'No name'
+          _category = doc['category'] as String? ?? 'No category';
+          _email = doc['email'] as String? ?? '';
+          _phone = doc['phone'] as String? ?? '';
+          _emailController.text = _email!;
+          _phoneController.text = _phone!;
         });
       }
     }
@@ -61,11 +64,12 @@ class _ApplyToJobState extends State<ApplyToJob> {
   Future<void> _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['pdf', 'jpg', 'png'],
+      allowedExtensions: ['pdf'],
     );
 
     if (result != null) {
       setState(() {
+        file = result.files.first.bytes;
         _pickedFileName = result.files.single.name;
         _isFilePicked = true;
       });
@@ -119,14 +123,27 @@ class _ApplyToJobState extends State<ApplyToJob> {
             content: Text('Please upload your resume before applying!'),
           ),
         );
+        setState(() {
+          _isLoading = false;
+        });
         return;
       }
 
       try {
-        String companyId = widget.job.company;
+        String companyId = widget.job.companyID;
 
-        String email = _emailController.text;
-        String phone = _phoneController.text;
+        String email = _emailController.text.trim();
+        String phone = _phoneController.text.trim();
+        String? fileUrl;
+
+        if (_isFilePicked) {
+          fileUrl = await FireStorage.uploadFile(
+            path: 'jobs/${widget.job.id}/applications/${FirebaseAuth.instance.currentUser!.uid}',
+            fileName: _pickedFileName!,
+            file: file!,
+            contentType: 'application/pdf',
+          );
+        }
 
         Map<String, dynamic> applicationData = {
           'email': email,
@@ -134,13 +151,28 @@ class _ApplyToJobState extends State<ApplyToJob> {
           'jobId': widget.job.id,
           'jobTitle': widget.job.title,
           'appliedAt': FieldValue.serverTimestamp(),
+          'status': 'pending',
+          'userId': FirebaseAuth.instance.currentUser!.uid,
+          'username': _username,
+          'category': _category,
+          'resume': fileUrl,
         };
 
         await FirebaseFirestore.instance
             .collection('company')
             .doc(companyId)
+            .collection('jobs')
+            .doc(widget.job.id)
             .collection('applications')
-            .add(applicationData);
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .set(applicationData);
+
+        // Increase the number of applicants
+        await FirebaseFirestore.instance
+            .collection('jobs')
+            .doc(widget.job.id)
+            .update({'number of applicants': FieldValue.increment(1)});
+        widget.job.numberOfApplicants += 1;
 
         User? user = FirebaseAuth.instance.currentUser;
         if (user != null) {
@@ -156,12 +188,8 @@ class _ApplyToJobState extends State<ApplyToJob> {
           _isFilePicked = false;
         });
 
-        Navigator.popUntil(
-          context,
-          ModalRoute.withName(
-            HomeLayout.routeName,
-          ),
-        );
+        Navigator.pop(context);
+        Navigator.pop(context);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error sending application: $e')),
@@ -192,10 +220,10 @@ class _ApplyToJobState extends State<ApplyToJob> {
                 children: [
                   CircleAvatar(
                     radius: 32,
-                    backgroundImage: _userImageURL != null
+                    backgroundImage: _userImageURL != null && _userImageURL!.isNotEmpty
                         ? NetworkImage(_userImageURL!)
                         : null,
-                    child: _userImageURL == null
+                    child: _userImageURL == null || _userImageURL!.isEmpty
                         ? const Icon(Icons.person, size: 32)
                         : null,
                   ),
@@ -204,13 +232,13 @@ class _ApplyToJobState extends State<ApplyToJob> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        _username ?? 'No name',
+                        _username ?? 'No name',  // Default to 'No name'
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text(_category ?? 'No category'),
+                      Text(_category ?? 'No category'),  // Default to 'No category'
                     ],
                   ),
                 ],
@@ -218,7 +246,6 @@ class _ApplyToJobState extends State<ApplyToJob> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _emailController,
-                initialValue: _email,
                 decoration: const InputDecoration(labelText: 'Email'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -230,7 +257,6 @@ class _ApplyToJobState extends State<ApplyToJob> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _phoneController,
-                initialValue: _phone,
                 decoration: const InputDecoration(labelText: 'Phone'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -284,32 +310,32 @@ class _ApplyToJobState extends State<ApplyToJob> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColor.lightBlue,
                     foregroundColor: Colors.white,
+                    padding: const EdgeInsets.all(24),
                   ),
                   child: const Text('Upload Resume'),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _isLoading
+                      ? null
+                      : () async {
+                    await _sendApplication(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColor.lightBlue,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.all(24),
+                  ),
+                  child: _isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text('Send Application'),
+                ),
+              ),
             ],
           ),
-        ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Expanded(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColor.lightBlue,
-                  foregroundColor: Colors.white,
-                ),
-                onPressed: () => _sendApplication(context),
-                child: _isLoading
-                    ? const CircularProgressIndicator()
-                    : const Text('Send'),
-              ),
-            ),
-          ],
         ),
       ),
     );

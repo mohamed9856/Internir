@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:internir/screens/layout/home_layout.dart';
+import 'admin/company_sign_up.dart';
+import '../dashboard/dashboard_screen.dart';
+import '../../providers/onboarding_provider.dart';
+import '../layout/home_layout.dart';
 import 'package:provider/provider.dart';
 import 'package:internir/providers/jobs_provider.dart';
 import 'create_account.dart';
@@ -35,14 +39,27 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Logged in successfully!")),
       );
+      var user = await FirebaseFirestore.instance
+          .collection('company')
+          .doc(userCredential.user!.uid);
+      var doc = await user.get();
 
-      var jobProvider = context.read<JobsProvider>();
-      await jobProvider.fetchJobs();
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (_) => const HomeLayout()),
-        (route) => false,
-      );
+      if (doc.exists) {
+        // for admin
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const DashboardScreen()),
+          (route) => false,
+        );
+      } else {
+        var jobProvider = context.read<JobsProvider>();
+        await jobProvider.fetchJobs();
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeLayout()),
+          (route) => false,
+        );
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to log in: ${e.toString()}")),
@@ -56,6 +73,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final onboardingProvider = context.watch<OnboardingProvider>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -70,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextSpan(
                     text: "Welcome ",
                     style: TextStyle(
-                      fontFamily: 'Greta Arabic',
+                      fontFamily: 'NotoSans',
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -79,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextSpan(
                     text: "Hunters",
                     style: TextStyle(
-                      fontFamily: 'Greta Arabic',
+                      fontFamily: 'NotoSans',
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                       color: Colors.indigo,
@@ -93,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const Text(
               "Log in with your account",
               style: TextStyle(
-                fontFamily: 'Greta Arabic',
+                fontFamily: 'NotoSans',
                 fontSize: 16,
                 color: Colors.grey,
               ),
@@ -150,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: const Text(
                         "Login",
                         style: TextStyle(
-                          fontFamily: 'Greta Arabic',
+                          fontFamily: 'NotoSans',
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -162,7 +181,13 @@ class _LoginScreenState extends State<LoginScreen> {
             Center(
               child: TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, CreateAccountScreen.routeName);
+                  if (onboardingProvider.type == 1) {
+                    Navigator.pushNamedAndRemoveUntil(context,
+                        CreateAccountScreen.routeName, (route) => false);
+                  } else {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, CompanySignUp.routeName, (route) => false);
+                  }
                 },
                 child: const Text(
                   "Create new account",

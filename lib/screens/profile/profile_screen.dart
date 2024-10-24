@@ -24,7 +24,6 @@ class _ProfilePageState extends State<ProfilePage> {
   bool isLoading = true;
   bool dataChanged = true;
 
-  //----GET DATA----\\
   Future<void> getData() async {
     if (currentUser != null) {
       try {

@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:internir/components/custom_button.dart';
-import 'package:internir/components/custom_text_form_field.dart';
-import 'package:internir/constants/constants.dart';
-import 'package:internir/screens/profile/widgets/profile_pic.dart';
-import 'package:internir/utils/app_color.dart';
+import '../../components/custom_button.dart';
+import '../../components/custom_text_form_field.dart';
+import '../../constants/constants.dart';
+import 'widgets/profile_pic.dart';
+import '../../utils/app_color.dart';
 
 import '../../utils/size_config.dart';
 

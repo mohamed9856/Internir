@@ -6,12 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:internir/constants/constants.dart';
+import 'package:internir/providers/jobs_provider.dart';
+import 'package:internir/screens/authentication/login_screen.dart';
 import 'package:provider/provider.dart';
 
-import 'package:internir/constants/constants.dart';
-import 'package:internir/screens/authentication/login_screen.dart';
-import 'package:internir/screens/layout/home_layout.dart';
-import 'package:internir/providers/jobs_provider.dart';
+import 'authenticate_email.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   static const String routeName = '/create-account';
@@ -70,7 +70,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         });
 
         UserCredential userCredential =
-            await _auth.createUserWithEmailAndPassword(
+        await _auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
@@ -94,20 +94,31 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
           'savedJobs': [],
         });
 
+        await _sendVerificationEmail(email);
+
         setState(() {
           _isLoading = false;
         });
 
+        const AuthenticateEmail();
+
         var jobProvider = context.read<JobsProvider>();
         await jobProvider.fetchJobs();
 
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const HomeLayout(),
-          ),
-          (route) => false,
+        AlertDialog(
+          title: const Text('Email Verified'),
+          content: const Text('Your email has been successfully verified!'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+              },
+              child: const Text('OK'),
+            ),
+          ],
         );
+
+
       } on FirebaseAuthException catch (e) {
         String errorMessage = '';
         setState(() {
@@ -139,6 +150,16 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         .child('$userId.jpg');
     await ref.putFile(image);
     return await ref.getDownloadURL();
+  }
+
+  Future<void> _sendVerificationEmail(String email) async {
+    User? user = _auth.currentUser;
+    if (user != null && !user.emailVerified) {
+      await user.sendEmailVerification();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Verification email sent to $email')),
+      );
+    }
   }
 
   Future<void> _pickImage(ImageSource source) async {
@@ -197,7 +218,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     TextSpan(
                       text: "Create ",
                       style: TextStyle(
-                        fontFamily: 'Greta Arabic',
+                        fontFamily: 'NotoSans',
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
@@ -206,7 +227,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     TextSpan(
                       text: "Account",
                       style: TextStyle(
-                        fontFamily: 'Greta Arabic',
+                        fontFamily: 'NotoSans',
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
                         color: Colors.indigo,
@@ -220,7 +241,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               const Text(
                 "Create an account so you can explore all the existing jobs",
                 style: TextStyle(
-                  fontFamily: 'Greta Arabic',
+                  fontFamily: 'NotoSans',
                   fontSize: 16,
                   color: Colors.grey,
                 ),
@@ -520,8 +541,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         child: Text(
                           'Create Account',
                           style: TextStyle(
+                            fontFamily: 'NotoSans',
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                             color: Colors.white,
-                            fontSize: 16,
                           ),
                         ),
                       ),

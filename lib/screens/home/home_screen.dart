@@ -3,15 +3,16 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:internir/components/category_card.dart';
-import 'package:internir/screens/category/categories.dart';
-import 'package:internir/components/custom_button.dart';
-import 'package:internir/components/job_card.dart';
-import 'package:internir/constants/constants.dart';
-import 'package:internir/providers/jobs_provider.dart';
-import 'package:internir/utils/app_assets.dart';
-import 'package:internir/utils/app_color.dart';
-import 'package:internir/utils/size_config.dart';
+import '../../components/category_card.dart';
+import '../category/categories.dart';
+import '../category/one_category.dart';
+import '../../components/custom_button.dart';
+import '../../components/job_card.dart';
+import '../../constants/constants.dart';
+import '../../providers/jobs_provider.dart';
+import '../../utils/app_assets.dart';
+import '../../utils/app_color.dart';
+import '../../utils/size_config.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {

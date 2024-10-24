@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:internir/utils/utils.dart';
+
+import '../utils/utils.dart';
 
 class FireDatabase {
   FireDatabase._();
@@ -124,6 +125,16 @@ class FireDatabase {
     } catch (e) {
       debugPrint(e.toString());
       return null;
+    }
+  }
+
+  static Future<bool> isExist(String collection, String id) async {
+    try {
+      var res = await _firebaseFirestore.collection(collection).doc(id).get();
+      return res.exists;
+    } catch (e) {
+      debugPrint(e.toString());
+      return false;
     }
   }
 

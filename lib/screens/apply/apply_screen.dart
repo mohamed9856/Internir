@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +27,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
   String? _companyImage;
 
   Future<void> fetchCompanyImage() async {
-    String? companyUid = widget.job.company;
+    String companyUid = widget.job.companyID;
     try {
       DocumentSnapshot companyDoc = await FirebaseFirestore.instance
           .collection('company')
@@ -43,7 +44,6 @@ class _ApplyScreenState extends State<ApplyScreen> {
     }
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -57,6 +57,24 @@ class _ApplyScreenState extends State<ApplyScreen> {
     _descriptionController.skipRequestKeyboard = true;
 
     fetchCompanyImage();
+  }
+
+  Future<bool> getAppliedState() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (userSnapshot.exists) {
+        List<String> appliedJobs = List<String>.from(userSnapshot.get('appliedJobs'));
+
+        return appliedJobs.contains(widget.job.id);
+      }
+    }
+    return false;
   }
 
   @override
@@ -84,7 +102,8 @@ class _ApplyScreenState extends State<ApplyScreen> {
                       borderRadius: BorderRadius.circular(16),
                       child: Image(
                         image: NetworkImage(
-                          _companyImage ?? 'https://dummyimage.com/300x200/000/fff',
+                          _companyImage ??
+                              'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg',
                         ),
                         fit: BoxFit.cover,
                         width: 104,
@@ -248,7 +267,17 @@ class _ApplyScreenState extends State<ApplyScreen> {
             Expanded(
               child: CustomButton(
                 text: 'Apply',
-                onPressed: () {
+                onPressed: () async {
+                  bool applied = await getAppliedState();
+
+                  if (applied) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('You have already applied to this job!'),
+                      ),
+                    );
+                    return;
+                  }
                   Navigator.of(context).pushNamed(
                     ApplyToJob.routeName,
                     arguments: widget.job,

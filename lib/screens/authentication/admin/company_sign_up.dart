@@ -2,13 +2,14 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:internir/components/custom_button.dart';
-import 'package:internir/components/custom_text_form_field.dart';
-import 'package:internir/providers/Admin/company_auth_provider.dart';
-import 'package:internir/screens/layout/home_layout.dart';
-import 'package:internir/utils/app_assets.dart';
-import 'package:internir/utils/app_color.dart';
-import 'package:internir/utils/size_config.dart';
+import '../login_screen.dart';
+import '../../../components/custom_button.dart';
+import '../../../components/custom_text_form_field.dart';
+import '../../../providers/Admin/company_auth_provider.dart';
+import '../../dashboard/dashboard_screen.dart';
+import '../../../utils/app_assets.dart';
+import '../../../utils/app_color.dart';
+import '../../../utils/size_config.dart';
 import 'package:provider/provider.dart';
 
 class CompanySignUp extends StatefulWidget {
@@ -278,14 +279,33 @@ class _CompanySignUp extends State<CompanySignUp> {
                             );
 
                             if (res) {
-                              Navigator.pushNamed(
+                              Navigator.pushNamedAndRemoveUntil(
                                 context,
-                                HomeLayout.routeName,
+                                DashboardScreen.routeName,
+                                (route) => false,
                               );
                             }
                           }
                         },
                         text: 'Sign Up',
+                      ),
+                      SizedBox(
+                        height: 16 * SizeConfig.verticalBlock,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            LoginScreen.routeName,
+                            (route) => false,
+                          );
+                        },
+                        child: const Text(
+                          "Sign In",
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
                       ),
                     ],
                   ),
