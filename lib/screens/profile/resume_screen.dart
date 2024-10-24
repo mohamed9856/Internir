@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../components/custom_button.dart';
 import 'widgets/my_pdf_card.dart';
 import '../../utils/size_config.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import '../../utils/app_color.dart';
 
 class ResumePage extends StatefulWidget {

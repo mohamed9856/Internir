@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:internir/screens/applications/applications.dart';
+import 'package:internir/screens/profile/admin/admin_profile.dart';
 import '../../components/custom_button.dart';
 import '../../components/custom_text_form_field.dart';
 import '../../constants/constants.dart';
@@ -75,12 +75,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
           SizedBox(width: 10 * SizeConfig.horizontalBlock),
-          CircleAvatar(
-            backgroundImage: (companyImage != null && companyImage.isNotEmpty)
-                ? NetworkImage(
-                    companyImage,
-                  )
-                : const AssetImage(AppAssets.noProfileImage), // Fallback image
+          GestureDetector(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>const AdminProfileScreen()));
+            },
+            child: CircleAvatar(
+              backgroundImage: (companyImage != null && companyImage.isNotEmpty)
+                  ? NetworkImage(
+                      companyImage,
+                    )
+                  : const AssetImage(AppAssets.noProfileImage), // Fallback image
+            ),
           ),
           SizedBox(width: 10 * SizeConfig.horizontalBlock),
         ],
@@ -91,12 +96,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              IconButton(
-                onPressed: () async {
-                  await FirebaseAuth.instance.signOut();
-                },
-                icon: Icon(Icons.logout),
-              ),
               Text(
                 'All Internships',
                 style: TextStyle(

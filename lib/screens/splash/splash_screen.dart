@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:internir/utils/app_assets.dart';
 import '../dashboard/dashboard_screen.dart';
 import '../onboarding/onboarding_screen.dart';
 import '../../services/fire_database.dart';
@@ -23,8 +24,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      futureCall();
+    WidgetsBinding.instance.addPostFrameCallback((_) async{
+      await futureCall();
     });
   }
 
@@ -59,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/Internir.jpg',
+              AppAssets.logo,
               width: 350 * SizeConfig.horizontalBlock,
               height: 350 * SizeConfig.verticalBlock,
             ),

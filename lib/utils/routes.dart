@@ -50,7 +50,6 @@ class AppRoute {
       case PdfViewer.routeName:
         final pdfUrl = settings.arguments as String;
         return MaterialPageRoute(builder: (_) => PdfViewer(pdfUrl: pdfUrl));
-
       default:
         return MaterialPageRoute(builder: (_) => errorRoute());
     }

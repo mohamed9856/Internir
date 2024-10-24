@@ -3,7 +3,6 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:internir/components/custom_button.dart';
 import 'package:internir/components/custom_text_form_field.dart';
 import 'package:internir/constants/constants.dart';
-import 'package:internir/models/job_model.dart';
 import 'package:internir/providers/Admin/company_provider.dart';
 import 'package:internir/components/pdf_viewer.dart';
 import 'package:internir/utils/app_color.dart';
@@ -206,7 +205,7 @@ class _ApplicationsState extends State<Applications> {
                   scrollDirection: Axis.horizontal,
                   child: DataTable(
                     headingRowColor:
-                        MaterialStateProperty.all(AppColor.mainBlue),
+                        WidgetStateProperty.all(AppColor.mainBlue),
                     border: TableBorder.all(
                         color: AppColor.black,
                         borderRadius: BorderRadius.circular(8),

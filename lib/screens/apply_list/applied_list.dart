@@ -10,6 +10,8 @@ import '../../utils/size_config.dart';
 class ApplyListScreen extends StatefulWidget {
   const ApplyListScreen({super.key});
 
+  static const String routeName = 'appliedList';
+
   @override
   State<ApplyListScreen> createState() => _ApplyListScreenState();
 }

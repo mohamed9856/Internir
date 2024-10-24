@@ -19,14 +19,21 @@ class MyPdf extends StatefulWidget {
 }
 
 class _MyPdfState extends State<MyPdf> {
- DateTime? lastModified;
+  DateTime? lastModified;
 
   @override
   void initState() {
     super.initState();
-    _lastModifiedDate(); // Get the file modification date when the widget initializes
+    _lastModifiedDate();
   }
 
+  //----Function to get the last modification date of the file----\\
+  Future<void> _lastModifiedDate() async {
+    final fileStat = await widget.file.stat(); // Get file metadata
+    setState(() {
+      lastModified = fileStat.modified; // Set the modification date
+    });
+  }
 
   //---- Function to show the confirmation dialog ----\\
   Future<void> _showDeleteConfirmation() async {
@@ -56,14 +63,6 @@ class _MyPdfState extends State<MyPdf> {
     if (result == true) {
       widget.onDelete();
     }
-  }
-
-  //----Function to get the last modification date of the file----\\
-  Future<void> _lastModifiedDate() async {
-    final fileStat = await widget.file.stat(); // Get file metadata
-    setState(() {
-      lastModified = fileStat.modified; // Set the modification date
-    });
   }
 
   @override

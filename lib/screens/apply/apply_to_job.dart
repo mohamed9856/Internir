@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:internir/screens/layout/home_layout.dart';
 import 'package:internir/services/fire_storage.dart';
 
 import 'package:internir/utils/app_color.dart';
