@@ -1,8 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:internir/screens/layout/home_layout.dart';
+import 'package:internir/services/fire_storage.dart';
 
 import 'package:internir/utils/app_color.dart';
 import 'package:internir/models/job_model.dart';
@@ -30,6 +33,7 @@ class _ApplyToJobState extends State<ApplyToJob> {
   String? _category;
   bool _isFilePicked = false;
   bool _isLoading = false;
+  Uint8List ?file;
 
   @override
   void initState() {
@@ -63,11 +67,12 @@ class _ApplyToJobState extends State<ApplyToJob> {
   Future<void> _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['pdf', 'jpg', 'png'],
+      allowedExtensions: ['pdf'],
     );
 
     if (result != null) {
       setState(() {
+        file = result.files.first.bytes;
         _pickedFileName = result.files.single.name;
         _isFilePicked = true;
       });
@@ -129,6 +134,16 @@ class _ApplyToJobState extends State<ApplyToJob> {
 
         String email = _emailController.text;
         String phone = _phoneController.text;
+        String? fileUrl;
+        if(_isFilePicked){
+          fileUrl = await FireStorage.uploadFile(
+            path: 'jobs/${widget.job.id}/applications/${FirebaseAuth.instance.currentUser!.uid}',
+            fileName: _pickedFileName!,
+            file: file!,
+            contentType: 'application/pdf',
+
+          );
+        }
 
         Map<String, dynamic> applicationData = {
           'email': email,
@@ -140,6 +155,7 @@ class _ApplyToJobState extends State<ApplyToJob> {
           'userId': FirebaseAuth.instance.currentUser!.uid,
           'username': _username,
           'category': _category,
+          'resume': fileUrl
         };
 
         await FirebaseFirestore.instance

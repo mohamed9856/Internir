@@ -5,6 +5,7 @@ import 'package:internir/components/custom_text_form_field.dart';
 import 'package:internir/constants/constants.dart';
 import 'package:internir/models/job_model.dart';
 import 'package:internir/providers/Admin/company_provider.dart';
+import 'package:internir/components/pdf_viewer.dart';
 import 'package:internir/utils/app_color.dart';
 import 'package:internir/utils/size_config.dart';
 import 'package:internir/utils/utils.dart';
@@ -271,6 +272,18 @@ class _ApplicationsState extends State<Applications> {
                       ),
                       DataColumn(
                         label: Text(
+                          'Resume',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: AppColor.white,
+                            fontFamily: 'NotoSans',
+                            fontSize: 16 * SizeConfig.textRatio,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
                           'action',
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -314,13 +327,29 @@ class _ApplicationsState extends State<Applications> {
                             fontSize: 14 * SizeConfig.textRatio,
                           ),
                         )),
-                        DataCell(Text(
-                          application.status,
-                          style: TextStyle(
-                            fontFamily: 'NotoSans',
-                            fontSize: 14 * SizeConfig.textRatio,
+                        DataCell(
+                          Text(
+                            application.status,
+                            style: TextStyle(
+                              fontFamily: 'NotoSans',
+                              fontSize: 14 * SizeConfig.textRatio,
+                            ),
                           ),
-                        )),
+                        ),
+                        DataCell(
+                          CustomButton(
+                            text: 'View Resume',
+                            textColor: AppColor.lightBlue,
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                PdfViewer.routeName,
+                                arguments: application.resume,
+                              );
+                               
+                            }
+                          ),
+                        ),
                         DataCell(
                           Row(
                             children: [

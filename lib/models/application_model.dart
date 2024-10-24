@@ -21,6 +21,7 @@ class ApplicationModel {
   String jobTitle;
   String userId;
   String category;
+  String? resume;
 
   ApplicationModel({
     required this.email,
@@ -32,6 +33,7 @@ class ApplicationModel {
     required this.userId,
     required this.username,
     required this.category,
+    this.resume,
   });
 
   Map<String, dynamic> toJson() => {
@@ -43,6 +45,7 @@ class ApplicationModel {
         'status': status,
         'userId': userId,
         'username': username,
+        'resume': resume,
         'category': category,
       };
 
@@ -57,10 +60,11 @@ class ApplicationModel {
         userId: json['userId'],
         username: json['username'],
         category: json['category'],
+        resume: json['resume'],
       );
 
   @override
   String toString() {
-    return 'ApplicationModel(email: $email, phone: $phone, jobId: $jobId, jobTitle: $jobTitle, appliedAt: $appliedAt, status: $status, userId: $userId, username: $username, category: $category)';
+    return 'ApplicationModel(email: $email, phone: $phone, jobId: $jobId, jobTitle: $jobTitle, appliedAt: $appliedAt, status: $status, userId: $userId, username: $username, category: $category, resume: $resume)';
   }
 }
