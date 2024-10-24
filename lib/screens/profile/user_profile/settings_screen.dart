@@ -12,7 +12,6 @@ class ProfileSettingsPage extends StatefulWidget {
 }
 
 class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
-  bool _notificationsEnabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,30 +31,6 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
         child: ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
-            //---- NOTIFICATION TOGGLE WITH ICON ----\\
-            ListTile(
-              leading: const Icon(
-                Icons.notifications_none,
-                size: 30,
-                color: AppColor.mainBlue,
-              ),
-              title: const Text(
-                'Enable Notifications',
-                style: TextStyle(fontSize: 18),
-              ),
-              trailing: Switch(
-                value: _notificationsEnabled,
-                onChanged: (bool value) {
-                  setState(() {
-                    _notificationsEnabled = value;
-                  });
-                },
-                activeColor: AppColor.mainBlue,
-                inactiveThumbColor: AppColor.indigo,
-              ),
-            ),
-            const Divider(),
-
             //---- CHANGE PASSWORD ----\\
             ListTile(
               leading: const Icon(Icons.lock_outline,
@@ -82,9 +57,60 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                 _showDeleteAccountDialog();
               },
             ),
+            const Divider(),
+
+            //---- ABOUT APP ----\\
+            ListTile(
+              leading: const Icon(
+                Icons.info_outline,
+                size: 30,
+                color: AppColor.mainBlue,
+              ),
+              title: const Text(
+                'About App',
+                style: TextStyle(fontSize: 18),
+              ),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                _showAboutDialog();
+              },
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  //---- SHOW ABOUT DIALOG ----\\
+  void _showAboutDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('About Internir'),
+          content: const Text(
+            'Internir is your gateway to exciting internship opportunities!'
+                ' Our app is designed to connect aspiring professionals with valuable hands-on experiences'
+                ' in their desired fields. Whether you’re looking to gain skills,'
+                ' network with industry leaders, or kickstart your career, '
+                'Internir is here to help you every step of the way.\n\n'
+                'This app is developed by:\n'
+                'Mariam Tarek\n'
+                'Omar Ahmed\n'
+                'Mohamed Ayman\n'
+                'Abdelrahman Wael\n'
+                'Shahd Khaled\n'
+                'Salam Abdelaziz',
+            style: TextStyle(fontSize: 16),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -120,16 +146,14 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                       MaterialPageRoute(
                         builder: (context) => const LoginScreen(),
                       ),
-                          (Route<dynamic> route) =>
-                      false,
+                          (Route<dynamic> route) => false,
                     );
                   }
                 } catch (e) {
                   print('Error sending password reset email: $e');
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content:
-                      Text('Failed to send reset email. Please try again.'),
+                      content: Text('Failed to send reset email. Please try again.'),
                     ),
                   );
                 }
@@ -197,4 +221,3 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
     );
   }
 }
-
