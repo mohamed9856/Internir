@@ -232,13 +232,13 @@ class _ApplyToJobState extends State<ApplyToJob> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        _username ?? 'No name',  // Default to 'No name'
+                        _username ?? 'No name',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text(_category ?? 'No category'),  // Default to 'No category'
+                      Text(_category ?? 'No category'),
                     ],
                   ),
                 ],

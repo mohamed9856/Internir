@@ -38,7 +38,7 @@ class _CompanySignUp extends State<CompanySignUp> {
 
   @override
   Widget build(BuildContext context) {
-    final CompnayAuthProvider compnayAuthProvider =
+    final CompnayAuthProvider companyAuthProvider =
         context.watch<CompnayAuthProvider>();
     return Scaffold(
       body: SingleChildScrollView(
@@ -46,7 +46,7 @@ class _CompanySignUp extends State<CompanySignUp> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (compnayAuthProvider.isLoading)
+              if (companyAuthProvider.isLoading)
                 const LinearProgressIndicator(),
               Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -60,14 +60,14 @@ class _CompanySignUp extends State<CompanySignUp> {
                           CircleAvatar(
                             radius: 100,
                             onBackgroundImageError: (exception, stackTrace) {},
-                            backgroundImage: (!compnayAuthProvider
+                            backgroundImage: (!companyAuthProvider
                                     .isNetworkImage())
-                                ? MemoryImage(compnayAuthProvider.localImage!)
-                                : (compnayAuthProvider.company.image == null)
+                                ? MemoryImage(companyAuthProvider.localImage!)
+                                : (companyAuthProvider.company.image == null)
                                     ? AssetImage(AppAssets.noProfileImage
                                         .replaceAll('assets/', ''))
                                     : NetworkImage(
-                                        compnayAuthProvider.company.image!),
+                                        companyAuthProvider.company.image!),
                           ),
                           Positioned(
                             bottom: -5,
@@ -81,19 +81,19 @@ class _CompanySignUp extends State<CompanySignUp> {
                                   return;
                                 }
                                 Uint8List imageFile = await image.readAsBytes();
-                                compnayAuthProvider.changeCompany(
+                                companyAuthProvider.changeCompany(
                                   image: imageFile,
                                   newCompany:
-                                      compnayAuthProvider.company.copyWith(
-                                    name: compnayAuthProvider.company.name,
-                                    email: compnayAuthProvider.company.email,
+                                      companyAuthProvider.company.copyWith(
+                                    name: companyAuthProvider.company.name,
+                                    email: companyAuthProvider.company.email,
                                     password:
-                                        compnayAuthProvider.company.password,
-                                    phone: compnayAuthProvider.company.phone,
+                                        companyAuthProvider.company.password,
+                                    phone: companyAuthProvider.company.phone,
                                     address:
-                                        compnayAuthProvider.company.address,
+                                        companyAuthProvider.company.address,
                                     description:
-                                        compnayAuthProvider.company.description,
+                                        companyAuthProvider.company.description,
                                   ),
                                 );
                               },
@@ -147,18 +147,18 @@ class _CompanySignUp extends State<CompanySignUp> {
                         hintText: 'Password',
                         hintColor: AppColor.grey1,
                         prefixIcon: const Icon(Icons.lock),
-                        obscureText: !compnayAuthProvider.isPasswordVisible,
-                        suffixIcon: compnayAuthProvider.isPasswordVisible
+                        obscureText: !companyAuthProvider.isPasswordVisible,
+                        suffixIcon: companyAuthProvider.isPasswordVisible
                             ? IconButton(
                                 onPressed: () {
-                                  compnayAuthProvider
+                                  companyAuthProvider
                                       .togglePasswordVisibility();
                                 },
                                 icon: const Icon(Icons.remove_red_eye),
                               )
                             : IconButton(
                                 onPressed: () {
-                                  compnayAuthProvider
+                                  companyAuthProvider
                                       .togglePasswordVisibility();
                                 },
                                 icon: const Icon(Icons.visibility_off),
@@ -177,18 +177,18 @@ class _CompanySignUp extends State<CompanySignUp> {
                         controller: confirmPasswordController,
                         hintText: 'Confirm Password',
                         obscureText:
-                            !compnayAuthProvider.isConfirmPasswordVisible,
-                        suffixIcon: compnayAuthProvider.isConfirmPasswordVisible
+                            !companyAuthProvider.isConfirmPasswordVisible,
+                        suffixIcon: companyAuthProvider.isConfirmPasswordVisible
                             ? IconButton(
                                 onPressed: () {
-                                  compnayAuthProvider
+                                  companyAuthProvider
                                       .toggleConfirmPasswordVisibility();
                                 },
                                 icon: const Icon(Icons.remove_red_eye),
                               )
                             : IconButton(
                                 onPressed: () {
-                                  compnayAuthProvider
+                                  companyAuthProvider
                                       .toggleConfirmPasswordVisibility();
                                 },
                                 icon: const Icon(Icons.visibility_off),
@@ -266,9 +266,9 @@ class _CompanySignUp extends State<CompanySignUp> {
                         backgroundColor: AppColor.indigo,
                         onPressed: () async {
                           if (formKey.currentState!.validate()) {
-                            bool res = await compnayAuthProvider.signUp(
+                            bool res = await companyAuthProvider.signUp(
                               context,
-                              compnayAuthProvider.company.copyWith(
+                              companyAuthProvider.company.copyWith(
                                 name: nameController.text,
                                 email: emailController.text,
                                 password: passwordController.text,

@@ -70,7 +70,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         });
 
         UserCredential userCredential =
-        await _auth.createUserWithEmailAndPassword(
+            await _auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
@@ -105,20 +105,23 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         var jobProvider = context.read<JobsProvider>();
         await jobProvider.fetchJobs();
 
+        Navigator.of(context).pushReplacementNamed(
+          LoginScreen.routeName,
+        );
+
         AlertDialog(
           title: const Text('Email Verified'),
           content: const Text('Your email has been successfully verified!'),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
+                Navigator.of(context)
+                    .pushReplacementNamed(LoginScreen.routeName);
               },
               child: const Text('OK'),
             ),
           ],
         );
-
-
       } on FirebaseAuthException catch (e) {
         String errorMessage = '';
         setState(() {
