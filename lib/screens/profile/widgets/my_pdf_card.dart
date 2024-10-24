@@ -23,50 +23,20 @@ class MyPdf extends StatefulWidget {
 }
 
 class _MyPdfState extends State<MyPdf> {
- DateTime? lastModified;
- final currentUser = FirebaseAuth.instance.currentUser;
- String? resume;
-
-// Function to upload PDF
-  Future<void> uploadPdf() async {
-    // Use file_picker to pick a PDF
-    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
-
-    if (result != null) {
-      File file = File(result.files.single.path!);
-
-      // Uploading file to Firebase Storage
-      try {
-        // Create a reference to the storage location
-        Reference ref = FirebaseStorage.instance.ref('pdfs/${file.path.split('/').last}');
-        UploadTask uploadTask = ref.putFile(file);
-
-        // Wait for the upload to complete
-        TaskSnapshot snapshot = await uploadTask;
-        String downloadUrl = await snapshot.ref.getDownloadURL();
-
-        // Save the download URL in Firestore
-        if (currentUser != null) {
-          await FirebaseFirestore.instance.collection("users").doc(currentUser!.uid).update({
-            'cvFile': downloadUrl,
-          });
-        }
-
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('PDF uploaded successfully!')));
-
-      } catch (e) {
-        print("Error uploading PDF: $e");
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to upload PDF.')));
-      }
-    }
-  }
-
-
+  DateTime? lastModified;
 
   @override
   void initState() {
     super.initState();
     _lastModifiedDate();
+  }
+
+  //----Function to get the last modification date of the file----\\
+  Future<void> _lastModifiedDate() async {
+    final fileStat = await widget.file.stat(); // Get file metadata
+    setState(() {
+      lastModified = fileStat.modified; // Set the modification date
+    });
   }
 
   //---- Function to show the confirmation dialog ----\\
@@ -97,14 +67,6 @@ class _MyPdfState extends State<MyPdf> {
     if (result == true) {
       widget.onDelete();
     }
-  }
-
-  //----Function to get the last modification date of the file----\\
-  Future<void> _lastModifiedDate() async {
-    final fileStat = await widget.file.stat(); // Get file metadata
-    setState(() {
-      lastModified = fileStat.modified; // Set the modification date
-    });
   }
 
   @override

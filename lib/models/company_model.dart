@@ -11,7 +11,6 @@ class CompanyModel {
   String address;
   String description;
   String? image;
-  List<String> jobs;
 
   CompanyModel({
     required this.id,
@@ -22,7 +21,6 @@ class CompanyModel {
     required this.address,
     required this.description,
     this.image,
-    required this.jobs,
   });
 
   CompanyModel copyWith({
@@ -34,7 +32,6 @@ class CompanyModel {
     String? address,
     String? description,
     String? image,
-    List<String>? jobs,
   }) {
     return CompanyModel(
       id: id ?? this.id,
@@ -45,36 +42,33 @@ class CompanyModel {
       address: address ?? this.address,
       description: description ?? this.description,
       image: image ?? this.image,
-      jobs: jobs ?? this.jobs,
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'email': email,
-        'password': password,
-        'phone': phone,
-        'address': address,
-        'description': description,
-        'image': image,
-        'jobs': jobs
-      };
+    'id': id,
+    'name': name,
+    'email': email,
+    'password': password,
+    'phone': phone,
+    'address': address,
+    'description': description,
+    'image': image,
+  };
 
   factory CompanyModel.fromJson(Map<String, dynamic> json) => CompanyModel(
-        id: json['id'],
-        name: json['name'],
-        email: json['email'],
-        password: json['password'],
-        phone: json['phone'],
-        address: json['address'],
-        description: json['description'],
-        image: json['image'],
-        jobs: List<String>.from(json['jobs']??[]),
-      );
+    id: json['id'],
+    name: json['name'],
+    email: json['email'],
+    password: json['password'],
+    phone: json['phone'],
+    address: json['address'],
+    description: json['description'],
+    image: json['image'],
+  );
 
   @override
   String toString() {
-    return 'CompanyModel{id: $id, name: $name, email: $email, password: $password, phone: $phone, address: $address, description: $description, image: $image, jobs: $jobs}';
+    return 'CompanyModel{id: $id, name: $name, email: $email, password: $password, phone: $phone, address: $address, description: $description, image: $image}';
   }
 }

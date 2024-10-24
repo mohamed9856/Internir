@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:internir/components/custom_button.dart';
 import 'package:internir/components/custom_text_form_field.dart';
 import 'package:internir/constants/constants.dart';
-import 'package:internir/screens/profile/profile_screen.dart';
+import 'package:internir/screens/profile/user_profile/profile_screen.dart';
 import 'package:internir/screens/profile/widgets/profile_pic.dart';
 import 'package:internir/utils/app_color.dart';
-import '../../utils/size_config.dart';
+import '../../../utils/size_config.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -18,6 +18,7 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
+
   final currentUser = FirebaseAuth.instance.currentUser;
 
   TextEditingController usernameController = TextEditingController();
@@ -25,6 +26,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   TextEditingController categoryController = TextEditingController();
 
   bool isLoading = false;
+
+  String? imagePath;
+  String? image;
 
   //----GET DATA----\\
   Future<void> getData() async {
@@ -39,6 +43,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           usernameController.text = userDoc['username'];
           categoryController.text = userDoc['category'];
           phoneNumberController.text = userDoc['phone'];
+          image = userDoc['image'];
           isLoading = false;
         });
       } catch (e) {
@@ -50,25 +55,51 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-  //----UPDATE DATA----\\
   Future<void> updateData() async {
     if (currentUser != null) {
       try {
+        // Store the current username
+        final String currentUsername = usernameController.text.trim();
+
+        // Get the user document from Firestore
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUser!.uid)
+            .get();
+
+        // Check if the username has changed
+        if (currentUsername != userDoc['username']) {
+          // Check if the new username already exists
+          final QuerySnapshot result = await FirebaseFirestore.instance
+              .collection('users')
+              .where('username', isEqualTo: currentUsername)
+              .get();
+
+          // If the length of result is greater than 0, the username is taken
+          if (result.docs.isNotEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Username is already taken.')),
+            );
+            return; // Exit the function if the username is taken
+          }
+        }
+
+        // Update Firestore with new data
         await FirebaseFirestore.instance
             .collection('users')
             .doc(currentUser!.uid)
             .update({
-          'username': usernameController.text.trim(),
+          'username': currentUsername , // This will only update if changed
           'phone': phoneNumberController.text.trim(),
           'category': categoryController.text.trim(),
+          if (imagePath != null) 'image': image,
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile updated successfully!')),
-        );
+
         Navigator.pop(context, {
-          'username': usernameController.text.trim(),
+          'username': currentUsername,
           'phone': phoneNumberController.text.trim(),
           'category': categoryController.text.trim(),
+          'image': image,  // Send the updated image URL
         });
       } catch (e) {
         print("Error updating user data: $e");
@@ -78,6 +109,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
       }
     }
   }
+
+
+
 
   //----JOB CATEGORIES----\\
   void _showSelectOptions(BuildContext context) {

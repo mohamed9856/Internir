@@ -1,19 +1,17 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:internir/screens/authentication/login_screen.dart';
-import 'package:internir/screens/home/home_screen.dart';
-import 'package:internir/screens/layout/home_layout.dart';
 import 'package:provider/provider.dart';
 
-import '../../constants/constants.dart';
-import '../../providers/jobs_provider.dart';
+import 'package:internir/constants/constants.dart';
+import 'package:internir/screens/authentication/login_screen.dart';
+import 'package:internir/screens/layout/home_layout.dart';
+import 'package:internir/providers/jobs_provider.dart';
 
 class CreateAccountScreen extends StatefulWidget {
   static const String routeName = '/create-account';
@@ -32,7 +30,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   String? selectedCategory;
   String? selectedGender;
-  String? selectedCvFile;
   File? selectedImage;
 
   final TextEditingController _emailController = TextEditingController();
@@ -40,7 +37,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _dobController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+  TextEditingController();
 
   final List<String> genderOptions = [
     'Male',
@@ -72,22 +70,26 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         });
 
         UserCredential userCredential =
-            await _auth.createUserWithEmailAndPassword(
+        await _auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
 
         String userId = userCredential.user!.uid;
 
+        String? imageUrl;
+        if (selectedImage != null) {
+          imageUrl = await _uploadImageToStorage(selectedImage!, userId);
+        }
+
         await _firestore.collection('users').doc(userId).set({
-          'image': selectedImage?.path,
           'username': _usernameController.text,
           'email': email,
           'phone': _phoneController.text,
-          'dob': _dobController.text,
           'category': selectedCategory,
           'gender': selectedGender,
-          'cvFile': selectedCvFile,
+          'image': imageUrl,
+          'dob': _dobController.text,
           'appliedJobs': [],
           'savedJobs': [],
         });
@@ -103,12 +105,14 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
           context,
           MaterialPageRoute(
             builder: (_) => const HomeLayout(),
-            
           ),
-          (route) => false,
+              (route) => false,
         );
       } on FirebaseAuthException catch (e) {
         String errorMessage = '';
+        setState(() {
+          _isLoading = false;
+        });
         if (e.code == 'weak-password') {
           errorMessage = 'The password provided is too weak.';
         } else if (e.code == 'email-already-in-use') {
@@ -128,30 +132,47 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     }
   }
 
+  Future<String> _uploadImageToStorage(File image, String userId) async {
+    final ref = FirebaseStorage.instance
+        .ref()
+        .child('user_images')
+        .child('$userId.jpg');
+    await ref.putFile(image);
+    return await ref.getDownloadURL();
+  }
+
   Future<void> _pickImage(ImageSource source) async {
-    final XFile? pickedImage = await _imagePicker.pickImage(
-      source: source,
-      imageQuality: 85,
-    );
-    if (pickedImage != null) {
-      setState(() {
-        selectedImage = File(pickedImage.path);
-      });
+    try {
+      final XFile? pickedImage = await _imagePicker.pickImage(
+        source: source,
+        imageQuality: 85,
+      );
+      if (pickedImage != null) {
+        setState(() {
+          selectedImage = File(pickedImage.path);
+        });
+      } else {
+        print('No image selected.');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $e')),
+      );
     }
   }
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: DateTime(2012, 12, 31),
       firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
+      lastDate: DateTime(2012, 12, 31),
     );
 
     if (pickedDate != null) {
       setState(() {
         _dobController.text =
-            "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-"
+        "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-"
             "${pickedDate.day.toString().padLeft(2, '0')}";
       });
     }
@@ -241,7 +262,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   backgroundImage: selectedImage != null
                       ? FileImage(selectedImage!)
                       : const AssetImage('assets/images/profile.png')
-                          as ImageProvider,
+                  as ImageProvider,
                   child: const Align(
                     alignment: Alignment.bottomRight,
                     child: Icon(
@@ -294,57 +315,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   }
                   // regix for email validation
                   var reg = RegExp(
-                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+                    r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+                  );
                   if (!reg.hasMatch(value)) {
-                    return 'Invalid email';
-                  }
-
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _phoneController,
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(15),
-                ],
-                keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
-                  labelText: "Phone",
-                  filled: true,
-                  fillColor: Colors.blue.shade50,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'A valid phone number is required';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _dobController,
-                readOnly: true,
-                onTap: () {
-                  _selectDate(context);
-                },
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.calendar_month),
-                  labelText: "Date Of Birth",
-                  filled: true,
-                  fillColor: Colors.blue.shade50,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Date of birth is required';
+                    return 'Please enter a valid email';
                   }
                   return null;
                 },
@@ -353,6 +327,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               TextFormField(
                 controller: _passwordController,
                 obscureText: !_isPasswordVisible,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(20),
+                ],
                 decoration: InputDecoration(
                   labelText: "Password",
                   filled: true,
@@ -375,10 +352,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
                 ),
                 validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
+                  if (value!.isEmpty) {
                     return 'Password is required';
-                  }
-                  if (value.length < 6) {
+                  } else if (value.length < 6) {
                     return 'Password must be at least 6 characters';
                   }
                   return null;
@@ -388,6 +364,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               TextFormField(
                 controller: _confirmPasswordController,
                 obscureText: !_isConfirmPasswordVisible,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(20),
+                ],
                 decoration: InputDecoration(
                   labelText: "Confirm Password",
                   filled: true,
@@ -410,16 +389,23 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
                 ),
                 validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Confirm your password';
+                  if (value!.isEmpty) {
+                    return 'Confirm password is required';
+                  } else if (value != _passwordController.text) {
+                    return 'Passwords do not match';
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 20),
-              DropdownButtonFormField<String>(
+              TextFormField(
+                controller: _phoneController,
+                keyboardType: TextInputType.phone,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(15),
+                ],
                 decoration: InputDecoration(
-                  labelText: 'Categories',
+                  labelText: "Phone",
                   filled: true,
                   fillColor: Colors.blue.shade50,
                   border: OutlineInputBorder(
@@ -427,21 +413,31 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                     borderSide: BorderSide.none,
                   ),
                 ),
-                value: selectedCategory,
-                items: listCategories
-                    .map((category) => DropdownMenuItem(
-                          value: category,
-                          child: Text(category),
-                        ))
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedCategory = value;
-                  });
-                },
                 validator: (value) {
-                  if (value == null) {
-                    return 'Please select a category';
+                  if (value!.isEmpty) {
+                    return 'Phone number is required';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _dobController,
+                readOnly: true,
+                onTap: () => _selectDate(context),
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.calendar_month),
+                  labelText: "Date of Birth",
+                  filled: true,
+                  fillColor: Colors.blue.shade50,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Date of birth is required';
                   }
                   return null;
                 },
@@ -449,7 +445,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
               const SizedBox(height: 20),
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(
-                  labelText: 'Gender',
+                  labelText: "Gender",
                   filled: true,
                   fillColor: Colors.blue.shade50,
                   border: OutlineInputBorder(
@@ -458,95 +454,92 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
                 ),
                 value: selectedGender,
-                items: genderOptions
-                    .map(
-                      (gender) => DropdownMenuItem(
-                        value: gender,
-                        child: Text(gender),
-                      ),
-                    )
-                    .toList(),
                 onChanged: (value) {
                   setState(() {
-                    selectedGender = value;
+                    selectedGender = value!;
                   });
                 },
+                items: genderOptions
+                    .map((gender) => DropdownMenuItem<String>(
+                  value: gender,
+                  child: Text(gender),
+                ))
+                    .toList(),
                 validator: (value) {
                   if (value == null) {
-                    return 'Please select your gender';
+                    return 'Gender is required';
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 20),
-              GestureDetector(
-                onTap: () async {
-                  FilePickerResult? result =
-                      await FilePicker.platform.pickFiles(
-                    type: FileType.custom,
-                    allowedExtensions: ['pdf'],
-                  );
-
-                  if (result != null) {
-                    setState(() {
-                      selectedCvFile = result.files.single.name;
-                    });
-                  }
+              DropdownButtonFormField<String>(
+                decoration: InputDecoration(
+                  labelText: "Category",
+                  filled: true,
+                  fillColor: Colors.blue.shade50,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+                value: selectedCategory,
+                onChanged: (value) {
+                  setState(() {
+                    selectedCategory = value!;
+                  });
                 },
-                child: Container(
-                  padding: const EdgeInsets.all(12.0),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade50,
+                items: [
+                  for (final category in listCategories)
+                    DropdownMenuItem(
+                      value: category,
+                      child: Text(category),
+                    ),
+                ],
+                validator: (value) {
+                  if (value == null) {
+                    return 'Category is required';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _isLoading ? null : _signUp,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.indigo,
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        selectedCvFile ?? 'Upload CV',
-                        style: TextStyle(color: Colors.grey.shade700),
-                      ),
-                      const Icon(Icons.upload_file, color: Colors.indigo),
-                    ],
+                ),
+                child: _isLoading
+                    ? const CircularProgressIndicator()
+                    : const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(
+                    'Create Account',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.only(top: 20, right: 10, left: 10),
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _signUp,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    backgroundColor: Colors.indigo,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Already have an account?"),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        LoginScreen.routeName,
+                      );
+                    },
+                    child: const Text("Login"),
                   ),
-                  child: (_isLoading)
-                      ? const CircularProgressIndicator(color: Colors.white,)
-                      : const Text(
-                          'Register',
-                          style: TextStyle(
-                            fontFamily: 'Greta Arabic',
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    LoginScreen.routeName,
-                    (route) => false,
-                  );
-                },
-                child: const Text(
-                  "Sign In",
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
+                ],
               ),
             ],
           ),

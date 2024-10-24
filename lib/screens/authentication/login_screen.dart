@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:internir/screens/layout/home_layout.dart';
 import 'package:provider/provider.dart';
-import '../../providers/jobs_provider.dart';
+import 'package:internir/providers/jobs_provider.dart';
 import 'create_account.dart';
-import 'package:internir/screens/home/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';
@@ -42,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (_) => const HomeLayout()),
-        (route) => false,
+            (route) => false,
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -141,24 +140,24 @@ class _LoginScreenState extends State<LoginScreen> {
             _isLoading
                 ? const CircularProgressIndicator()
                 : SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _login,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        backgroundColor: Colors.indigo,
-                      ),
-                      child: const Text(
-                        "Login",
-                        style: TextStyle(
-                          fontFamily: 'Greta Arabic',
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _login,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  backgroundColor: Colors.indigo,
+                ),
+                child: const Text(
+                  "Login",
+                  style: TextStyle(
+                    fontFamily: 'Greta Arabic',
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
+                ),
+              ),
+            ),
             const SizedBox(height: 20),
             Center(
               child: TextButton(

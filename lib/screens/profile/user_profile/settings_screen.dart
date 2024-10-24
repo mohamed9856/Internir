@@ -82,19 +82,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 _showDeleteAccountDialog();
               },
             ),
-            const Divider(),
-
-            //---- ABOUT APP ----\\
-            ListTile(
-              leading: const Icon(Icons.brightness_4_outlined,
-                  size: 30, color: AppColor.mainBlue),
-              title: const Text(
-                'System Mode',
-                style: TextStyle(fontSize: 18),
-              ),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {},
-            ),
           ],
         ),
       ),

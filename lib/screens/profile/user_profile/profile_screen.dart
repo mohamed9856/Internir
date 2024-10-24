@@ -1,22 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:internir/screens/profile/resume_screen.dart';
-import 'package:internir/screens/profile/settings_screen.dart';
+import 'package:internir/screens/profile/user_profile/resume_screen.dart';
+import 'package:internir/screens/profile/user_profile/settings_screen.dart';
 import 'package:internir/screens/profile/widgets/profile_options.dart';
-import '../../utils/app_color.dart';
-import '../../utils/size_config.dart';
-import '../authentication/login_screen.dart';
+import '../../../utils/app_color.dart';
+import '../../../utils/size_config.dart';
+import '../../authentication/login_screen.dart';
 import 'edit_profile_screen.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class UserProfilePage extends StatefulWidget {
+  const UserProfilePage({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<UserProfilePage> createState() => _UserProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _UserProfilePageState extends State<UserProfilePage> {
   final currentUser = FirebaseAuth.instance.currentUser;
   String? username;
   String? category;
@@ -70,7 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: isLoading
           ? const Center(
-              child: CircularProgressIndicator()) // Loading indicator
+              child: CircularProgressIndicator())
           : Container(
               color: AppColor.background,
               margin: const EdgeInsets.all(20),
@@ -90,13 +90,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   SizedBox(height: SizeConfig.screenHeight * 0.012),
 
-                  // Display the username and category
+                  //----DISPLAY USERNAME----\\
                   Text(
                     username ??
                         "Username not available",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
+
+                  //----DISPLAY CATEGORY----\\
                   Text(
                     category ??
                         "Category not available",
@@ -106,8 +108,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   SizedBox(height: SizeConfig.screenHeight * 0.032),
 
-                  //----PROFILE OPTIONS----\\
-                  // Inside your ProfileOptions for Edit Profile
+                  //--------PROFILE OPTIONS--------\\
+
+                  //----EDIT PROFILE----\\
                   ProfileOptions(
                     icon: Icons.manage_accounts,
                     label: 'Edit Profile',
@@ -122,11 +125,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           username = updatedData['username'];
                           category = updatedData['category'];
                           image = updatedData['image'];
-                          // Optionally update the profile image if you have a way to change it
                         });
+                        getData();
                       }
                     },
                   ),
+
+                  //----MY RESUME----\\
                   ProfileOptions(
                       icon: Icons.sticky_note_2_outlined,
                       label: 'My Resumes',
@@ -135,6 +140,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         Navigator.push(context, MaterialPageRoute(
                                 builder: (context) => const ResumePage()));
                       }),
+
+                  //----SETTINGS----\\
                   ProfileOptions(
                       icon: Icons.settings,
                       label: 'Settings',
@@ -145,6 +152,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             MaterialPageRoute(
                                 builder: (context) => const SettingsPage()));
                       }),
+
+                  //----LOG OUT----\\
                   ProfileOptions(
                       icon: Icons.logout,
                       label: 'Log Out',
