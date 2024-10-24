@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../providers/index_provider.dart';
 import '../home/home_screen.dart';
-import '../profile/profile_screen.dart';
+import '../profile/user_profile/profile_screen.dart';
 import '../saved/saved_internships.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/app_color.dart';
@@ -24,7 +24,7 @@ class _HomeLayoutState extends State<HomeLayout> {
     const HomeScreen(),
     const ApplyListScreen(),
     const SavedInternships(),
-    const ProfilePage(),
+    const UserProfilePage(),
   ];
 
   @override

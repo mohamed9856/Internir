@@ -1,12 +1,11 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../login_screen.dart';
 import '../../../components/custom_button.dart';
 import '../../../components/custom_text_form_field.dart';
 import '../../../providers/Admin/company_auth_provider.dart';
-import '../../dashboard/dashboard_screen.dart';
 import '../../../utils/app_assets.dart';
 import '../../../utils/app_color.dart';
 import '../../../utils/size_config.dart';
@@ -14,6 +13,7 @@ import 'package:provider/provider.dart';
 
 class CompanySignUp extends StatefulWidget {
   static const String routeName = '/home';
+
   const CompanySignUp({super.key});
 
   @override
@@ -22,6 +22,7 @@ class CompanySignUp extends StatefulWidget {
 
 class _CompanySignUp extends State<CompanySignUp> {
   final formKey = GlobalKey<FormState>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -35,6 +36,39 @@ class _CompanySignUp extends State<CompanySignUp> {
   var addressController = TextEditingController();
   var phoneController = TextEditingController();
   var descriptionController = TextEditingController();
+
+  Future<void> _checkVerification() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      await user.reload();
+      if (user.emailVerified) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Success'),
+            content: const Text('Your email has been verified successfully!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    LoginScreen.routeName,
+                        (route) => false,
+                  );
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Email not verified yet!')),
+        );
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +98,13 @@ class _CompanySignUp extends State<CompanySignUp> {
                                     .isNetworkImage())
                                 ? MemoryImage(companyAuthProvider.localImage!)
                                 : (companyAuthProvider.company.image == null)
-                                    ? AssetImage(AppAssets.noProfileImage
-                                        .replaceAll('assets/', ''))
+                                    ? AssetImage(
+                                        AppAssets.noProfileImage
+                                            .replaceAll('assets/', ''),
+                                      )
                                     : NetworkImage(
-                                        companyAuthProvider.company.image!),
+                                        companyAuthProvider.company.image!,
+                                      ),
                           ),
                           Positioned(
                             bottom: -5,
@@ -129,13 +166,11 @@ class _CompanySignUp extends State<CompanySignUp> {
                           if (value!.isEmpty) {
                             return 'Email is required';
                           }
-                          // regix for email validation\
                           var reg = RegExp(
                               r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
                           if (!reg.hasMatch(value)) {
                             return 'Invalid email';
                           }
-
                           return null;
                         },
                       ),
@@ -202,7 +237,6 @@ class _CompanySignUp extends State<CompanySignUp> {
                           if (value != passwordController.text) {
                             return 'Password does not match';
                           }
-
                           return null;
                         },
                       ),
@@ -233,7 +267,6 @@ class _CompanySignUp extends State<CompanySignUp> {
                             if (value!.isEmpty) {
                               return 'Phone is required';
                             }
-                            //regix for phone number
                             RegExp reg = RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
                             if (!reg.hasMatch(value)) {
                               return 'Invalid phone number';
@@ -277,35 +310,40 @@ class _CompanySignUp extends State<CompanySignUp> {
                                 description: descriptionController.text,
                               ),
                             );
-
                             if (res) {
-                              Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                DashboardScreen.routeName,
-                                (route) => false,
-                              );
+                              User? user = _auth.currentUser;
+                              if (user != null && !user.emailVerified) {
+                                await user.sendEmailVerification();
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => Dialog(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Text(
+                                            'A verification email has been sent. Please verify your email.',
+                                          ),
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            // Close dialog
+                                            child: const Text('OK'),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                                Future.delayed(const Duration(seconds: 5), () {
+                                  _checkVerification();
+                                });
+                              }
                             }
                           }
                         },
                         text: 'Sign Up',
-                      ),
-                      SizedBox(
-                        height: 16 * SizeConfig.verticalBlock,
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            LoginScreen.routeName,
-                            (route) => false,
-                          );
-                        },
-                        child: const Text(
-                          "Sign In",
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
                       ),
                     ],
                   ),

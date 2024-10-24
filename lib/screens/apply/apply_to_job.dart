@@ -49,13 +49,13 @@ class _ApplyToJobState extends State<ApplyToJob> {
 
       if (doc.exists) {
         setState(() {
-          _userImageURL = doc['image'] as String? ?? '';  // Fallback to empty string if null
-          _username = doc['username'] as String? ?? 'No name';  // Fallback to 'No name'
+          _userImageURL = doc['image'] as String? ?? '';
+          _username = doc['username'] as String? ?? 'No name';
           _category = doc['category'] as String? ?? 'No category';
           _email = doc['email'] as String? ?? '';
           _phone = doc['phone'] as String? ?? '';
-          _emailController.text = _email!;
-          _phoneController.text = _phone!;
+          _emailController.text = _email ?? '';
+          _phoneController.text = _phone ?? '';
         });
       }
     }
@@ -79,20 +79,6 @@ class _ApplyToJobState extends State<ApplyToJob> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('No file selected')),
-      );
-    }
-  }
-
-  void _uploadResume(BuildContext context) {
-    if (_isFilePicked) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Resume uploaded!')),
-      );
-    } else {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please pick a file first!')),
       );
     }
   }
@@ -136,10 +122,11 @@ class _ApplyToJobState extends State<ApplyToJob> {
         String phone = _phoneController.text.trim();
         String? fileUrl;
 
-        if (_isFilePicked) {
+        if (_isFilePicked && file != null) {
           fileUrl = await FireStorage.uploadFile(
-            path: 'jobs/${widget.job.id}/applications/${FirebaseAuth.instance.currentUser!.uid}',
-            fileName: _pickedFileName!,
+            path:
+                'jobs/${widget.job.id}/applications/${FirebaseAuth.instance.currentUser!.uid}',
+            fileName: _pickedFileName ?? 'resume.pdf',
             file: file!,
             contentType: 'application/pdf',
           );
@@ -153,8 +140,8 @@ class _ApplyToJobState extends State<ApplyToJob> {
           'appliedAt': FieldValue.serverTimestamp(),
           'status': 'pending',
           'userId': FirebaseAuth.instance.currentUser!.uid,
-          'username': _username,
-          'category': _category,
+          'username': _username ?? 'Anonymous', // Added null safety
+          'category': _category ?? 'General', // Added null safety
           'resume': fileUrl,
         };
 
@@ -167,7 +154,6 @@ class _ApplyToJobState extends State<ApplyToJob> {
             .doc(FirebaseAuth.instance.currentUser!.uid)
             .set(applicationData);
 
-        // Increase the number of applicants
         await FirebaseFirestore.instance
             .collection('jobs')
             .doc(widget.job.id)
@@ -220,9 +206,10 @@ class _ApplyToJobState extends State<ApplyToJob> {
                 children: [
                   CircleAvatar(
                     radius: 32,
-                    backgroundImage: _userImageURL != null && _userImageURL!.isNotEmpty
-                        ? NetworkImage(_userImageURL!)
-                        : null,
+                    backgroundImage:
+                        _userImageURL != null && _userImageURL!.isNotEmpty
+                            ? NetworkImage(_userImageURL!)
+                            : null,
                     child: _userImageURL == null || _userImageURL!.isEmpty
                         ? const Icon(Icons.person, size: 32)
                         : null,
@@ -248,23 +235,31 @@ class _ApplyToJobState extends State<ApplyToJob> {
                 controller: _emailController,
                 decoration: const InputDecoration(labelText: 'Email'),
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
+                  if (value!.isEmpty) {
+                    return 'Email is required';
+                  }
+                  var reg = RegExp(
+                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+                  if (!reg.hasMatch(value)) {
+                    return 'Invalid email';
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 16),
               TextFormField(
-                controller: _phoneController,
-                decoration: const InputDecoration(labelText: 'Phone'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your phone number';
-                  }
-                  return null;
-                },
-              ),
+                  controller: _phoneController,
+                  decoration: const InputDecoration(labelText: 'Phone'),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Phone is required';
+                    }
+                    RegExp reg = RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
+                    if (!reg.hasMatch(value)) {
+                      return 'Invalid phone number';
+                    }
+                    return null;
+                  }),
               const SizedBox(height: 24),
               const Text(
                 'Resume',
@@ -289,51 +284,50 @@ class _ApplyToJobState extends State<ApplyToJob> {
                     color: Colors.grey[300],
                     borderRadius: BorderRadius.circular(12),
                   ),
+                  height: 120,
                   width: double.infinity,
-                  height: 200,
-                  child: Center(
-                    child: Text(
-                      _pickedFileName ?? 'Choose Resume',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 18,
-                      ),
+                  child: _isFilePicked
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.file_present,
+                              size: 32,
+                              color: AppColor.mainBlue,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              _pickedFileName ?? 'No file selected',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        )
+                      : const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.cloud_upload,
+                              size: 32,
+                              color: AppColor.mainBlue,
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Upload resume',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                ),
+              ),
+              const SizedBox(height: 32),
+              _isLoading
+                  ? const CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: () => _sendApplication(context),
+                      child: const Text('Apply Now'),
                     ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => _uploadResume(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColor.lightBlue,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.all(24),
-                  ),
-                  child: const Text('Upload Resume'),
-                ),
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isLoading
-                      ? null
-                      : () async {
-                    await _sendApplication(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColor.lightBlue,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.all(24),
-                  ),
-                  child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('Send Application'),
-                ),
-              ),
             ],
           ),
         ),
