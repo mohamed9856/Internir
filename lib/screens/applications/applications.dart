@@ -30,7 +30,9 @@ class _ApplicationsState extends State<Applications> {
       titleController.text = companyProvider.selectedJob!.title;
       selectedCategory.text = companyProvider.selectedJob!.category ?? '';
       locationController.text = companyProvider.selectedJob!.location;
-      salaryController.text = companyProvider.selectedJob!.salary.toString();
+      salaryController.text = (companyProvider.selectedJob!.salary != null)
+          ? companyProvider.selectedJob!.salary.toString()
+          : '';
       employmentTypeController.text =
           companyProvider.selectedJob!.jobType ?? '';
       descriptionController = QuillController(
@@ -338,17 +340,15 @@ class _ApplicationsState extends State<Applications> {
                         ),
                         DataCell(
                           CustomButton(
-                            text: 'View Resume',
-                            textColor: AppColor.lightBlue,
-                            onPressed: () {
-                              Navigator.pushNamed(
-                                context,
-                                PdfViewer.routeName,
-                                arguments: application.resume,
-                              );
-                               
-                            }
-                          ),
+                              text: 'View Resume',
+                              textColor: AppColor.lightBlue,
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  PdfViewer.routeName,
+                                  arguments: application.resume,
+                                );
+                              }),
                         ),
                         DataCell(
                           Row(
@@ -678,28 +678,24 @@ class _ApplicationsState extends State<Applications> {
                                                 listen: false);
 
                                         companyProvider.updateJob(
-                                          job: JobModel.fromJson(
-                                            {
-                                              'title': titleController.text,
-                                              'description': encodeQuillContent(
-                                                  descriptionController),
-                                              'location':
-                                                  locationController.text,
-                                              'salary': salaryController
-                                                      .text.isNotEmpty
-                                                  ? double.parse(
-                                                      salaryController.text,
-                                                    )
-                                                  : null,
-                                              'category': selectedCategory.text,
-                                              'employmentType':
-                                                  employmentTypeController
-                                                          .text.isNotEmpty
-                                                      ? employmentTypeController
-                                                          .text
-                                                      : null,
-                                              'enabled': enabled,
-                                            },
+                                          job: companyProvider.selectedJob!
+                                              .copyWith(
+                                            title: titleController.text,
+                                            description: encodeQuillContent(
+                                                descriptionController),
+                                            location: locationController.text,
+                                            salary:
+                                                salaryController.text.isNotEmpty
+                                                    ? double.parse(
+                                                        salaryController.text,
+                                                      )
+                                                    : null,
+                                            category: selectedCategory.text,
+                                            jobType: employmentTypeController
+                                                    .text.isNotEmpty
+                                                ? employmentTypeController.text
+                                                : null,
+                                            enabled: enabled,
                                           ),
                                         );
                                         Navigator.pop(context);
