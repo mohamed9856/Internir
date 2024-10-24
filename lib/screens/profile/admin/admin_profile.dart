@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:internir/screens/profile/admin/admin_editscreen.dart';
 import '../../../utils/app_color.dart';
 import '../../../utils/size_config.dart';
 import '../../authentication/login_screen.dart';
-import '../user_profile/edit_profile_screen.dart';
-import '../user_profile/resume_screen.dart';
 import '../user_profile/settings_screen.dart';
 import '../widgets/profile_options.dart';
 
@@ -117,7 +115,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                       final updatedData = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const EditProfilePage()),
+                            builder: (context) => const AdminEditProfileScreen()),
                       );
                       if (updatedData != null) {
                         setState(() {
@@ -139,7 +137,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const SettingsPage()));
+                                builder: (context) => const ProfileSettingsPage()));
                       }),
 
                   //----LOG OUT----\\

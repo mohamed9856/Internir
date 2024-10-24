@@ -1,11 +1,9 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:internir/components/custom_button.dart';
 import 'package:internir/components/custom_text_form_field.dart';
 import 'package:internir/constants/constants.dart';
-import 'package:internir/screens/profile/user_profile/profile_screen.dart';
 import 'package:internir/screens/profile/widgets/profile_pic.dart';
 import 'package:internir/utils/app_color.dart';
 import '../../../utils/size_config.dart';
@@ -58,33 +56,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Future<void> updateData() async {
     if (currentUser != null) {
       try {
-        // Store the current username
         final String currentUsername = usernameController.text.trim();
 
-        // Get the user document from Firestore
         DocumentSnapshot userDoc = await FirebaseFirestore.instance
             .collection('users')
             .doc(currentUser!.uid)
             .get();
 
-        // Check if the username has changed
         if (currentUsername != userDoc['username']) {
-          // Check if the new username already exists
           final QuerySnapshot result = await FirebaseFirestore.instance
               .collection('users')
               .where('username', isEqualTo: currentUsername)
               .get();
 
-          // If the length of result is greater than 0, the username is taken
           if (result.docs.isNotEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Username is already taken.')),
             );
-            return; // Exit the function if the username is taken
+            return;
           }
         }
-
-        // Update Firestore with new data
         await FirebaseFirestore.instance
             .collection('users')
             .doc(currentUser!.uid)

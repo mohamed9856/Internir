@@ -39,8 +39,6 @@ class _ResumePageState extends State<ResumePage> {
             uploadedFiles = []; // Reset the local files list
           });
           for (var url in uploadedFileUrls) {
-            // Create a dummy file from the URLs
-            // You might want to modify this as per your needs
             uploadedFiles.add(File(url)); // Note: This may not work as expected
           }
         }

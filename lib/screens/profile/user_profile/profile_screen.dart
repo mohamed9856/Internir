@@ -150,7 +150,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const SettingsPage()));
+                                builder: (context) => const ProfileSettingsPage()));
                       }),
 
                   //----LOG OUT----\\

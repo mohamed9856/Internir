@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:internir/screens/authentication/login_screen.dart';
 import 'package:internir/utils/app_color.dart';
 
-class ProfileSettingsPage extends StatefulWidget {
-  const ProfileSettingsPage({super.key});
+class AdminSettingsPage extends StatefulWidget {
+  const AdminSettingsPage({super.key});
 
   @override
-  State<ProfileSettingsPage> createState() => _ProfileSettingsPageState();
+  State<AdminSettingsPage> createState() => _AdminSettingsPageState();
 }
 
-class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
+class _AdminSettingsPageState extends State<AdminSettingsPage> {
   bool _notificationsEnabled = false;
 
   @override
@@ -160,19 +160,17 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
               onPressed: () async {
                 try {
                   User? user = FirebaseAuth.instance.currentUser;
-
                   if (user != null) {
                     await FirebaseFirestore.instance
-                        .collection('users')
+                        .collection('company')
                         .doc(user.uid)
                         .delete();
-
                     await user.delete();
 
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content: Text('Account deleted successfully')),
+                          content: Text('Account Deleted Successfully')),
                     );
 
                     Navigator.pushReplacement(
@@ -181,7 +179,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                             builder: (context) => const LoginScreen()));
                   }
                 } catch (e) {
-                  print('Error deleting account: $e');
+                  print('Error Deleting Account: $e');
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                         content: Text(

@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:internir/components/custom_button.dart';
 import 'package:internir/components/custom_text_form_field.dart';
-import 'package:internir/constants/constants.dart';
-import 'package:internir/screens/profile/user_profile/profile_screen.dart';
 import 'package:internir/screens/profile/widgets/profile_pic.dart';
 import 'package:internir/utils/app_color.dart';
 import '../../../utils/size_config.dart';
@@ -20,12 +15,12 @@ class AdminEditProfileScreen extends StatefulWidget {
 }
 
 class _AdminEditProfileScreenState extends State<AdminEditProfileScreen> {
-
   final currentUser = FirebaseAuth.instance.currentUser;
 
   TextEditingController usernameController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
-  TextEditingController descreptionController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
 
   bool isLoading = false;
 
@@ -43,7 +38,7 @@ class _AdminEditProfileScreenState extends State<AdminEditProfileScreen> {
 
         setState(() {
           usernameController.text = userDoc['username'];
-          descreptionController.text = userDoc['category'];
+          descriptionController.text = userDoc['category'];
           phoneNumberController.text = userDoc['phone'];
           image = userDoc['image'];
           isLoading = false;
@@ -93,14 +88,16 @@ class _AdminEditProfileScreenState extends State<AdminEditProfileScreen> {
             .update({
           'username': currentUsername , // This will only update if changed
           'phone': phoneNumberController.text.trim(),
-          'category': descreptionController.text.trim(),
+          'description': descriptionController.text.trim(),
+          'address': addressController.text.trim(),
           if (imagePath != null) 'image': image,
         });
 
         Navigator.pop(context, {
           'username': currentUsername,
           'phone': phoneNumberController.text.trim(),
-          'category': descreptionController.text.trim(),
+          'description': descriptionController.text.trim(),
+          'address': addressController.text.trim(),
           'image': image,  // Send the updated image URL
         });
       } catch (e) {
@@ -114,31 +111,6 @@ class _AdminEditProfileScreenState extends State<AdminEditProfileScreen> {
 
 
 
-
-  //----JOB CATEGORIES----\\
-  void _showSelectOptions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return SafeArea(
-          child: ListView.builder(
-            itemCount: listCategories.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(listCategories[index]),
-                onTap: () {
-                  setState(() {
-                    descreptionController.text = listCategories[index];
-                  });
-                  Navigator.pop(context);
-                },
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
 
   @override
   void initState() {
@@ -175,6 +147,16 @@ class _AdminEditProfileScreenState extends State<AdminEditProfileScreen> {
             customTextFormField(controller: usernameController),
             SizedBox(height: SizeConfig.screenHeight * 0.016),
 
+
+            //----Description FIELD----\\
+            const Text('Description',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            SizedBox(height: SizeConfig.screenHeight * 0.008),
+            customTextFormField(
+                controller: descriptionController,
+            ),
+            SizedBox(height: SizeConfig.screenHeight * 0.016),
+
             //----PHONE NUMBER FIELD----\\
             const Text('Phone Number',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
@@ -184,20 +166,14 @@ class _AdminEditProfileScreenState extends State<AdminEditProfileScreen> {
                 keyboardType: TextInputType.phone),
             SizedBox(height: SizeConfig.screenHeight * 0.016),
 
-            //----CATEGORY FIELD----\\
-            const Text('Category',
+            //----ADDRESS FIELD----\\
+            const Text('Address',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             SizedBox(height: SizeConfig.screenHeight * 0.008),
             customTextFormField(
-                controller: descreptionController,
-                readOnly: true,
-                onTap: () {
-                  _showSelectOptions(context);
-                },
-                suffixIcon: const Icon(
-                  Icons.keyboard_arrow_down,
-                  size: 30,
-                )),
+                controller: addressController,
+                keyboardType: TextInputType.phone),
+            SizedBox(height: SizeConfig.screenHeight * 0.016),
 
             //----SAVED BUTTON----\\
             SizedBox(height: SizeConfig.screenHeight * 0.230),
