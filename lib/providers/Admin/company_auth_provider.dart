@@ -80,7 +80,7 @@ class CompnayAuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateCompany(context, CompanyModel company) async {
+  Future<bool> updateCompany(context, CompanyModel company) async {
     isLoading = true;
     notifyListeners();
     try {
@@ -94,19 +94,24 @@ class CompnayAuthProvider with ChangeNotifier {
         );
         isLocalImage = false;
       }
+      this.company = company.copyWith(image: urlImage);
+
       await FireDatabase.updateData(
         'company',
-        company.id,
-        company.toJson(),
+        this.company.id,
+        this.company.toJson(),
       );
-      company = company.copyWith(image: urlImage);
 
       notifyListeners();
+      return true;
     } catch (error) {
       debugPrint(error.toString());
+      return false;
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-    isLoading = false;
-    notifyListeners();
+    return false;
   }
 
   Future<bool> signUp(context, CompanyModel company) async {

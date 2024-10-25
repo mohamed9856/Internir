@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:internir/providers/Admin/company_auth_provider.dart';
 import 'package:internir/screens/profile/admin/admin_editscreen.dart';
+import 'package:provider/provider.dart';
 import '../../../utils/app_color.dart';
 import '../../../utils/size_config.dart';
 import '../../authentication/login_screen.dart';
@@ -55,6 +57,12 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var companyAuthProvider = Provider.of<CompnayAuthProvider>(context);
+
+    if (companyAuthProvider.company.image != null &&
+        companyAuthProvider.company.image!.isNotEmpty) {
+      image = companyAuthProvider.company.image;
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -115,7 +123,8 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                       final updatedData = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const AdminEditProfileScreen()),
+                            builder: (context) =>
+                                const AdminEditProfileScreen()),
                       );
                       if (updatedData != null) {
                         setState(() {
@@ -137,7 +146,8 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const ProfileSettingsPage()));
+                                builder: (context) =>
+                                    const ProfileSettingsPage()));
                       }),
 
                   //----LOG OUT----\\
