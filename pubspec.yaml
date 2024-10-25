@@ -57,13 +57,14 @@ dev_dependencies:
     sdk: flutter
   flutter_launcher_icons: ^0.14.1
 
-flutter_launcher_icons:
-  android: "ic_launcher"
+
+flutter_icons:
+  android: "launcher_icon"
   ios: true
-  image_path: "assets/images/Internir.jpg"
+  image_path: "assets/images/Internir.png"
   web: 
     generate: true
-    image_path: "assets/images/Internir.jpg"
+    image_path: "assets/images/Internir.png"
     background_color: "#ffffff"
     theme_color: "#0000ff"
 
