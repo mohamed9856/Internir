@@ -27,7 +27,7 @@ class _ApplicationsState extends State<Applications> {
       var companyProvider =
           Provider.of<CompanyProvider>(context, listen: false);
       companyProvider.fetchApplications();
-      print( companyProvider.selectedJob!.title);
+      print(companyProvider.selectedJob!.title);
       titleController.text = companyProvider.selectedJob!.title;
       selectedCategory.text = companyProvider.selectedJob!.category ?? '';
       locationController.text = companyProvider.selectedJob!.location;
@@ -58,7 +58,9 @@ class _ApplicationsState extends State<Applications> {
   Widget build(BuildContext context) {
     var companyProvider = Provider.of<CompanyProvider>(context);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(surfaceTintColor: Colors.transparent, backgroundColor: AppColor.background,
+
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -205,8 +207,10 @@ class _ApplicationsState extends State<Applications> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: DataTable(
+                    horizontalMargin: 5 * SizeConfig.horizontalBlock,
                     headingRowColor:
                         MaterialStateProperty.all(AppColor.mainBlue),
+                    columnSpacing: 12 * SizeConfig.textRatio,
                     border: TableBorder.all(
                         color: AppColor.black,
                         borderRadius: BorderRadius.circular(8),
@@ -214,8 +218,9 @@ class _ApplicationsState extends State<Applications> {
                         style: BorderStyle.solid),
                     columns: [
                       DataColumn(
+                        headingRowAlignment: MainAxisAlignment.center,
                         label: Text(
-                          'applied name',
+                          'Applied Name',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: AppColor.white,
@@ -226,8 +231,9 @@ class _ApplicationsState extends State<Applications> {
                         ),
                       ),
                       DataColumn(
+                        headingRowAlignment: MainAxisAlignment.center,
                         label: Text(
-                          'applied email',
+                          'Applied Nmail',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: AppColor.white,
@@ -238,8 +244,9 @@ class _ApplicationsState extends State<Applications> {
                         ),
                       ),
                       DataColumn(
+                        headingRowAlignment: MainAxisAlignment.center,
                         label: Text(
-                          'applied phone',
+                          'Applied Phone',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: AppColor.white,
@@ -250,8 +257,9 @@ class _ApplicationsState extends State<Applications> {
                         ),
                       ),
                       DataColumn(
+                        headingRowAlignment: MainAxisAlignment.center,
                         label: Text(
-                          'applied date',
+                          'Applied Date',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: AppColor.white,
@@ -262,8 +270,9 @@ class _ApplicationsState extends State<Applications> {
                         ),
                       ),
                       DataColumn(
+                        headingRowAlignment: MainAxisAlignment.center,
                         label: Text(
-                          'status',
+                          'Atatus',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: AppColor.white,
@@ -274,6 +283,7 @@ class _ApplicationsState extends State<Applications> {
                         ),
                       ),
                       DataColumn(
+                        headingRowAlignment: MainAxisAlignment.center,
                         label: Text(
                           'Resume',
                           textAlign: TextAlign.center,
@@ -286,8 +296,9 @@ class _ApplicationsState extends State<Applications> {
                         ),
                       ),
                       DataColumn(
+                        headingRowAlignment: MainAxisAlignment.center,
                         label: Text(
-                          'action',
+                          'Actions',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: AppColor.white,
@@ -341,6 +352,7 @@ class _ApplicationsState extends State<Applications> {
                         ),
                         DataCell(
                           CustomButton(
+                            fontSize: 14 * SizeConfig.textRatio,
                               text: 'View Resume',
                               textColor: AppColor.lightBlue,
                               onPressed: () {
@@ -356,6 +368,7 @@ class _ApplicationsState extends State<Applications> {
                             children: [
                               CustomButton(
                                   text: 'Approve',
+                                  fontSize: 14 * SizeConfig.textRatio,
                                   textColor: AppColor.mainGreen,
                                   onPressed: () {
                                     companyProvider.updateStatus(
@@ -366,6 +379,7 @@ class _ApplicationsState extends State<Applications> {
                               ),
                               CustomButton(
                                   text: 'Reject',
+                            fontSize: 14 * SizeConfig.textRatio,
                                   textColor: AppColor.red,
                                   onPressed: () {
                                     companyProvider.updateStatus(
@@ -740,6 +754,7 @@ class _ApplicationsState extends State<Applications> {
                                 Navigator.pop(context);
                                 companyProvider
                                     .deleteJob(companyProvider.selectedJob!.id);
+                                Navigator.pop(context);
                               },
                               child: const Text('Delete',
                                   style: TextStyle(color: Colors.red)),

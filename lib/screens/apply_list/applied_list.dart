@@ -24,7 +24,9 @@ class _ApplyListScreenState extends State<ApplyListScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
     _loadAppliedJobs();
+    });
   }
 
   Future<void> _loadAppliedJobs() async {

@@ -58,9 +58,14 @@ dev_dependencies:
   flutter_launcher_icons: ^0.14.1
 
 flutter_icons:
-  android: true
+  android: "ic_launcher"
   ios: true
   image_path: "assets/images/Internir.jpg"
+  web: 
+    generate: true
+    image_path: "assets/images/Internir.jpg"
+    background_color: "#ffffff"
+    theme_color: "#0000ff"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -83,6 +88,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/images/Internir.jpg
   fonts:
     - family: NotoSans
       fonts:

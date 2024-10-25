@@ -64,21 +64,30 @@ class _ApplyToJobState extends State<ApplyToJob> {
   }
 
   Future<void> _pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    );
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+      );
 
-    if (result != null) {
-      setState(() {
-        file = result.files.first.bytes;
+      if (result != null) {
+        print(result.xFiles.first.toString() + ' this is result');
+        file = await result.xFiles.first.readAsBytes();
+        print(file.toString() + ' this is file');
         _pickedFileName = result.files.single.name;
         _isFilePicked = true;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Selected: $_pickedFileName')),
-      );
-    } else {
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Selected: $_pickedFileName')),
+        );
+        setState(() {});
+        print(file.toString());
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No file selected')),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('No file selected')),
       );
@@ -123,7 +132,8 @@ class _ApplyToJobState extends State<ApplyToJob> {
         String email = _emailController.text.trim();
         String phone = _phoneController.text.trim();
         String? fileUrl;
-
+        print(_isFilePicked);
+        print(file != null);
         if (_isFilePicked && file != null) {
           fileUrl = await FireStorage.uploadFile(
             path:
