@@ -1,19 +1,20 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:internir/components/custom_button.dart';
-import 'package:internir/components/custom_text_form_field.dart';
-import 'package:internir/models/company_model.dart';
-import 'package:internir/providers/Admin/company_auth_provider.dart';
-import 'package:internir/screens/layout/home_layout.dart';
-import 'package:internir/utils/app_assets.dart';
-import 'package:internir/utils/app_color.dart';
-import 'package:internir/utils/size_config.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../login_screen.dart';
+import '../../../components/custom_button.dart';
+import '../../../components/custom_text_form_field.dart';
+import '../../../providers/Admin/company_auth_provider.dart';
+import '../../dashboard/dashboard_screen.dart';
+import '../../../utils/app_assets.dart';
+import '../../../utils/app_color.dart';
+import '../../../utils/size_config.dart';
 import 'package:provider/provider.dart';
 
 class CompanySignUp extends StatefulWidget {
   static const String routeName = '/home';
+
   const CompanySignUp({super.key});
 
   @override
@@ -22,6 +23,7 @@ class CompanySignUp extends StatefulWidget {
 
 class _CompanySignUp extends State<CompanySignUp> {
   final formKey = GlobalKey<FormState>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -36,9 +38,42 @@ class _CompanySignUp extends State<CompanySignUp> {
   var phoneController = TextEditingController();
   var descriptionController = TextEditingController();
 
+  Future<void> _checkVerification() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      await user.reload();
+      if (user.emailVerified) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Success'),
+            content: const Text('Your email has been verified successfully!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    LoginScreen.routeName,
+                        (route) => false,
+                  );
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Email not verified yet!')),
+        );
+      }
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    final CompnayAuthProvider compnayAuthProvider =
+    final CompnayAuthProvider companyAuthProvider =
         context.watch<CompnayAuthProvider>();
     return Scaffold(
       body: SingleChildScrollView(
@@ -46,7 +81,7 @@ class _CompanySignUp extends State<CompanySignUp> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (compnayAuthProvider.isLoading)
+              if (companyAuthProvider.isLoading)
                 const LinearProgressIndicator(),
               Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -60,14 +95,17 @@ class _CompanySignUp extends State<CompanySignUp> {
                           CircleAvatar(
                             radius: 100,
                             onBackgroundImageError: (exception, stackTrace) {},
-                            backgroundImage: (!compnayAuthProvider
+                            backgroundImage: (!companyAuthProvider
                                     .isNetworkImage())
-                                ? MemoryImage(compnayAuthProvider.localImage!)
-                                : (compnayAuthProvider.company.image == null)
-                                    ? AssetImage(AppAssets.noProfileImage
-                                        .replaceAll('assets/', ''))
+                                ? MemoryImage(companyAuthProvider.localImage!)
+                                : (companyAuthProvider.company.image == null)
+                                    ? AssetImage(
+                                        AppAssets.noProfileImage
+                                            .replaceAll('assets/', ''),
+                                      )
                                     : NetworkImage(
-                                        compnayAuthProvider.company.image!),
+                                        companyAuthProvider.company.image!,
+                                      ),
                           ),
                           Positioned(
                             bottom: -5,
@@ -81,19 +119,19 @@ class _CompanySignUp extends State<CompanySignUp> {
                                   return;
                                 }
                                 Uint8List imageFile = await image.readAsBytes();
-                                compnayAuthProvider.changeCompany(
+                                companyAuthProvider.changeCompany(
                                   image: imageFile,
                                   newCompany:
-                                      compnayAuthProvider.company.copyWith(
-                                    name: compnayAuthProvider.company.name,
-                                    email: compnayAuthProvider.company.email,
+                                      companyAuthProvider.company.copyWith(
+                                    name: companyAuthProvider.company.name,
+                                    email: companyAuthProvider.company.email,
                                     password:
-                                        compnayAuthProvider.company.password,
-                                    phone: compnayAuthProvider.company.phone,
+                                        companyAuthProvider.company.password,
+                                    phone: companyAuthProvider.company.phone,
                                     address:
-                                        compnayAuthProvider.company.address,
+                                        companyAuthProvider.company.address,
                                     description:
-                                        compnayAuthProvider.company.description,
+                                        companyAuthProvider.company.description,
                                   ),
                                 );
                               },
@@ -129,13 +167,11 @@ class _CompanySignUp extends State<CompanySignUp> {
                           if (value!.isEmpty) {
                             return 'Email is required';
                           }
-                          // regix for email validation\
                           var reg = RegExp(
                               r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
                           if (!reg.hasMatch(value)) {
                             return 'Invalid email';
                           }
-
                           return null;
                         },
                       ),
@@ -147,18 +183,18 @@ class _CompanySignUp extends State<CompanySignUp> {
                         hintText: 'Password',
                         hintColor: AppColor.grey1,
                         prefixIcon: const Icon(Icons.lock),
-                        obscureText: !compnayAuthProvider.isPasswordVisible,
-                        suffixIcon: compnayAuthProvider.isPasswordVisible
+                        obscureText: !companyAuthProvider.isPasswordVisible,
+                        suffixIcon: companyAuthProvider.isPasswordVisible
                             ? IconButton(
                                 onPressed: () {
-                                  compnayAuthProvider
+                                  companyAuthProvider
                                       .togglePasswordVisibility();
                                 },
                                 icon: const Icon(Icons.remove_red_eye),
                               )
                             : IconButton(
                                 onPressed: () {
-                                  compnayAuthProvider
+                                  companyAuthProvider
                                       .togglePasswordVisibility();
                                 },
                                 icon: const Icon(Icons.visibility_off),
@@ -177,18 +213,18 @@ class _CompanySignUp extends State<CompanySignUp> {
                         controller: confirmPasswordController,
                         hintText: 'Confirm Password',
                         obscureText:
-                            !compnayAuthProvider.isConfirmPasswordVisible,
-                        suffixIcon: compnayAuthProvider.isConfirmPasswordVisible
+                            !companyAuthProvider.isConfirmPasswordVisible,
+                        suffixIcon: companyAuthProvider.isConfirmPasswordVisible
                             ? IconButton(
                                 onPressed: () {
-                                  compnayAuthProvider
+                                  companyAuthProvider
                                       .toggleConfirmPasswordVisibility();
                                 },
                                 icon: const Icon(Icons.remove_red_eye),
                               )
                             : IconButton(
                                 onPressed: () {
-                                  compnayAuthProvider
+                                  companyAuthProvider
                                       .toggleConfirmPasswordVisibility();
                                 },
                                 icon: const Icon(Icons.visibility_off),
@@ -202,7 +238,6 @@ class _CompanySignUp extends State<CompanySignUp> {
                           if (value != passwordController.text) {
                             return 'Password does not match';
                           }
-
                           return null;
                         },
                       ),
@@ -233,7 +268,6 @@ class _CompanySignUp extends State<CompanySignUp> {
                             if (value!.isEmpty) {
                               return 'Phone is required';
                             }
-                            //regix for phone number
                             RegExp reg = RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
                             if (!reg.hasMatch(value)) {
                               return 'Invalid phone number';
@@ -266,9 +300,9 @@ class _CompanySignUp extends State<CompanySignUp> {
                         backgroundColor: AppColor.indigo,
                         onPressed: () async {
                           if (formKey.currentState!.validate()) {
-                            bool res = await compnayAuthProvider.signUp(
+                            bool res = await companyAuthProvider.signUp(
                               context,
-                              compnayAuthProvider.company.copyWith(
+                              companyAuthProvider.company.copyWith(
                                 name: nameController.text,
                                 email: emailController.text,
                                 password: passwordController.text,
@@ -277,16 +311,58 @@ class _CompanySignUp extends State<CompanySignUp> {
                                 description: descriptionController.text,
                               ),
                             );
-
                             if (res) {
-                              Navigator.pushNamed(
-                                context,
-                                HomeLayout.routeName,
-                              );
+                              User? user = _auth.currentUser;
+                              if (user != null && !user.emailVerified) {
+                                await user.sendEmailVerification();
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => Dialog(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Text(
+                                            'A verification email has been sent. Please verify your email.',
+                                          ),
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            // Close dialog
+                                            child: const Text('OK'),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                                Future.delayed(const Duration(seconds: 5), () {
+                                  _checkVerification();
+                                });
+                              }
                             }
                           }
                         },
                         text: 'Sign Up',
+                      ),
+                      SizedBox(
+                        height: 16 * SizeConfig.verticalBlock,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            LoginScreen.routeName,
+                            (route) => false,
+                          );
+                        },
+                        child: const Text(
+                          "Sign In",
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
                       ),
                     ],
                   ),

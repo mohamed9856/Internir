@@ -1,39 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:internir/screens/authentication/admin/company_sign_up.dart';
-import 'package:internir/utils/app_assets.dart';
-import 'package:internir/utils/app_color.dart';
-import 'package:internir/utils/size_config.dart';
-import 'package:internir/screens/layout/home_layout.dart';
+import '../authentication/admin/company_sign_up.dart';
+import '../authentication/login_screen.dart';
+import '../../utils/app_assets.dart';
+import '../../utils/app_color.dart';
+import '../../utils/size_config.dart';
+import 'package:provider/provider.dart';
+import '../../providers/onboarding_provider.dart';
 
-class OnBoardingScreen extends StatefulWidget {
+class OnBoardingScreen extends StatelessWidget {
   const OnBoardingScreen({super.key});
   static const routeName = '/onboarding';
 
   @override
-  State<OnBoardingScreen> createState() => _OnBoardingScreenState();
-}
-
-class _OnBoardingScreenState extends State<OnBoardingScreen> {
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final onboardingProvider = context.watch<OnboardingProvider>();
+    final PageController pageController = PageController(
+      initialPage: onboardingProvider.currentPage,
+    );
+
     return Scaffold(
       body: Stack(
         children: [
           PageView(
-            controller: _pageController,
+            controller: pageController,
             onPageChanged: (index) {
-              setState(() {
-                _currentPage = index;
-              });
+              onboardingProvider.setPage(index);
             },
             children: [
               // First onboarding page
@@ -65,7 +56,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 ],
               ),
 
-              // Second onboarding page
+              // Second onboarding page (with buttons)
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -92,11 +83,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
+
+                  // The buttons are here, for navigation to different parts of the app
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
                         onPressed: () {
+                          onboardingProvider.setType(0);
                           Navigator.pushReplacementNamed(
                               context, CompanySignUp.routeName);
                         },
@@ -112,8 +106,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       const SizedBox(width: 20),
                       ElevatedButton(
                         onPressed: () {
+                          onboardingProvider.setType(1);
                           Navigator.pushReplacementNamed(
-                              context, HomeLayout.routeName);
+                              context, LoginScreen.routeName);
                         },
                         child: Text(
                           'Intern Seeker',
@@ -139,11 +134,12 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // "Back" button on the second page
-                if (_currentPage == 1)
+                if (onboardingProvider.currentPage == 1)
                   TextButton(
                     onPressed: () {
-                      _pageController.previousPage(
+                      onboardingProvider
+                          .setPage(onboardingProvider.currentPage - 1);
+                      pageController.previousPage(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeInOut,
                       );
@@ -157,22 +153,22 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       ),
                     ),
                   ),
-
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       2,
-                      (index) => buildDot(index, _currentPage),
+                      (index) =>
+                          buildDot(index, onboardingProvider.currentPage),
                     ),
                   ),
                 ),
-
-                // "Next" button on the first page
-                if (_currentPage == 0)
+                if (onboardingProvider.currentPage == 0)
                   TextButton(
                     onPressed: () {
-                      _pageController.nextPage(
+                      onboardingProvider
+                          .setPage(onboardingProvider.currentPage + 1);
+                      pageController.nextPage(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeInOut,
                       );

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:internir/utils/utils.dart';
+
 import '../models/job_model.dart';
 import '../services/fire_database.dart';
+import '../utils/utils.dart';
 
 class JobsProvider extends ChangeNotifier {
   int page = 0;
@@ -12,6 +13,9 @@ class JobsProvider extends ChangeNotifier {
   var allJobs = <JobModel>[];
   var jobs = <JobModel>[];
   bool loading = false;
+  String category = '';
+
+  var jobsByCategory = <JobModel>[];
 
   Future<dynamic> fetchData({
     bool isPrevious = false,

@@ -33,31 +33,46 @@ dependencies:
   cupertino_icons: ^1.0.6
   firebase_core: ^3.5.0
   cloud_firestore: ^5.4.2
-  firebase_storage: ^12.3.1
+  firebase_storage: ^12.3.2
   firebase_messaging: ^15.1.2
   firebase_auth: ^5.3.0
   flutter_svg: ^2.0.10+1
-  hive_flutter: ^1.1.0
-  hive: ^2.2.3
   provider: ^6.1.2
+  timezone: ^0.9.4
+  geolocator: ^13.0.1
+  flutter_quill: ^10.8.2
+  file_picker: ^8.1.2
   http: ^1.2.2
   html: ^0.15.4
-  file_picker: ^5.2.4
   image_picker: ^1.1.2
-  flutter_quill: ^10.8.4
+  path_provider: ^2.1.4
+  url_launcher: ^6.3.1
+  intl: ^0.19.0
+  syncfusion_flutter_pdfviewer: ^27.1.55
 
 dev_dependencies:
+  flutter_lints: ^3.0.0
+
   flutter_test:
     sdk: flutter
-  hive_generator: ^2.0.1
-  build_runner: ^2.4.12
+  flutter_launcher_icons: ^0.14.1
+
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/Internir.png"
+  web: 
+    generate: true
+    image_path: "assets/images/Internir.png"
+    background_color: "#ffffff"
+    theme_color: "#0000ff"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -74,6 +89,28 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/images/Internir.jpg
+  fonts:
+    - family: NotoSans
+      fonts:
+        - asset: fonts/NotoSans/NotoSans-Thin.ttf
+          weight: 100
+        - asset: fonts/NotoSans/NotoSans-ExtraLight.ttf
+          weight: 200
+        - asset: fonts/NotoSans/NotoSans-Light.ttf
+          weight: 300
+        - asset: fonts/NotoSans/NotoSans-Regular.ttf
+          weight: 400
+        - asset: fonts/NotoSans/NotoSans-Medium.ttf
+          weight: 500
+        - asset: fonts/NotoSans/NotoSans-SemiBold.ttf
+          weight: 600
+        - asset: fonts/NotoSans/NotoSans-Bold.ttf
+          weight: 700 
+        - asset: fonts/NotoSans/NotoSans-Black.ttf
+          weight: 800 
+        - asset: fonts/NotoSans/NotoSans-ExtraBold.ttf
+          weight: 900 
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

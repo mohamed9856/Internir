@@ -32,6 +32,7 @@ Widget customTextFormField({
     decoration: InputDecoration(
       hintText: hintText,
       isDense: true,
+
       hintStyle: TextStyle(
         fontFamily: 'NotoSans',
         fontSize: 16 * SizeConfig.textRatio,

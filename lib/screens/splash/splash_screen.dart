@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:internir/providers/jobs_provider.dart';
-import 'package:internir/screens/authentication/login_screen.dart';
-import 'package:internir/utils/app_color.dart';
-import 'package:internir/utils/size_config.dart';
-import 'package:internir/screens/layout/home_layout.dart';
+import 'package:internir/utils/app_assets.dart';
+import '../dashboard/dashboard_screen.dart';
+import '../onboarding/onboarding_screen.dart';
+import '../../services/fire_database.dart';
+import '../../providers/jobs_provider.dart';
+import '../../utils/app_color.dart';
+import '../../utils/size_config.dart';
+import '../layout/home_layout.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -32,12 +35,19 @@ class _SplashScreenState extends State<SplashScreen> {
 
     await Future.delayed(const Duration(seconds: 3));
     if (user != null) {
-      await jobProvider.fetchJobs();
-      Navigator.pushNamedAndRemoveUntil(
-          context, HomeLayout.routeName, (route) => false);
+      bool admin = await FireDatabase.isExist('company', user.uid);
+      if (admin) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, DashboardScreen.routeName, (route) => false);
+      } else {
+        await jobProvider.fetchJobs();
+
+        Navigator.pushNamedAndRemoveUntil(
+            context, HomeLayout.routeName, (route) => false);
+      }
     } else {
       Navigator.pushNamedAndRemoveUntil(
-          context, LoginScreen.routeName, (route) => false);
+          context, OnBoardingScreen.routeName, (route) => false);
     }
   }
 
