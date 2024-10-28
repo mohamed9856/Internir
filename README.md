@@ -1,16 +1,3 @@
 # internir
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Interner is a Flutter app that simplifies the internship search process. Leveraging Firebase CLI for backend support, it offers real-time listings tailored to user preferences. Users can easily find, save, and apply for internships, while recruiters can post opportunities. Interner makes discovering the right internship effortless.
